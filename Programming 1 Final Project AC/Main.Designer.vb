@@ -23,7 +23,6 @@ Partial Class Main
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.btnSalary = New System.Windows.Forms.Button()
-        Me.btnHourly = New System.Windows.Forms.Button()
         Me.btnExit = New System.Windows.Forms.Button()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
@@ -42,15 +41,6 @@ Partial Class Main
         Me.btnSalary.Text = "Salary"
         Me.btnSalary.UseVisualStyleBackColor = True
         '
-        'btnHourly
-        '
-        Me.btnHourly.Location = New System.Drawing.Point(345, 62)
-        Me.btnHourly.Name = "btnHourly"
-        Me.btnHourly.Size = New System.Drawing.Size(184, 143)
-        Me.btnHourly.TabIndex = 1
-        Me.btnHourly.Text = "Hourly"
-        Me.btnHourly.UseVisualStyleBackColor = True
-        '
         'btnExit
         '
         Me.btnExit.Location = New System.Drawing.Point(156, 312)
@@ -66,7 +56,7 @@ Partial Class Main
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1, Me.ToolStripMenuItem3})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(599, 28)
+        Me.MenuStrip1.Size = New System.Drawing.Size(599, 30)
         Me.MenuStrip1.TabIndex = 3
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -74,7 +64,7 @@ Partial Class Main
         '
         Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SalaryToolStripMenuItem, Me.HourlyToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(75, 24)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(75, 26)
         Me.ToolStripMenuItem1.Text = "Options"
         '
         'SalaryToolStripMenuItem
@@ -92,7 +82,7 @@ Partial Class Main
         'ToolStripMenuItem3
         '
         Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
-        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(47, 24)
+        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(47, 26)
         Me.ToolStripMenuItem3.Text = "Exit"
         '
         'Main
@@ -101,7 +91,6 @@ Partial Class Main
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(599, 450)
         Me.Controls.Add(Me.btnExit)
-        Me.Controls.Add(Me.btnHourly)
         Me.Controls.Add(Me.btnSalary)
         Me.Controls.Add(Me.MenuStrip1)
         Me.MainMenuStrip = Me.MenuStrip1
@@ -115,7 +104,6 @@ Partial Class Main
     End Sub
 
     Friend WithEvents btnSalary As Button
-    Friend WithEvents btnHourly As Button
     Friend WithEvents btnExit As Button
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem

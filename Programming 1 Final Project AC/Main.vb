@@ -21,7 +21,7 @@ Public Class Main
         Salary.ShowDialog()
     End Sub
 
-    Private Sub btnHourly_Click(sender As Object, e As EventArgs) Handles btnHourly.Click
+    Private Sub btnHourly_Click(sender As Object, e As EventArgs) 
         'If user clicks hourly button, run hourly form
 
         Dim Hourly As New frmHourly
