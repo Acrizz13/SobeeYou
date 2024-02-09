@@ -22,8 +22,6 @@ Partial Class Main
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.btnSalary = New System.Windows.Forms.Button()
-        Me.btnExit = New System.Windows.Forms.Button()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.SalaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -31,24 +29,6 @@ Partial Class Main
         Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'btnSalary
-        '
-        Me.btnSalary.Location = New System.Drawing.Point(78, 62)
-        Me.btnSalary.Name = "btnSalary"
-        Me.btnSalary.Size = New System.Drawing.Size(184, 143)
-        Me.btnSalary.TabIndex = 0
-        Me.btnSalary.Text = "Salary"
-        Me.btnSalary.UseVisualStyleBackColor = True
-        '
-        'btnExit
-        '
-        Me.btnExit.Location = New System.Drawing.Point(156, 312)
-        Me.btnExit.Name = "btnExit"
-        Me.btnExit.Size = New System.Drawing.Size(276, 82)
-        Me.btnExit.TabIndex = 2
-        Me.btnExit.Text = "Exit"
-        Me.btnExit.UseVisualStyleBackColor = True
         '
         'MenuStrip1
         '
@@ -90,8 +70,6 @@ Partial Class Main
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(599, 450)
-        Me.Controls.Add(Me.btnExit)
-        Me.Controls.Add(Me.btnSalary)
         Me.Controls.Add(Me.MenuStrip1)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "Main"
@@ -102,9 +80,6 @@ Partial Class Main
         Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents btnSalary As Button
-    Friend WithEvents btnExit As Button
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem3 As ToolStripMenuItem

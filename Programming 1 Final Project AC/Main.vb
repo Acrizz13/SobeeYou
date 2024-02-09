@@ -7,14 +7,14 @@
 Public Class Main
 
 
-    Private Sub btnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
+    Private Sub btnExit_Click(sender As Object, e As EventArgs) 
 
         'close
         Close()
 
     End Sub
 
-    Private Sub btnSalary_Click(sender As Object, e As EventArgs) Handles btnSalary.Click
+    Private Sub btnSalary_Click(sender As Object, e As EventArgs) 
         'If user clicks salary button, run salary form
         Dim Salary As New frmSalary
 
