@@ -9,6 +9,7 @@ namespace SobeeYou.Controllers
     public class HomeController : Controller
     {
         int int1 = 1;
+        int int2 = 2;
 
         public ActionResult Index()
         {
