@@ -8,6 +8,8 @@ namespace SobeeYou.Controllers
 {
     public class HomeController : Controller
     {
+        int int1 = 1;
+
         public ActionResult Index()
         {
             return View();
