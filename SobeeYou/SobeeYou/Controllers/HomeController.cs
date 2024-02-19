@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +10,7 @@ namespace SobeeYou.Controllers
     {
         int int1 = 1;
         int int2 = 2;
+        int int3 = 3;
 
         public ActionResult Index()
         {
