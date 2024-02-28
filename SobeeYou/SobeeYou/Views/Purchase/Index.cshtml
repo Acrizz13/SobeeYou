@@ -1,9 +1,47 @@
-﻿@{
-    ViewBag.Title = "Purhcase";
-}
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
+﻿@model IEnumerable<SobeeYou.Models.ProductsModel>
 
-    <p>Use this area to provide additional information.</p>
-</main>
+<h2>Purchase Our Beverages</h2>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+</style>
+
+<table>
+    <tr>
+        <th>Product ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Stock Amount</th>
+        <th>Image</th> e4
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.intProductID</td>
+            <td>@item.strName</td>
+            <td>@item.strPrice</td>
+            <td>@item.strStockAmount</td>
+            <td>
+                <!-- Ensure the product name is URL-friendly if used as a filename -->
+                <img src="@Url.Content("~/Content/ProductImages/" + item.strName.Replace(" ", "") + ".jpg")" alt="Product Image" style="width:100px; height:auto;">
+            </td>
+
+        </tr>
+    }
+</table>

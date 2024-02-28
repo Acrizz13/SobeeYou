@@ -11,7 +11,7 @@ namespace SobeeYou.Controllers
         // GET: About
         public ActionResult Index()
         {
-            var x = "10";
+
             return View();
         }
     }
