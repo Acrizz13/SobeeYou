@@ -1,6 +1,4 @@
-﻿@model IEnumerable<SobeeYou.Models.ProductsModel>
-
-<h2>Purchase Our Beverages</h2>
+﻿<h2>Purchase Our Beverages</h2>
 
 <style>
     table {
@@ -20,6 +18,11 @@
     tr:nth-child(even) {
         background-color: #f9f9f9;
     }
+
+    .quantity-dropdown {
+        padding: 4px;
+        margin-right: 10px;
+    }
 </style>
 
 <table>
@@ -28,7 +31,8 @@
         <th>Name</th>
         <th>Price</th>
         <th>Stock Amount</th>
-        <th>Image</th> e4
+        <th>Image</th>
+        <th>Action</th> <!-- Added for "Add to Cart" button -->
     </tr>
     @foreach (var item in Model)
     {
@@ -38,12 +42,23 @@
             <td>@item.strPrice</td>
             <td>@item.strStockAmount</td>
             <td>
-                <!-- Ensure the product name is URL-friendly if used as a filename -->
                 <img src="@Url.Content("~/Content/ProductImages/" + item.strName.Replace(" ", "") + ".jpg")" alt="Product Image" style="width:100px; height:auto;">
-            @*//put a button here to add to cart - make it connected to the product id
-            // we probably want to hide the product id from the user but keep it in the form*@
             </td>
+            <td>
+                <!-- Quantity Dropdown -->
+                <select class="quantity-dropdown" name="quantity" form="form@item.intProductID">
+                    @for (int i = 1; i <= 9; i++)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
 
+                <!-- Add to Cart Button -->
+                <form id="form@item.intProductID" action="/Cart/Add" method="post">
+                    <input type="hidden" name="productId" value="@item.intProductID" />
+                    <input type="submit" value="Add to Cart" />
+                </form>
+            </td>
         </tr>
     }
 </table>
