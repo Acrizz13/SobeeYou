@@ -3,12 +3,28 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - SoBee You!</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <style>
+        /* Custom Navigation Bar Styles */
+        .navbar-custom {
+            background-color: #ff8c00; /* Orange background */
+            color: #ff69b4; /* Pink text */
+        }
+
+            .navbar-custom .navbar-brand,
+            .navbar-custom .nav-link {
+                color: #ff69b4; /* Pink text for links */
+            }
+
+                .navbar-custom .nav-link:hover {
+                    color: #ffffff; /* Lighter shade or different color on hover */
+                }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark navbar-custom">
         <div class="container">
             @Html.ActionLink("Sobee You", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
