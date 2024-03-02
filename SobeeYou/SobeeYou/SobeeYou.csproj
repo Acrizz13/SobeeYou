@@ -188,6 +188,9 @@
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\Purchase\Index.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Account\AdminDashboard.cshtml" />
+    <Content Include="Views\Account\CustomerProfile.cshtml" />
+    <Content Include="Views\Purchase\Cart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
