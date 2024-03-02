@@ -18,3 +18,69 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f0f0f0; /* Use a gradient or background image as in the uploaded image */
+}
+
+.login-container {
+    width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+.login-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #8476d9; /* Adjust the color to match the image */
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+    .login-button:hover {
+        background-color: #6658d3; /* A darker shade for hover effect */
+    }
+
+.login-footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+    .login-footer a {
+        color: #8476d9; /* Adjust the color to match the image */
+        text-decoration: none;
+        font-size: 0.9em;
+    }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
