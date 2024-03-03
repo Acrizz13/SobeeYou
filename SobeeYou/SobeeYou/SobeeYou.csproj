@@ -191,6 +191,9 @@
     <Content Include="Views\Account\AdminDashboard.cshtml" />
     <Content Include="Views\Account\CustomerProfile.cshtml" />
     <Content Include="Views\Purchase\Cart.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\CustomerAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
