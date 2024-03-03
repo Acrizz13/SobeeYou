@@ -1,0 +1,44 @@
+﻿@model SobeeYou.Models.UserModel
+
+@{
+    Layout = null; // Or your site layout if you have one
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Account</title>
+    <link rel="stylesheet" href="~/Content/styles.css">
+</head>
+<body>
+    <div class="account-container">
+        <h2>Good evening, @Model.strFirstName</h2>
+        <div class="account-tabs">
+            <ul>
+                <li><a href="#accountInfo">Account</a></li>
+                <li><a href="#orders">Orders</a></li>
+                <!-- Other tabs can be added here -->
+            </ul>
+        </div>
+
+        <div id="accountInfo">
+            <h3>Account Information</h3>
+            <p><strong>First Name:</strong> @Model.strFirstName</p>
+            <p><strong>Last Name:</strong> @Model.strLastName</p>
+            <p><strong>Email:</strong> @Model.strEmail</p>
+            <p><strong>Billing Address:</strong> @Model.strBillingAddress</p>
+            <p><strong>Shipping Address:</strong> @Model.strShippingAddress</p>
+            <!-- Add more fields as needed -->
+        </div>
+
+        <div id="orders" style="display:none;">
+            <h3>Your Orders</h3>
+            <!-- Order information will go here -->
+        </div>
+
+        <!-- Other sections can be added here -->
+    </div>
+</body>
+</html>

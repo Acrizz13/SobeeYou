@@ -1,5 +1,8 @@
-﻿using System;
+﻿using SobeeYou.Models;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -23,16 +26,109 @@ namespace SobeeYou.Controllers
         }
 
         // POST: Login
-        [HttpPost]
-
         public ActionResult Login(string email, string password)
         {
-            // Your authentication logic here...
-            // If successful:
-            // Redirect user based on role
-            // If not successful:
-            // Show error and return to login view
+            UserModel userModel = null;
+
+            string connectionString = ConfigurationManager.AppSettings["AppDBConnect"];
+            string query = "SELECT intUserID, strFirstName, strLastName, strEmail, strPassword, intUserRoleID FROM TUsers WHERE strEmail = @Email AND strPassword = @Password";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@Password", password);
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            userModel = new UserModel
+                            {
+                                // Assuming these are the properties of your UserModel
+                                intUserID = (int)reader["intUserID"],
+                                strFirstName = reader["strFirstName"].ToString(),
+                                strLastName = reader["strLastName"].ToString(),
+                                strEmail = reader["strEmail"].ToString(),
+                                strPassword = reader["strPassword"].ToString(),
+                                intUserRoleID = (int)reader["intUserRoleID"]
+                            };
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle any exceptions, log them, etc.
+                    ModelState.AddModelError("", "An error occurred while processing your request.");
+                    return View();
+                }
+            }
+
+            if (userModel != null)
+            {
+                // User found, check their role
+                if (userModel.intUserRoleID == 1)
+                {  // Store userModel in TempData before redirecting
+                    TempData["UserModel"] = userModel;
+                    // Redirect to the customer account view
+                    return RedirectToAction("CustomerAccount", "Account");
+                }
+                else if (userModel.intUserRoleID == 2)
+                {
+                    // Redirect to the admin view
+                    return RedirectToAction("Admin", "Account");
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            else
+            {
+                // User not found or password does not match
+                ModelState.AddModelError("", "Can't find an account with those credentials.");
+                return View();
+            }
+        }
+
+        // GET: Customer Account View
+        public ActionResult CustomerAccount()
+        {
+            var userModel = TempData["UserModel"] as UserModel;
+            //do some SQL to get the user's orders, etc.
+
+
+            return View(userModel);
+        }
+
+
+        // GET: ForgotPassword
+        public ActionResult ForgotPassword()
+        {
+            // Simply return the view for now
             return View();
+        }
+
+        // GET: Register
+        public ActionResult Register()
+        {
+            // Simply return the view for registering a new user
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Protect against CSRF attacks
+        public ActionResult Register(UserModel usermdl)
+        {
+            if (ModelState.IsValid)
+            {
+                // Your code to handle registration, like adding the user to the database
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(usermdl);
         }
     }
 }

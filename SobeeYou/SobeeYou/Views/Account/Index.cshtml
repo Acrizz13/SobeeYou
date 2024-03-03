@@ -9,7 +9,8 @@
 <body>
     <div class="login-container">
         <h1>Login</h1>
-        <form action="/login" method="post">
+        <!-- Update the action attribute to use the Url.Action helper -->
+        <form action="@Url.Action("Login", "Account")" method="post">
             <div class="form-group">
                 <label for="email">Email address*</label>
                 <input type="email" id="email" name="email" required>
@@ -20,11 +21,11 @@
             </div>
             <button type="submit" class="login-button">LOGIN</button>
             <div class="login-footer">
-                <a href="/forgot-password">Forgot your password?</a>
-                <a href="/register">New Customer? Sign up</a>
+                <!-- These links will use the Url.Action helper to generate the correct URL -->
+                <a href="@Url.Action("ForgotPassword", "Account")">Forgot your password?</a>
+                <a href="@Url.Action("Register", "Account")">New Customer? Sign up</a>
             </div>
         </form>
     </div>
 </body>
 </html>
- 
