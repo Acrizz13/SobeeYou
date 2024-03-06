@@ -44,21 +44,25 @@
             <td>
                 <img src="@Url.Content("~/Content/ProductImages/" + item.strName.Replace(" ", "") + ".jpg")" alt="Product Image" style="width:100px; height:auto;">
             </td>
-            <td>
-                <!-- Quantity Dropdown -->
-                <select class="quantity-dropdown" name="quantity" form="form@item.intProductID">
-                    @for (int i = 1; i <= 9; i++)
-                    {
-                        <option value="@i">@i</option>
-                    }
-                </select>
+			<td>
+				<!-- Quantity Dropdown -->
+				<select class="quantity-dropdown" name="quantity" form="form@item.intProductID">
+					@for (int i = 1; i <= 9; i++) {
+						<option value="@i">@i</option>
+					}
+				</select>
 
-                <!-- Add to Cart Button -->
-                <form id="form@item.intProductID" action="/Cart/Add" method="post">
-                    <input type="hidden" name="productId" value="@item.intProductID" />
-                    <input type="submit" value="Add to Cart" />
-                </form>
-            </td>
+				<!-- Add to Cart Button -->
+				<button class="add-to-cart-btn"
+						data-product-id="@item.intProductID"
+						data-product-name="@item.strName"
+						data-product-price="@item.strPrice"
+						data-product-stock="@item.strStockAmount">
+					Add to Cart
+				</button>
+
+			</td>
         </tr>
     }
 </table>
+
