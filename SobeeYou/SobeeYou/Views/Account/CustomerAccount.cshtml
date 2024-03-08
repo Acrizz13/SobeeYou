@@ -1,9 +1,5 @@
 ﻿@model SobeeYou.Models.UserModel
 
-@{
-    Layout = null; // Or your site layout if you have one
-}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,23 +18,94 @@
                 <!-- Other tabs can be added here -->
             </ul>
         </div>
-
         <div id="accountInfo">
             <h3>Account Information</h3>
-            <p><strong>First Name:</strong> @Model.strFirstName</p>
-            <p><strong>Last Name:</strong> @Model.strLastName</p>
-            <p><strong>Email:</strong> @Model.strEmail</p>
-            <p><strong>Billing Address:</strong> @Model.strBillingAddress</p>
-            <p><strong>Shipping Address:</strong> @Model.strShippingAddress</p>
-            <!-- Add more fields as needed -->
+            <button id="editButton">Edit Profile Information</button>
+            <p>
+                <input type="hidden" id="currentUserID" value="@Model.intUserID" />
+                <label for="strFirstName"><strong>First Name:</strong></label>
+                <input type="text" id="strFirstName" value="@Model.strFirstName" readonly>
+            </p>
+            <p>
+                <label for="strLastName"><strong>Last Name:</strong></label>
+                <input type="text" id="strLastName" value="@Model.strLastName" readonly>
+            </p>
+            <p>
+                <label for="email"><strong>Email:</strong></label>
+                <input type="text" id="strEmail" value="@Model.strEmail" readonly>
+            </p>
+            <p>
+                <label for="strBillingAddress"><strong>Billing Address:</strong></label>
+                <input type="text" id="strBillingAddress" value="@Model.strBillingAddress" readonly>
+            </p>
+            <p>
+                <label for="strShippingAddress"><strong>Shipping Address:</strong></label>
+                <input type="text" id="strShippingAddress" value="@Model.strShippingAddress" readonly>
+            </p>
+            <button id="saveChanges" style="display: none;">Save Changes</button>
         </div>
-
         <div id="orders" style="display:none;">
             <h3>Your Orders</h3>
             <!-- Order information will go here -->
         </div>
-
         <!-- Other sections can be added here -->
     </div>
+
+    <script>
+        // Get the edit button and save changes button
+        var editButton = document.getElementById("editButton");
+        var saveChangesButton = document.getElementById("saveChanges");
+
+        // Get all the input fields
+        var inputFields = document.querySelectorAll("#accountInfo input[type='text']");
+
+        // Handle edit button click
+        editButton.addEventListener("click", function () {
+            // Enable the input fields
+            inputFields.forEach(function (field) {
+                field.readOnly = false;
+            });
+
+            // Show the save changes button
+            saveChangesButton.style.display = "inline-block";
+        });
+
+        // Handle save changes button click
+        saveChangesButton.addEventListener("click", function () {
+            var currentUserID = document.getElementById("currentUserID").value;
+            var updatedData = {};
+
+            // Collect the updated values from the input fields
+            inputFields.forEach(function (field) {
+                updatedData[field.id] = field.value;
+            });
+
+            // Send an AJAX request to the server
+            fetch('@Url.Action("UpdateProfile", "Account")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userID: currentUserID, updatedData: updatedData })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Disable the input fields
+                    inputFields.forEach(function (field) {
+                        field.readOnly = true;
+                    });
+
+                    // Hide the save changes button
+                    saveChangesButton.style.display = "none";
+                } else {
+                    console.error('Error:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
 </body>
 </html>

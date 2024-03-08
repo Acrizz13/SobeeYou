@@ -128,9 +128,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CartItems.cs" />
+    <Compile Include="Models\MasterModel.cs" />
     <Compile Include="Models\OrderItems.cs" />
     <Compile Include="Models\Orders.cs" />
     <Compile Include="Models\ProductsModel.cs" />
+    <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

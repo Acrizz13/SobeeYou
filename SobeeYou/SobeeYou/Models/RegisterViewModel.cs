@@ -6,11 +6,8 @@ using System.Web;
 
 namespace SobeeYou.Models
 {
-    public class UserModel
+    public class RegisterViewModel
     {
-        public int intUserID { get; set; }
-
-        public int intUserRoleID { get; set; }
         [Required]
         [Display(Name = "First name")]
         public string strFirstName { get; set; }
@@ -27,14 +24,20 @@ namespace SobeeYou.Models
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
-        public string strPassword { get; set; }
-     
-     
-        [Display(Name = "Billing Address")]
-        public string strBillingAddress{ get; set; }
+        public string strPassword
+        {
+            get; set;
 
-      
-        [Display(Name = "Shipping Address")]
-        public string strShippingAddress { get; set; }
+        }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm Password")]
+        public string ConfirmPassword
+        {
+            get; set;
+
+        }
+
     }
 }
