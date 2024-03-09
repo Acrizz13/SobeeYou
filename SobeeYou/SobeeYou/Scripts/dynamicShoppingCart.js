@@ -137,6 +137,20 @@
 	}
 
 
+	$(document).ready(function () {
+		// Hide the shipping address form by default
+		$("#shipping-address-form").hide();
+
+		// Show/hide the shipping address form based on the checkbox state
+		$("#same-address").change(function () {
+			if (this.checked) {
+				$("#shipping-address-form").slideUp();
+			} else {
+				$("#shipping-address-form").slideDown();
+			}
+		});
+	});
+
 
 	// Call updateCartCount function initially and then at regular intervals (e.g., every 5 seconds)
 	updateCartCount();
