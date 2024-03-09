@@ -128,6 +128,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CartItems.cs" />
+    <Compile Include="Models\CartItemProductJoin.cs" />
     <Compile Include="Models\OrderItems.cs" />
     <Compile Include="Models\Orders.cs" />
     <Compile Include="Models\ProductsModel.cs" />
@@ -205,8 +206,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Classes\" />
-    <Folder Include="Views\NewFolder1\" />
-    <Folder Include="Views\ShoppingCartItems\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
