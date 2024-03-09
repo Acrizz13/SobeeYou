@@ -9,6 +9,7 @@
 			},
 			error: function () {
 				// Handle error
+				console.log("Cart not updated")
 			}
 		});
 	}
@@ -35,6 +36,7 @@
 				success: function (response) {
 					// Handle success response
 					alert('Item added to cart successfully');
+					updateCartCount();
 				},
 				error: function (xhr, status, error) {
 					// Handle error response
