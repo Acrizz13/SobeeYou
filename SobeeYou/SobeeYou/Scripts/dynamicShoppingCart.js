@@ -140,5 +140,5 @@
 
 	// Call updateCartCount function initially and then at regular intervals (e.g., every 5 seconds)
 	updateCartCount();
-	setInterval(updateCartCount, 5000); // Update every 5 seconds
+	//setInterval(updateCartCount, 5000); // Update every 5 seconds
 });

@@ -1,6 +1,11 @@
 ﻿@{
 	ViewBag.Title = "Index";
 
+
+List<SobeeYou.Models.CartItemProductJoin> checkoutCartItems = Model;
+
+
+
 	// Initialize total price variable
 	decimal totalPrice = 0;
 
@@ -15,6 +20,8 @@
 			// You can log an error, display a message, or take appropriate action
 		}
 	}
+
+
 }
 
 
@@ -77,6 +84,7 @@
 
 <!-- Checkout button -->
 <a href="@Url.Action("Checkout", "ShoppingCart")"><button>Checkout</button></a>
+
 
 
 
