@@ -149,7 +149,6 @@
     <Compile Include="Models\TPaymentMethod.cs" />
     <Compile Include="Models\TPaymentStatu.cs" />
     <Compile Include="Models\TPermission.cs" />
-    <Compile Include="Models\TProduct.cs" />
     <Compile Include="Models\TProductImage.cs" />
     <Compile Include="Models\TProductRecommendation.cs" />
     <Compile Include="Models\TPromotion.cs" />

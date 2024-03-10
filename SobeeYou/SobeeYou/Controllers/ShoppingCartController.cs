@@ -58,7 +58,7 @@ namespace SobeeYou.Controllers {
             using (var context = new TableModels()) {
                 decimal totalPrice = context.TCartItems
                     .Where(ci => ci.intShoppingCartID == intShoppingCartID)
-                    .Sum(ci => ci.intQuantity * Convert.ToDecimal(ci.Product.strPrice));
+                    .Sum(ci => ci.intQuantity * decimal.Parse(ci.Product.strPrice));
 
                 return totalPrice;
             }

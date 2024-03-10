@@ -1,4 +1,4 @@
-﻿@model List<SobeeYou.Models.TCartItem>
+﻿@model List<SobeeYou.Models.CartItemDTO>
 
 @{
 	ViewBag.Title = "Index";
@@ -9,7 +9,7 @@
 	// Calculate total price
 	foreach (var item in Model) {
 		decimal itemPrice;
-		if (decimal.TryParse(item.Product.strPrice, out itemPrice)) {
+		if (decimal.TryParse(item.decPrice, out itemPrice)) {
 			totalPrice += item.intQuantity * itemPrice;
 		}
 		else {
