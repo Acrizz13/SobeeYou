@@ -23,23 +23,27 @@
             <button id="editButton">Edit Profile Information</button>
             <p>
                 <input type="hidden" id="currentUserID" value="@Model.intUserID" />
-                <label for="strFirstName"><strong>First Name:</strong></label>
-                <input type="text" id="strFirstName" value="@Model.strFirstName" readonly>
+                <label for="firstName"><strong>First Name:</strong></label>
+                <input type="text" id="strfirstName" value="@Model.strFirstName" readonly>
             </p>
             <p>
-                <label for="strLastName"><strong>Last Name:</strong></label>
-                <input type="text" id="strLastName" value="@Model.strLastName" readonly>
+                <label for="lastName"><strong>Last Name:</strong></label>
+                <input type="text" id="strlastName" value="@Model.strLastName" readonly>
             </p>
             <p>
                 <label for="email"><strong>Email:</strong></label>
                 <input type="text" id="strEmail" value="@Model.strEmail" readonly>
             </p>
             <p>
-                <label for="strBillingAddress"><strong>Billing Address:</strong></label>
+                <label for="password"><strong>Password:</strong></label>
+                <input type="password" id="strPassword" value="@Model.strPassword" readonly>
+            </p>
+            <p>
+                <label for="billingAddress"><strong>Billing Address:</strong></label>
                 <input type="text" id="strBillingAddress" value="@Model.strBillingAddress" readonly>
             </p>
             <p>
-                <label for="strShippingAddress"><strong>Shipping Address:</strong></label>
+                <label for="shippingAddress"><strong>Shipping Address:</strong></label>
                 <input type="text" id="strShippingAddress" value="@Model.strShippingAddress" readonly>
             </p>
             <button id="saveChanges" style="display: none;">Save Changes</button>
@@ -57,7 +61,7 @@
         var saveChangesButton = document.getElementById("saveChanges");
 
         // Get all the input fields
-        var inputFields = document.querySelectorAll("#accountInfo input[type='text']");
+        var inputFields = document.querySelectorAll("#accountInfo input[type='text'], #accountInfo input[type='password']");
 
         // Handle edit button click
         editButton.addEventListener("click", function () {
