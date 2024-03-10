@@ -1,11 +1,9 @@
-﻿using SobeeYou.Models;
+﻿
+using SobeeYou.Models;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
+using System.Data.Entity;
 using System.Linq;
-using System.Security.Policy;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SobeeYou.Controllers {
@@ -15,35 +13,18 @@ namespace SobeeYou.Controllers {
             int intTotalCartItems = GetTotalCartItems();
             ViewBag.TotalCartItems = intTotalCartItems;
 
-            List<CartItemProductJoin> cartItems = new List<CartItemProductJoin>();
-
             try {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.AppSettings["AppDBConnect"])) {
-                    conn.Open();
-                    string query = @"SELECT ci.intProductID, ci.intQuantity, ci.dtmDateAdded, p.strName, p.strPrice
-                             FROM TCartItems ci
-                             JOIN TProducts p ON ci.intProductID = p.intProductID
-                             WHERE ci.intShoppingCartID = 2
-                             ORDER BY ci.dtmDateAdded";
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    // cmd.Parameters.AddWithValue("@intShoppingCartID", 1); // Set ShoppingCartID to 1 for testing
+                using (var context = new Model1()) {
+                    int intShoppingCartID = 2; // Replace with the actual ShoppingCartID
 
-                    using (SqlDataReader reader = cmd.ExecuteReader()) {
-                        while (reader.Read()) {
-                            cartItems.Add(new CartItemProductJoin {
-                                intProductID = (int)reader["intProductID"],
-                                intQuantity = (int)reader["intQuantity"],
-                                dtmDateAdded = (DateTime)reader["dtmDateAdded"],
-                                strProductName = (string)reader["strName"],
-                                decPrice = (string)reader["strPrice"]
-                            });
-                        }
-                    }
+                    var cartItems = context.TCartItems
+                        .Where(ci => ci.intShoppingCartID == intShoppingCartID)
+                        .OrderBy(ci => ci.dtmDateAdded)
+                        .ToList();
+
+                    ViewBag.CartItems = cartItems;
+                    return View(cartItems);
                 }
-
-                ViewBag.CartItems = cartItems;
-
-                return View(cartItems);
             }
             catch (Exception ex) {
                 ViewBag.ErrorMessage = "An error occurred while retrieving cart items: " + ex.Message;
@@ -55,105 +36,72 @@ namespace SobeeYou.Controllers {
 
         // Gets total number of items in cart, works with Scripts/dynamicShoppingCart.js  
         public int GetTotalCartItems() {
-            // Assuming you have a way to get the current ShoppingCartID's ID
-            string intShoppingCartID = "2"; // Replace "current_cart_id" with the actual ShoppingCartID 
+            int intShoppingCartID = 2; // Replace with the actual ShoppingCartID
 
-            int intTotalCartItems = 0; // stores the total that will be returned
+            Console.WriteLine("Starting GetTotalCartItems method...");
+            Console.WriteLine("ShoppingCartID: " + intShoppingCartID);
 
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.AppSettings["AppDBConnect"])) {
-                conn.Open();
+            using (var context = new Model1()) {
+                Console.WriteLine("Querying database for CartItems with ShoppingCartID: " + intShoppingCartID);
 
-                // Retrieve the total quantity of items in the user's cart
-                string query = "SELECT SUM(intQuantity) FROM TCartItems WHERE intShoppingCartID = @intShoppingCartID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@intShoppingCartID", intShoppingCartID);
+                var cartItems = context.TCartItems
+                    .Where(ci => ci.intShoppingCartID == intShoppingCartID)
+                    .ToList();
 
-                object result = cmd.ExecuteScalar();
+                Console.WriteLine("Found " + cartItems.Count + " CartItems in the database");
 
-                if (result != DBNull.Value) {
-                    intTotalCartItems = Convert.ToInt32(result);
-                }
+                int intTotalCartItems = cartItems.Sum(ci => ci.intQuantity);
+
+                Console.WriteLine("TotalCartItems calculated: " + intTotalCartItems);
+
+                return intTotalCartItems;
             }
-            return intTotalCartItems;
         }
 
 
+
         public decimal GetTotalPrice() {
-            string intShoppingCartID = "2"; // Replace "intShoppingCartID" with the actual ShoppingCartID 
+            int intShoppingCartID = 2; // Replace with the actual ShoppingCartID
 
-            decimal totalPrice = 0; // stores the total price that will be returned
+            using (var context = new Model1()) {
+                decimal totalPrice = context.TCartItems
+                    .Where(ci => ci.intShoppingCartID == intShoppingCartID)
+                    .Sum(ci => ci.intQuantity * Convert.ToDecimal(ci.Product.strPrice));
 
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.AppSettings["AppDBConnect"])) {
-                conn.Open();
-
-                // Retrieve the total price of items in the user's cart
-                string query = @"SELECT SUM(ci.intQuantity * TRY_CAST(p.strPrice AS decimal(18, 2)))
-                                FROM TCartItems ci 
-                                JOIN TProducts p ON ci.intProductID = p.intProductID 
-                                WHERE ci.intShoppingCartID = @intShoppingCartID
-                                ";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@intShoppingCartID", intShoppingCartID);
-
-                object result = cmd.ExecuteScalar();
-
-                if (result != DBNull.Value) {
-                    totalPrice = Convert.ToDecimal(result);
-                }
+                return totalPrice;
             }
-            return totalPrice;
         }
 
 
 
 
         [HttpPost]
-        public ActionResult AddToCart(CartItems newItem) {
+        public ActionResult AddToCart(TCartItem newItem) {
             try {
-                // Get the current shoppingCart's ID - You need to replace this with your actual method to retrieve the shoppingCart ID
-                newItem.intShoppingCartID = 2; // Replace intShoppingCartID with your actual ID
-
-                // Set the current date/time
+                newItem.intShoppingCartID = 2; // Replace with the actual ShoppingCartID
                 newItem.dtmDateAdded = DateTime.Now;
 
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.AppSettings["AppDBConnect"])) {
-                    conn.Open();
-                    string query;
-                    SqlCommand cmd;
-
+                using (var context = new Model1()) {
                     // Check if the product already exists in the cart
-                    query = "SELECT intQuantity FROM TCartItems WHERE intShoppingCartID = @intShoppingCartID AND intProductID = @intProductID";
-                    cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@intShoppingCartID", newItem.intShoppingCartID);
-                    cmd.Parameters.AddWithValue("@intProductID", newItem.intProductID);
-                    int existingQuantity = Convert.ToInt32(cmd.ExecuteScalar());
+                    var existingCartItem = context.TCartItems
+                        .FirstOrDefault(ci => ci.intShoppingCartID == newItem.intShoppingCartID &&
+                                              ci.intProductID == newItem.intProductID);
 
-                    if (existingQuantity > 0) {
-                        // Update the quantity of the existing product
-                        query = "UPDATE TCartItems SET intQuantity = intQuantity + @intQuantity WHERE intShoppingCartID = @intShoppingCartID AND intProductID = @intProductID";
-                        cmd = new SqlCommand(query, conn);
-                        cmd.Parameters.AddWithValue("@intShoppingCartID", newItem.intShoppingCartID);
-                        cmd.Parameters.AddWithValue("@intProductID", newItem.intProductID);
-                        cmd.Parameters.AddWithValue("@intQuantity", newItem.intQuantity);
-                        cmd.ExecuteNonQuery();
+                    if (existingCartItem != null) {
+                        // Update the quantity of the existing cart item
+                        existingCartItem.intQuantity += newItem.intQuantity;
                     }
                     else {
-                        // Add a new entry for the product
-                        query = "INSERT INTO TCartItems (intShoppingCartID, intProductID, intQuantity, dtmDateAdded) VALUES (@intShoppingCartID, @intProductID, @intQuantity, @dtmDateAdded)";
-                        cmd = new SqlCommand(query, conn);
-                        cmd.Parameters.AddWithValue("@intShoppingCartID", newItem.intShoppingCartID);
-                        cmd.Parameters.AddWithValue("@intProductID", newItem.intProductID);
-                        cmd.Parameters.AddWithValue("@intQuantity", newItem.intQuantity);
-                        cmd.Parameters.AddWithValue("@dtmDateAdded", newItem.dtmDateAdded);
-                        cmd.ExecuteNonQuery();
+                        // Add a new cart item
+                        context.TCartItems.Add(newItem);
                     }
+
+                    context.SaveChanges();
                 }
 
-                // Return a success message or status
                 return Content("Item added to cart successfully");
             }
             catch (Exception ex) {
-                // Return error message
                 return Content("An error occurred: " + ex.Message);
             }
         }
@@ -164,29 +112,24 @@ namespace SobeeYou.Controllers {
         [HttpPost]
         public ActionResult RemoveFromCart(int productId) {
             try {
-                // Get the current shoppingCart's ID - You need to replace this with your actual method to retrieve the shoppingCart ID
-                int shoppingCartId = 2; // Replace intShoppingCartID with your actual ID
+                int shoppingCartId = 2; // Replace with the actual ShoppingCartID
 
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.AppSettings["AppDBConnect"])) {
-                    conn.Open();
-                    string query = "DELETE FROM TCartItems WHERE intShoppingCartID = @intShoppingCartID AND intProductID = @intProductID";
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@intShoppingCartID", shoppingCartId);
-                    cmd.Parameters.AddWithValue("@intProductID", productId);
-                    int rowsAffected = cmd.ExecuteNonQuery();
+                using (var context = new Model1()) {
+                    var cartItem = context.TCartItems
+                        .SingleOrDefault(ci => ci.intShoppingCartID == shoppingCartId &&
+                                               ci.intProductID == productId);
 
-                    if (rowsAffected > 0) {
-                        // Return a success message or status
+                    if (cartItem != null) {
+                        context.TCartItems.Remove(cartItem);
+                        context.SaveChanges();
                         return Content("Item removed from cart successfully");
                     }
                     else {
-                        // Return a message indicating that the item was not found in the cart
                         return Content("Item not found in the cart");
                     }
                 }
             }
             catch (Exception ex) {
-                // Return error message
                 return Content("An error occurred: " + ex.Message);
             }
         }
@@ -196,102 +139,64 @@ namespace SobeeYou.Controllers {
         [HttpPost]
         public ActionResult ModifyQuantity(int productId, int change) {
             try {
-                // Get the current shoppingCart's ID - You need to replace this with your actual method to retrieve the shoppingCart ID
-                int shoppingCartId = 2; // Replace intShoppingCartID with your actual ID
+                int shoppingCartId = 2; // Replace with the actual ShoppingCartID
 
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.AppSettings["AppDBConnect"])) {
-                    conn.Open();
+                using (var context = new Model1()) {
+                    var cartItem = context.TCartItems
+                        .SingleOrDefault(ci => ci.intShoppingCartID == shoppingCartId &&
+                                               ci.intProductID == productId);
 
-                    // Check if the product exists in the cart
-                    string checkQuery = "SELECT COUNT(*) FROM TCartItems WHERE intShoppingCartID = @intShoppingCartID AND intProductID = @intProductID";
-                    SqlCommand checkCmd = new SqlCommand(checkQuery, conn);
-                    checkCmd.Parameters.AddWithValue("@intShoppingCartID", shoppingCartId);
-                    checkCmd.Parameters.AddWithValue("@intProductID", productId);
-                    int productCount = (int)checkCmd.ExecuteScalar();
+                    if (cartItem != null) {
+                        cartItem.intQuantity += change;
 
-                    if (productCount > 0) {
-                        // Modify the quantity of the existing product
-                        string updateQuery = "UPDATE TCartItems SET intQuantity = intQuantity + @change WHERE intShoppingCartID = @intShoppingCartID AND intProductID = @intProductID";
-                        SqlCommand updateCmd = new SqlCommand(updateQuery, conn);
-                        updateCmd.Parameters.AddWithValue("@intShoppingCartID", shoppingCartId);
-                        updateCmd.Parameters.AddWithValue("@intProductID", productId);
-                        updateCmd.Parameters.AddWithValue("@change", change);
-                        updateCmd.ExecuteNonQuery();
-
-                        // Check if the quantity became 0, if so, remove the item from the cart
-                        if (change < 0) {
-                            string removeQuery = "DELETE FROM TCartItems WHERE intShoppingCartID = @intShoppingCartID AND intProductID = @intProductID AND intQuantity = 0";
-                            SqlCommand removeCmd = new SqlCommand(removeQuery, conn);
-                            removeCmd.Parameters.AddWithValue("@intShoppingCartID", shoppingCartId);
-                            removeCmd.Parameters.AddWithValue("@intProductID", productId);
-                            removeCmd.ExecuteNonQuery();
+                        if (cartItem.intQuantity <= 0) {
+                            context.TCartItems.Remove(cartItem);
                         }
 
-                        // Return a success message or status
+                        context.SaveChanges();
                         return Content("Quantity modified successfully");
                     }
                     else {
-                        // Return a message indicating that the product is not found in the cart
                         return Content("Product not found in the cart");
                     }
                 }
             }
             catch (Exception ex) {
-                // Return error message
                 return Content("An error occurred: " + ex.Message);
             }
         }
 
 
         public ActionResult Checkout() {
-            // Retrieve the cart items and total price
             List<CartItemProductJoin> cartItems = GetCartItems();
             decimal totalPrice = GetTotalPrice();
 
-            // Store the cart items and total price in the session
             Session["CartItems"] = cartItems;
             Session["TotalPrice"] = totalPrice;
 
-            // Redirect to the Checkout index view
             return RedirectToAction("Index", "Checkout");
         }
 
 
         private List<CartItemProductJoin> GetCartItems() {
-            List<CartItemProductJoin> cartItems = new List<CartItemProductJoin>();
+            using (var context = new Model1()) {
+                int intShoppingCartID = 2; // Replace with the actual ShoppingCartID
 
-            try {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.AppSettings["AppDBConnect"])) {
-                    conn.Open();
-                    string query = @"SELECT ci.intProductID, ci.intQuantity, ci.dtmDateAdded, p.strName, p.strPrice
-                             FROM TCartItems ci
-                             JOIN TProducts p ON ci.intProductID = p.intProductID
-                             WHERE ci.intShoppingCartID = 2
-                             ORDER BY ci.dtmDateAdded";
-                    SqlCommand cmd = new SqlCommand(query, conn);
+                var cartItems = context.TCartItems
+                    .Where(ci => ci.intShoppingCartID == intShoppingCartID)
+                    .Select(ci => new CartItemProductJoin {
+                        intProductID = ci.intProductID,
+                        intQuantity = ci.intQuantity,
+                        dtmDateAdded = ci.dtmDateAdded,
+                        strProductName = ci.Product.strName,
+                        decPrice = ci.Product.strPrice
+                    })
+                    .OrderBy(ci => ci.dtmDateAdded)
+                    .ToList();
 
-                    using (SqlDataReader reader = cmd.ExecuteReader()) {
-                        while (reader.Read()) {
-                            cartItems.Add(new CartItemProductJoin {
-                                intProductID = (int)reader["intProductID"],
-                                intQuantity = (int)reader["intQuantity"],
-                                dtmDateAdded = (DateTime)reader["dtmDateAdded"],
-                                strProductName = (string)reader["strName"],
-                                decPrice = (string)reader["strPrice"]
-                            });
-                        }
-                    }
-                }
+                return cartItems;
             }
-            catch (Exception ex) {
-                // Handle the exception or log the error
-                // You can throw the exception or return an empty list based on your requirement
-                throw ex;
-            }
-
-            return cartItems;
         }
-
 
 
     }
