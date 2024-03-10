@@ -1,11 +1,7 @@
-﻿
+﻿@model List<SobeeYou.Models.TCartItem>
+
 @{
 	ViewBag.Title = "Index";
-
-
-	List<SobeeYou.Models.CartItemProductJoin> checkoutCartItems = Model;
-
-
 
 	// Initialize total price variable
 	decimal totalPrice = 0;
@@ -13,7 +9,7 @@
 	// Calculate total price
 	foreach (var item in Model) {
 		decimal itemPrice;
-		if (decimal.TryParse(item.decPrice, out itemPrice)) {
+		if (decimal.TryParse(item.Product.strPrice, out itemPrice)) {
 			totalPrice += item.intQuantity * itemPrice;
 		}
 		else {
@@ -21,8 +17,7 @@
 			// You can log an error, display a message, or take appropriate action
 		}
 	}
-
-
+}
 }
 
 

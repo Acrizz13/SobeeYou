@@ -1,26 +1,29 @@
-namespace SobeeYou.Models {
+namespace SobeeYou.Models
+{
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class ProductsModel {
+    [Table("db_owner.TUserRoles")]
+    public partial class TUserRole
+    {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ProductsModel() {
-            CartItems = new HashSet<TCartItem>();
+        public TUserRole()
+        {
+            TUsers = new HashSet<TUser>();
         }
 
         [Key]
-        public int intProductID { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int intUserRoleID { get; set; }
 
-        public string strName { get; set; }
-
-        public string strPrice { get; set; }
-
-        public string strStockAmount { get; set; }
+        [Required]
+        [StringLength(255)]
+        public string strRole { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TCartItem> CartItems { get; set; }
+        public virtual ICollection<TUser> TUsers { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace SobeeYou.Controllers {
         // GET: Checkout
         public ActionResult Index() {
             // Retrieve the cart items from the session
-            List<CartItemProductJoin> cartItems = (List<CartItemProductJoin>)Session["CartItems"];
+            List<CartItemDTO> cartItems = (List<CartItemDTO>)Session["CartItems"];
 
             // Recalculate the total price
             decimal totalPrice = CalculateTotalPrice(cartItems);
@@ -24,7 +24,7 @@ namespace SobeeYou.Controllers {
             return View();
         }
 
-        private decimal CalculateTotalPrice(List<CartItemProductJoin> cartItems) {
+        private decimal CalculateTotalPrice(List<CartItemDTO> cartItems) {
             decimal totalPrice = 0;
             foreach (var item in cartItems) {
                 decimal itemPrice = decimal.Parse(item.decPrice);
@@ -39,7 +39,7 @@ namespace SobeeYou.Controllers {
         public ActionResult ProcessCheckout(FormCollection form) {
             try {
                 // Get the cart items and total price from the session
-                List<CartItemProductJoin> cartItems = (List<CartItemProductJoin>)Session["CartItems"];
+                List<CartItemDTO> cartItems = (List<CartItemDTO>)Session["CartItems"];
                 decimal totalPrice = (decimal)Session["TotalPrice"];
 
                 // Get the selected payment method
@@ -93,7 +93,7 @@ namespace SobeeYou.Controllers {
             return orderId;
         }
 
-        private void InsertOrderItems(int orderId, List<CartItemProductJoin> cartItems) {
+        private void InsertOrderItems(int orderId, List<CartItemDTO> cartItems) {
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.AppSettings["AppDBConnect"])) {
                 conn.Open();
                 foreach (var item in cartItems) {

@@ -14,23 +14,15 @@ namespace SobeeYou.Controllers {
             ViewBag.TotalCartItems = intTotalCartItems;
 
             try {
-                using (var context = new Model1()) {
-                    int intShoppingCartID = 2; // Replace with the actual ShoppingCartID
-
-                    var cartItems = context.TCartItems
-                        .Where(ci => ci.intShoppingCartID == intShoppingCartID)
-                        .OrderBy(ci => ci.dtmDateAdded)
-                        .ToList();
-
-                    ViewBag.CartItems = cartItems;
-                    return View(cartItems);
-                }
+                var cartItems = GetCartItems();
+                return View(cartItems);
             }
             catch (Exception ex) {
                 ViewBag.ErrorMessage = "An error occurred while retrieving cart items: " + ex.Message;
                 return View();
             }
         }
+
 
 
 
@@ -41,7 +33,7 @@ namespace SobeeYou.Controllers {
             Console.WriteLine("Starting GetTotalCartItems method...");
             Console.WriteLine("ShoppingCartID: " + intShoppingCartID);
 
-            using (var context = new Model1()) {
+            using (var context = new TableModels()) {
                 Console.WriteLine("Querying database for CartItems with ShoppingCartID: " + intShoppingCartID);
 
                 var cartItems = context.TCartItems
@@ -63,7 +55,7 @@ namespace SobeeYou.Controllers {
         public decimal GetTotalPrice() {
             int intShoppingCartID = 2; // Replace with the actual ShoppingCartID
 
-            using (var context = new Model1()) {
+            using (var context = new TableModels()) {
                 decimal totalPrice = context.TCartItems
                     .Where(ci => ci.intShoppingCartID == intShoppingCartID)
                     .Sum(ci => ci.intQuantity * Convert.ToDecimal(ci.Product.strPrice));
@@ -81,7 +73,7 @@ namespace SobeeYou.Controllers {
                 newItem.intShoppingCartID = 2; // Replace with the actual ShoppingCartID
                 newItem.dtmDateAdded = DateTime.Now;
 
-                using (var context = new Model1()) {
+                using (var context = new TableModels()) {
                     // Check if the product already exists in the cart
                     var existingCartItem = context.TCartItems
                         .FirstOrDefault(ci => ci.intShoppingCartID == newItem.intShoppingCartID &&
@@ -114,7 +106,7 @@ namespace SobeeYou.Controllers {
             try {
                 int shoppingCartId = 2; // Replace with the actual ShoppingCartID
 
-                using (var context = new Model1()) {
+                using (var context = new TableModels()) {
                     var cartItem = context.TCartItems
                         .SingleOrDefault(ci => ci.intShoppingCartID == shoppingCartId &&
                                                ci.intProductID == productId);
@@ -141,7 +133,7 @@ namespace SobeeYou.Controllers {
             try {
                 int shoppingCartId = 2; // Replace with the actual ShoppingCartID
 
-                using (var context = new Model1()) {
+                using (var context = new TableModels()) {
                     var cartItem = context.TCartItems
                         .SingleOrDefault(ci => ci.intShoppingCartID == shoppingCartId &&
                                                ci.intProductID == productId);
@@ -168,7 +160,7 @@ namespace SobeeYou.Controllers {
 
 
         public ActionResult Checkout() {
-            List<CartItemProductJoin> cartItems = GetCartItems();
+            List<CartItemDTO> cartItems = GetCartItems();
             decimal totalPrice = GetTotalPrice();
 
             Session["CartItems"] = cartItems;
@@ -178,13 +170,13 @@ namespace SobeeYou.Controllers {
         }
 
 
-        private List<CartItemProductJoin> GetCartItems() {
-            using (var context = new Model1()) {
+        private List<CartItemDTO> GetCartItems() {
+            using (var context = new TableModels()) {
                 int intShoppingCartID = 2; // Replace with the actual ShoppingCartID
 
                 var cartItems = context.TCartItems
                     .Where(ci => ci.intShoppingCartID == intShoppingCartID)
-                    .Select(ci => new CartItemProductJoin {
+                    .Select(ci => new CartItemDTO {
                         intProductID = ci.intProductID,
                         intQuantity = ci.intQuantity,
                         dtmDateAdded = ci.dtmDateAdded,

@@ -20,7 +20,8 @@ namespace SobeeYou.Models {
 
 
 
-        public virtual ProductsModel Product { get; set; }
+        public virtual TProduct Product { get; set; }
 
+        public virtual TShoppingCart ShoppingCart { get; set; }
     }
 }

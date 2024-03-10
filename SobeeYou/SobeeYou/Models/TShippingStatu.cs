@@ -1,28 +1,29 @@
-namespace SobeeYou.Models {
+namespace SobeeYou.Models
+{
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class ShoppingCart {
+    [Table("db_owner.TShippingStatus")]
+    public partial class TShippingStatu
+    {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ShoppingCart() {
-            CartItems = new HashSet<TCartItem>();
+        public TShippingStatu()
+        {
+            TOrders = new HashSet<TOrder>();
         }
 
         [Key]
-        public int intShoppingCartID { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int intShippingStatusID { get; set; }
 
-        public int intUserID { get; set; }
-
-        public decimal decTotalPrice { get; set; }
-
-        public DateTime dtmDateCreated { get; set; }
-
-        public DateTime dtmLastUpdated { get; set; }
+        [Required]
+        [StringLength(255)]
+        public string strShippingStatus { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TCartItem> CartItems { get; set; }
+        public virtual ICollection<TOrder> TOrders { get; set; }
     }
 }

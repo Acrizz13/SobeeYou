@@ -7,16 +7,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace SobeeYou.Controllers
-{
-    public class AccountController : Controller
-    {
+namespace SobeeYou.Controllers {
+    public class AccountController : Controller {
         // GET: Login
-        public ActionResult Index()
-        {
+        public ActionResult Index() {
             // Check if user is already logged in
-            if (User.Identity.IsAuthenticated)
-            {
+            if (User.Identity.IsAuthenticated) {
                 // Direct user based on role
                 // Your role redirection logic here...
             }
@@ -26,68 +22,57 @@ namespace SobeeYou.Controllers
         }
 
         // POST: Login
-        public ActionResult Login(string email, string password)
-        {
-            UserModel userModel = null;
+        public ActionResult Login(string email, string password) {
+            TUser userModel = null;
 
             string connectionString = ConfigurationManager.AppSettings["AppDBConnect"];
             string query = "SELECT intUserID, strFirstName, strLastName, strEmail, strPassword, intUserRoleID FROM TUsers WHERE strEmail = @Email AND strPassword = @Password";
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
+            using (SqlConnection conn = new SqlConnection(connectionString)) {
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Email", email);
                 cmd.Parameters.AddWithValue("@Password", password);
 
-                try
-                {
+                try {
                     conn.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            userModel = new UserModel
+                    using (SqlDataReader reader = cmd.ExecuteReader()) {
+                        if (reader.Read()) {
+                            userModel = new TUser();
                             {
                                 // Assuming these are the properties of your UserModel
-                                intUserID = (int)reader["intUserID"],
-                                strFirstName = reader["strFirstName"].ToString(),
-                                strLastName = reader["strLastName"].ToString(),
-                                strEmail = reader["strEmail"].ToString(),
-                                strPassword = reader["strPassword"].ToString(),
-                                intUserRoleID = (int)reader["intUserRoleID"]
+                                userModel.intUserID = (int)reader["intUserID"];
+                                userModel.strFirstName = reader["strFirstName"].ToString();
+                                userModel.strLastName = reader["strLastName"].ToString();
+                                userModel.strEmail = reader["strEmail"].ToString();
+                                userModel.strPassword = reader["strPassword"].ToString();
+                                userModel.intUserRoleID = (int)reader["intUserRoleID"];
                             };
                         }
                     }
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     // Handle any exceptions, log them, etc.
                     ModelState.AddModelError("", "An error occurred while processing your request.");
                     return View();
                 }
             }
 
-            if (userModel != null)
-            {
+            if (userModel != null) {
                 // User found, check their role
-                if (userModel.intUserRoleID == 1)
-                {  // Store userModel in TempData before redirecting
+                if (userModel.intUserRoleID == 1) {  // Store userModel in TempData before redirecting
                     TempData["UserModel"] = userModel;
                     // Redirect to the customer account view
                     return RedirectToAction("CustomerAccount", "Account");
                 }
-                else if (userModel.intUserRoleID == 2)
-                {
+                else if (userModel.intUserRoleID == 2) {
                     // Redirect to the admin view
                     return RedirectToAction("Admin", "Account");
                 }
-                else
-                {
+                else {
                     return View();
                 }
             }
-            else
-            {
+            else {
                 // User not found or password does not match
                 ModelState.AddModelError("", "Can't find an account with those credentials.");
                 return View();
@@ -95,9 +80,8 @@ namespace SobeeYou.Controllers
         }
 
         // GET: Customer Account View
-        public ActionResult CustomerAccount()
-        {
-            var userModel = TempData["UserModel"] as UserModel;
+        public ActionResult CustomerAccount() {
+            var userModel = TempData["UserModel"] as TUser;
             //do some SQL to get the user's orders, etc.
 
 
@@ -106,24 +90,20 @@ namespace SobeeYou.Controllers
 
 
         // GET: ForgotPassword
-        public ActionResult ForgotPassword()
-        {
+        public ActionResult ForgotPassword() {
             // Simply return the view for now
             return View();
         }
 
         // GET: Register
-        public ActionResult Register()
-        {
+        public ActionResult Register() {
             // Simply return the view for registering a new user
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken] // Protect against CSRF attacks
-        public ActionResult Register(UserModel usermdl)
-        {
-            if (ModelState.IsValid)
-            {
+        public ActionResult Register(TableModels usermdl) {
+            if (ModelState.IsValid) {
                 // Your code to handle registration, like adding the user to the database
             }
 

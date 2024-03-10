@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 
 namespace SobeeYou.Models {
-    public class CartItemProductJoin {
+    public class CartItemDTO {
         public int intProductID { get; set; }
         public int intQuantity { get; set; }
         public DateTime dtmDateAdded { get; set; }

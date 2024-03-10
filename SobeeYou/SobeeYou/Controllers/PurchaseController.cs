@@ -14,7 +14,7 @@ namespace SobeeYou.Controllers
         // GET: Purchase
         public ActionResult Index()
         {
-            List<ProductsModel> products = new List<ProductsModel>();
+            List<TProduct> products = new List<TProduct>();
 
             using (SqlConnection conn = new SqlConnection())
             {
@@ -26,7 +26,7 @@ namespace SobeeYou.Controllers
                 {
                     while (reader.Read())
                     {
-                        products.Add(new ProductsModel
+                        products.Add(new TProduct
                         {
                             intProductID = (int)reader["intProductID"],
                             strName = reader["strName"].ToString(),
