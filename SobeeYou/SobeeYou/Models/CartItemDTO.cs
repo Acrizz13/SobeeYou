@@ -9,6 +9,6 @@ namespace SobeeYou.Models {
         public int intQuantity { get; set; }
         public DateTime dtmDateAdded { get; set; }
         public string strProductName { get; set; }
-        public string decPrice { get; set; }
+        public decimal decPrice { get; set; }
     }
 }

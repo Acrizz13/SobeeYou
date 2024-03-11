@@ -27,7 +27,7 @@ namespace SobeeYou.Controllers {
         private decimal CalculateTotalPrice(List<CartItemDTO> cartItems) {
             decimal totalPrice = 0;
             foreach (var item in cartItems) {
-                decimal itemPrice = decimal.Parse(item.decPrice);
+                decimal itemPrice = item.decPrice;
                 totalPrice += itemPrice * item.intQuantity;
             }
             return totalPrice;
@@ -103,7 +103,7 @@ namespace SobeeYou.Controllers {
                     cmd.Parameters.AddWithValue("@intOrderID", orderId);
                     cmd.Parameters.AddWithValue("@intProductID", item.intProductID);
                     cmd.Parameters.AddWithValue("@intQuantity", item.intQuantity);
-                    cmd.Parameters.AddWithValue("@monPricePerUnit", decimal.Parse(item.decPrice));
+                    cmd.Parameters.AddWithValue("@monPricePerUnit", item.decPrice);
                     cmd.ExecuteNonQuery();
                 }
             }

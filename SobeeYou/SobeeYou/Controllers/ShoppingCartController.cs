@@ -58,7 +58,7 @@ namespace SobeeYou.Controllers {
             using (var context = new TableModels()) {
                 decimal totalPrice = context.TCartItems
                     .Where(ci => ci.intShoppingCartID == intShoppingCartID)
-                    .Sum(ci => ci.intQuantity * decimal.Parse(ci.Product.strPrice));
+                    .Sum(ci => ci.intQuantity * ci.Product.decPrice);
 
                 return totalPrice;
             }
@@ -181,7 +181,7 @@ namespace SobeeYou.Controllers {
                         intQuantity = ci.intQuantity,
                         dtmDateAdded = ci.dtmDateAdded,
                         strProductName = ci.Product.strName,
-                        decPrice = ci.Product.strPrice
+                        decPrice = ci.Product.decPrice
                     })
                     .OrderBy(ci => ci.dtmDateAdded)
                     .ToList();

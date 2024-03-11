@@ -135,8 +135,8 @@ namespace SobeeYou.Models {
                 .IsUnicode(false);
 
             modelBuilder.Entity<TProduct>()
-                .Property(e => e.strPrice)
-                .IsUnicode(false);
+                .Property(e => e.decPrice)
+                .HasPrecision(10, 2);
 
             modelBuilder.Entity<TProduct>()
                 .Property(e => e.strStockAmount)

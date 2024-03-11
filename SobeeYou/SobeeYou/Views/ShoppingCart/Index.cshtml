@@ -8,16 +8,8 @@
 
 	// Calculate total price
 	foreach (var item in Model) {
-		decimal itemPrice;
-		if (decimal.TryParse(item.decPrice, out itemPrice)) {
-			totalPrice += item.intQuantity * itemPrice;
-		}
-		else {
-			// Handle invalid price format
-			// You can log an error, display a message, or take appropriate action
-		}
+		totalPrice += item.intQuantity * item.decPrice;
 	}
-}
 }
 
 
@@ -59,7 +51,7 @@
 	@foreach (var item in Model) {
 		<tr>
 			<td>@item.strProductName</td>
-			<td>@decimal.Parse(item.decPrice)</td> <!-- Convert price string to decimal -->
+			<td>@item.decPrice</td>
 			<td>
 				<!-- Display quantity as a text element with a specific class -->
 				<span class="quantity-text" data-product-id="@item.intProductID">@item.intQuantity</span>
