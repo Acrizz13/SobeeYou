@@ -1,6 +1,6 @@
 ﻿@{
 
-	List<SobeeYou.Models.CartItemProductJoin> cartItems = (List<SobeeYou.Models.CartItemProductJoin>)ViewBag.CartItems;
+	List<SobeeYou.Models.CartItemDTO> cartItems = (List<SobeeYou.Models.CartItemDTO>)ViewBag.CartItems;
 	decimal totalPrice = (decimal)ViewBag.TotalPrice;
 }
 
@@ -29,7 +29,7 @@
 									<h6 class="my-0">@item.strProductName</h6>
 									<small class="text-muted">Quantity: @item.intQuantity</small>
 								</div>
-								<span class="text-muted">@decimal.Parse(item.decPrice)</span>
+								<span class="text-muted">@item.decPrice</span>
 							</li>
 						}
 						<li class="list-group-item d-flex justify-content-between bg-light">
@@ -103,7 +103,7 @@
 						<input type="checkbox" class="custom-control-input" id="same-address">
 						<label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
 					</div>
-					@*<div id="shipping-address-form">
+					<div id="shipping-address-form">
 						<h4 class="mb-3">Shipping address</h4>
 						<div class="row">
 							<div class="col-md-6 mb-3">
@@ -152,7 +152,7 @@
 							<label for="shipping-instructions">Special Instructions <span class="text-muted">(Optional)</span></label>
 							<textarea class="form-control" id="shipping-instructions" rows="3"></textarea>
 						</div>
-					</div>*@
+					</div>
 					<!-- Add more fields for the shipping address form -->
 
 					<div class="custom-control custom-checkbox">

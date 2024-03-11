@@ -6,7 +6,7 @@ using System.Linq;
 namespace SobeeYou.Models {
     public partial class TableModels : DbContext {
         public TableModels()
-            : base("name=TableModels") {
+            : base("name=TableModels1") {
         }
 
         public virtual DbSet<TAdmin> TAdmins { get; set; }
@@ -135,11 +135,11 @@ namespace SobeeYou.Models {
                 .IsUnicode(false);
 
             modelBuilder.Entity<TProduct>()
-                .Property(e => e.decPrice)
-                .HasPrecision(10, 2);
+                .Property(e => e.strStockAmount)
+                .IsUnicode(false);
 
             modelBuilder.Entity<TProduct>()
-                .Property(e => e.strStockAmount)
+                .Property(e => e.strPrice)
                 .IsUnicode(false);
 
             modelBuilder.Entity<TPromotion>()

@@ -17,11 +17,11 @@ namespace SobeeYou.Models {
 
         public int intUserID { get; set; }
 
-        public DateTime? dtmOrderDate { get; set; }
+        public DateTime dtmOrderDate { get; set; }
 
-        public decimal? decTotalAmount { get; set; }
+        public decimal decTotalAmount { get; set; }
 
-        public int? intShippingStatusID { get; set; }
+        public int intShippingStatusID { get; set; }
 
         [StringLength(255)]
         public string strShippingAddress { get; set; }
@@ -29,7 +29,7 @@ namespace SobeeYou.Models {
         [StringLength(50)]
         public string strTrackingNumber { get; set; }
 
-        public int? intPaymentMethod { get; set; }
+        public int intPaymentMethod { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TOrderItem> TOrderItems { get; set; }

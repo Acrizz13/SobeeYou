@@ -26,11 +26,12 @@ namespace SobeeYou.Models {
 
         [Required]
         [StringLength(255)]
+        public string strStockAmount { get; set; }
+
         public decimal decPrice { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        public string strStockAmount { get; set; }
+        [StringLength(50)]
+        public string strPrice { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TCartItem> TCartItems { get; set; }

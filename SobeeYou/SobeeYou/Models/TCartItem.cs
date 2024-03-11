@@ -18,10 +18,8 @@ namespace SobeeYou.Models {
 
         public DateTime dtmDateAdded { get; set; }
 
-
-
         public virtual TProduct Product { get; set; }
 
-        public virtual TShoppingCart ShoppingCart { get; set; }
+        public virtual TShoppingCart TShoppingCart { get; set; }
     }
 }
