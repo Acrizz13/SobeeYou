@@ -10,7 +10,6 @@ using System.Web.Mvc;
 namespace SobeeYou.Controllers {
     public class PurchaseController : Controller {
         // GET: Purchase
-        // GET: Purchase
         public ActionResult Index() {
             using (var context = new TableModels()) {
                 // Retrieve the required product information using LINQ to Entities
