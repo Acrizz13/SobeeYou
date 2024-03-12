@@ -1,54 +1,118 @@
 ﻿@model SobeeYou.Models.UserModel
 
-@{
-    Layout = null;
-}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account</title>
-    <link rel="stylesheet" href="~/Content/styles.css">
+    <title>Registration Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .registration-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .registration-container h1 {
+                text-align: center;
+                color: #333333;
+            }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+            .form-group label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #cccccc;
+                border-radius: 3px;
+            }
+/*
+        .error-message {
+            background-color: #ff9999;
+            color: #ff0000;
+            padding: 10px;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+*/
+        .register-button {
+            background-color: #8a2be2;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .registration-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+            .registration-footer a {
+                color: #8a2be2;
+                text-decoration: none;
+                margin: 0 10px;
+            }
+    </style>
 </head>
 <body>
-    <div class="login-container">
-        <h1>Create an account</h1>
+    <div class="registration-container">
+        <h1>Register</h1>
         @using (Html.BeginForm("Register", "Account", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "error-message" })
 
             <div class="form-group">
-                @Html.LabelFor(model => model.strFirstName)
-                @Html.EditorFor(model => model.strFirstName, new { htmlAttributes = new { @class = "form-control", @id = "firstname" } })
-                @Html.ValidationMessageFor(model => model.strFirstName)
+                @Html.LabelFor(m => m.strFirstName)
+                @Html.TextBoxFor(m => m.strFirstName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.strFirstName, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.strLastName)
-                @Html.EditorFor(model => model.strLastName, new { htmlAttributes = new { @class = "form-control", @id = "lastname" } })
-                @Html.ValidationMessageFor(model => model.strLastName)
+                @Html.LabelFor(m => m.strLastName)
+                @Html.TextBoxFor(m => m.strLastName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.strLastName, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.strEmail)
-                @Html.EditorFor(model => model.strEmail, new { htmlAttributes = new { @class = "form-control", @id = "email" } })
-                @Html.ValidationMessageFor(model => model.strEmail)
+                @Html.LabelFor(m => m.strEmail)
+                @Html.TextBoxFor(m => m.strEmail, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.strEmail, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.strPassword)
-                @Html.EditorFor(model => model.strPassword, new { htmlAttributes = new { @class = "form-control", @type = "password", @id = "password" } })
-                @Html.ValidationMessageFor(model => model.strPassword)
+                @Html.LabelFor(m => m.strPassword)
+                @Html.PasswordFor(m => m.strPassword, new { @class = "form-control" }) 
+                @Html.ValidationMessageFor(m => m.strPassword, "", new { @class = "text-danger" })
             </div>
-
-            <button type="submit" class="login-button">SIGN UP</button>
+          
+            <button type="submit" class="register-button">REGISTER</button>
+            <div class="registration-footer">
+                <a href="@Url.Action("Index", "Account")">Already have an account? Login</a>
+            </div>
         }
-
-        <div class="login-footer">
-            <p>Returning Customer? <a href="@Url.Action("Index", "Account")">Login</a></p>
-        </div>
     </div>
 </body>
 </html>

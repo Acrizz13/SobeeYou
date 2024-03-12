@@ -130,6 +130,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="Models\CartItemDTO.cs" />
     <Compile Include="Models\Table Models\TableModels.cs" />
     <Compile Include="Models\Table Models\TAdmin.cs" />
@@ -163,6 +164,16 @@
     <Compile Include="Models\Table Models\TTicketStatu.cs" />
     <Compile Include="Models\Table Models\TUser.cs" />
     <Compile Include="Models\Table Models\TUserRole.cs" />
+=======
+    <Compile Include="Models\CartItems.cs" />
+    <Compile Include="Models\MasterModel.cs" />
+    <Compile Include="Models\OrderItems.cs" />
+    <Compile Include="Models\Orders.cs" />
+    <Compile Include="Models\ProductsModel.cs" />
+    <Compile Include="Models\RegisterViewModel.cs" />
+    <Compile Include="Models\ShoppingCart.cs" />
+    <Compile Include="Models\UserModel.cs" />
+>>>>>>> origin/3.9-3.10RegisterFix
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

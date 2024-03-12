@@ -4,13 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .login-container h1 {
+                text-align: center;
+                color: #333333;
+            }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+            .form-group label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #cccccc;
+                border-radius: 3px;
+            }
+
+        .error-message {
+            background-color: #ff9999;
+            color: #ff0000;
+            padding: 10px;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .login-button {
+            background-color: #8a2be2;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+            .login-footer a {
+                color: #8a2be2;
+                text-decoration: none;
+                margin: 0 10px;
+            }
+    </style>
 </head>
 <body>
     <div class="login-container">
         <h1>Login</h1>
-        <!-- Update the action attribute to use the Url.Action helper -->
         <form action="@Url.Action("Login", "Account")" method="post">
+            @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+            {
+                <div class="error-message">@ViewBag.ErrorMessage</div>
+            }
             <div class="form-group">
                 <label for="email">Email address*</label>
                 <input type="email" id="email" name="email" required>
@@ -21,7 +92,6 @@
             </div>
             <button type="submit" class="login-button">LOGIN</button>
             <div class="login-footer">
-                <!-- These links will use the Url.Action helper to generate the correct URL -->
                 <a href="@Url.Action("ForgotPassword", "Account")">Forgot your password?</a>
                 <a href="@Url.Action("Register", "Account")">New Customer? Sign up</a>
             </div>
