@@ -39,7 +39,7 @@
         <tr>
             <td>@item.intProductID</td>
             <td>@item.strName</td>
-            <td>@item.strPrice</td>
+            <td>@item.decPrice</td>
             <td>@item.strStockAmount</td>
             <td>
                 <img src="@Url.Content("~/Content/ProductImages/" + item.strName.Replace(" ", "") + ".jpg")" alt="Product Image" style="width:100px; height:auto;">
@@ -56,7 +56,7 @@
 				<button class="add-to-cart-btn"
 						data-product-id="@item.intProductID"
 						data-product-name="@item.strName"
-						data-product-price="@item.strPrice"
+						data-product-price="@item.decPrice"
 						data-product-stock="@item.strStockAmount">
 					Add to Cart
 				</button>
