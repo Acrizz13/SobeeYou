@@ -51,19 +51,23 @@ namespace SobeeYou.Controllers {
         }
 
 
-
         public decimal GetTotalPrice() {
             int intShoppingCartID = 2; // Replace with the actual ShoppingCartID
+            decimal totalPrice = 0;
 
-            using (var context = new TableModels()) {
-                decimal totalPrice = context.TCartItems
-                    .Where(ci => ci.intShoppingCartID == intShoppingCartID)
-                    .Sum(ci => ci.intQuantity * ci.Product.decPrice);
+            if (GetTotalCartItems() != 0) {
+                using (var context = new TableModels()) {
+                    totalPrice = context.TCartItems
+                        .Where(ci => ci.intShoppingCartID == intShoppingCartID)
+                        .Sum(ci => (decimal?)ci.intQuantity * ci.Product.decPrice ?? 0);
 
+                    return totalPrice;
+                }
+            }
+            else {
                 return totalPrice;
             }
         }
-
 
 
 

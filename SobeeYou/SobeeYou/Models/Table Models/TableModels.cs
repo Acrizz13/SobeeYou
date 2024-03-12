@@ -30,7 +30,7 @@ namespace SobeeYou.Models {
         public virtual DbSet<TProductRecommendation> TProductRecommendations { get; set; }
         public virtual DbSet<TProduct> TProducts { get; set; }
         public virtual DbSet<TPromotion> TPromotions { get; set; }
-        public virtual DbSet<Trace> TRaces { get; set; }
+        public virtual DbSet<TRace> TRaces { get; set; }
         public virtual DbSet<TReview> TReviews { get; set; }
         public virtual DbSet<TShippingMethod> TShippingMethods { get; set; }
         public virtual DbSet<TShippingStatu> TShippingStatus { get; set; }
@@ -150,7 +150,7 @@ namespace SobeeYou.Models {
                 .Property(e => e.strDiscountPercentage)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Trace>()
+            modelBuilder.Entity<TRace>()
                 .Property(e => e.strRace)
                 .IsUnicode(false);
 

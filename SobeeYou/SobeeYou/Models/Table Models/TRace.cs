@@ -1,5 +1,4 @@
-namespace SobeeYou.Models
-{
+namespace SobeeYou.Models {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -7,8 +6,7 @@ namespace SobeeYou.Models
     using System.Data.Entity.Spatial;
 
     [Table("db_owner.TRaces")]
-    public partial class Trace
-    {
+    public partial class TRace {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int intRaceID { get; set; }
