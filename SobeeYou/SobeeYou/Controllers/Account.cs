@@ -64,22 +64,27 @@ namespace SobeeYou.Controllers {
         }
 
 
-
-
-
-        // GET: Customer Account View
         public ActionResult CustomerAccount()
         {
-            if (Session["TUser"] is TUser userModel)
+            var TUser = Session["TUser"] as TUser;
+
+            if (TUser != null)
             {
-                // User model is available, pass it to the view
-                return View(userModel);
+                using (var context = new TableModels())
+                {
+                    // Retrieve the user from the database, including their orders
+                    var user = context.TUsers.Include("TOrders").FirstOrDefault(u => u.intUserID == TUser.intUserID);
+
+                    if (user != null)
+                    {
+                        // Pass the user model to the view
+                        return View(user);
+                    }
+                }
             }
-            else
-            {
-                // User model not available, maybe session expired or user not logged in
-                return RedirectToAction("Index", "Account");
-            }
+
+            // If the user is not logged in or the user is not found, redirect to the login page
+            return RedirectToAction("Index", "Account");
         }
 
 
