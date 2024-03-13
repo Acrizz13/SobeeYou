@@ -7,52 +7,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Account</title>
     <link rel="stylesheet" href="~/Content/styles.css">
+    <style>
+        .account-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .account-section {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 48%;
+        }
+
+        .account-info {
+            margin-right: 20px;
+        }
+
+            .account-info p {
+                margin-bottom: 10px;
+            }
+
+            .account-info label {
+                display: inline-block;
+                width: 120px;
+                font-weight: bold;
+            }
+
+            .account-info input {
+                width: 200px;
+            }
+    </style>
 </head>
 <body>
     <div class="account-container">
-        <h2>Good evening, @Model.strFirstName</h2>
-        <div class="account-tabs">
-            <ul>
-                <li><a href="#accountInfo">Account</a></li>
-                <li><a href="#orders">Orders</a></li>
-                <!-- Other tabs can be added here -->
-            </ul>
-        </div>
-        <div id="accountInfo">
-            <h3>Account Information</h3>
-            <button id="editButton">Edit Profile Information</button>
+        <div class="account-info account-section">
+            <h2>Account Information</h2>
             <p>
-                <input type="hidden" id="currentUserID" value="@Model.intUserID" />
-                <label for="firstName"><strong>First Name:</strong></label>
+                <label>First Name:</label>
                 <input type="text" id="strfirstName" value="@Model.strFirstName" readonly>
             </p>
             <p>
-                <label for="lastName"><strong>Last Name:</strong></label>
+                <label>Last Name:</label>
                 <input type="text" id="strlastName" value="@Model.strLastName" readonly>
             </p>
             <p>
-                <label for="email"><strong>Email:</strong></label>
+                <label>Email:</label>
                 <input type="text" id="strEmail" value="@Model.strEmail" readonly>
             </p>
             <p>
-                <label for="password"><strong>Password:</strong></label>
+                <label>Password:</label>
                 <input type="password" id="strPassword" value="@Model.strPassword" readonly>
             </p>
             <p>
-                <label for="billingAddress"><strong>Billing Address:</strong></label>
+                <label>Billing Address:</label>
                 <input type="text" id="strBillingAddress" value="@Model.strBillingAddress" readonly>
             </p>
             <p>
-                <label for="shippingAddress"><strong>Shipping Address:</strong></label>
+                <label>Shipping Address:</label>
                 <input type="text" id="strShippingAddress" value="@Model.strShippingAddress" readonly>
             </p>
+            <button id="editButton">Edit Profile</button>
             <button id="saveChanges" style="display: none;">Save Changes</button>
         </div>
-        <div id="orders" style="display:none;">
-            <h3>Your Orders</h3>
-            <!-- Order information will go here -->
+
+        <div class="order-history account-section">
+            <h2>Order History</h2>
+            @if (Model.TOrders != null && Model.TOrders.Any())
+            {
+                <ul>
+                    @foreach (var order in Model.TOrders)
+                    {
+                        <li>Order ID: @order.intOrderID - Date: @order.dtmOrderDate.ToShortDateString()</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>You have no order history.</p>
+            }
         </div>
-        <!-- Other sections can be added here -->
     </div>
 
     <script>
@@ -61,7 +95,7 @@
         var saveChangesButton = document.getElementById("saveChanges");
 
         // Get all the input fields
-        var inputFields = document.querySelectorAll("#accountInfo input[type='text'], #accountInfo input[type='password']");
+        var inputFields = document.querySelectorAll(".account-info input");
 
         // Handle edit button click
         editButton.addEventListener("click", function () {
@@ -76,7 +110,7 @@
 
         // Handle save changes button click
         saveChangesButton.addEventListener("click", function () {
-            var currentUserID = document.getElementById("currentUserID").value;
+            var currentUserID = @Model.intUserID;
             var updatedData = {};
 
             // Collect the updated values from the input fields
