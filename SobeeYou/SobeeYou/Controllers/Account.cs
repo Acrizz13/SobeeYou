@@ -13,63 +13,83 @@ using System.Web.Mvc;
 namespace SobeeYou.Controllers {
     public class AccountController : Controller {
         // GET: Login
-        public ActionResult Index() {
-            // Check if user is already logged in
-            if (User.Identity.IsAuthenticated) {
-                // Get the user's role
-                int userRoleId = GetUserRoleId();
-
-                // Direct user based on role
-                if (userRoleId == 1) {
-                    // Redirect to the customer account view
+        public ActionResult Index()
+        {
+            if (Session["UserID"] != null && Session["UserRoleID"] != null)
+            {
+                // Check user role and redirect accordingly
+                int userRoleId = (int)Session["UserRoleID"];
+                if (userRoleId == 1)
+                {
                     return RedirectToAction("CustomerAccount", "Account");
                 }
-                else if (userRoleId == 2) {
-                    // Redirect to the admin view
-                    return RedirectToAction("Admin", "Account");
+                else if (userRoleId == 2)
+                {
+                    return RedirectToAction("AdminDashBoard", "Account");
                 }
             }
-
-            // If not logged in, show the login view
+            // If no session exists, or role is not recognized, show the login view
             return View();
         }
 
-        // POST: Login
-        public ActionResult Login(string email, string password) {
-            using (var context = new TableModels()) {
-                var TUser = context.TUsers
-                    .FirstOrDefault(u => u.strEmail == email && u.strPassword == password);
+        public ActionResult Login(string email, string password)
+        {
+            using (var context = new TableModels())
+            {
+                var TUser = context.TUsers.FirstOrDefault(u => u.strEmail == email && u.strPassword == password);
 
-                if (TUser != null) {
-                    // User found, check their role
-                    if (TUser.intUserRoleID == 1) {
-                        // Store userModel in TempData before redirecting
-                        TempData["TUser"] = TUser;
-                        // Redirect to the customer account view
+                if (TUser != null)
+                {
+                    // Store TUser details in Session to keep them available across the user's session
+                    Session["TUser"] = TUser;
+                    Session["UserID"] = TUser.intUserID;
+                    Session["UserRoleID"] = TUser.intUserRoleID;
+
+                    // Redirect to the appropriate view based on role
+                    if (TUser.intUserRoleID == 1)
+                    {
                         return RedirectToAction("CustomerAccount", "Account");
                     }
-                    else if (TUser.intUserRoleID == 2) {
-                        // Redirect to the admin view
+                    else if (TUser.intUserRoleID == 2)
+                    {
                         return RedirectToAction("Admin", "Account");
                     }
                 }
-                else {
-                    // User not found or password does not match
+                else
+                {
                     ModelState.AddModelError("", "Can't find an account with those credentials.");
                     ViewBag.ErrorMessage = "Can't find an account with those credentials.";
                 }
             }
-
+            // If user not found, or if no role matches, redirect back to the login page (or return an appropriate view).
             return View("Index");
         }
 
-        // GET: Customer Account View
-        public ActionResult CustomerAccount() {
-            var userModel = TempData["TUser"] as TUser;
-            //do some SQL to get the user's orders, etc.
 
-            return View(userModel);
+        public ActionResult CustomerAccount()
+        {
+            var TUser = Session["TUser"] as TUser;
+
+            if (TUser != null)
+            {
+                using (var context = new TableModels())
+                {
+                    // Retrieve the user from the database, including their orders
+                    var user = context.TUsers.Include("TOrders").FirstOrDefault(u => u.intUserID == TUser.intUserID);
+
+                    if (user != null)
+                    {
+                        // Pass the user model to the view
+                        return View(user);
+                    }
+                }
+            }
+
+            // If the user is not logged in or the user is not found, redirect to the login page
+            return RedirectToAction("Index", "Account");
         }
+
+
 
         // GET: ResetPassword
         public ActionResult ResetPassword(int userId) {
@@ -252,6 +272,13 @@ namespace SobeeYou.Controllers {
                 }
             }
         }
+        public ActionResult Logout()
+        {
+            Session.Clear();  // Clears all session data
+            return RedirectToAction("Index", "Home");  // Redirect to home or login page
+        }
+
+
 
 
 
