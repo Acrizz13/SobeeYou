@@ -5,6 +5,8 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 
@@ -110,7 +112,8 @@ namespace SobeeYou.Controllers {
                 string resetLink = Url.Action("ResetPassword", "Account", new { userId = userModel.intUserID }, Request.Url.Scheme);
 
                 // Send the password reset email
-                SendPasswordResetEmail(userModel.strEmail, resetLink);
+                // SendPasswordResetEmail(userModel.strEmail, resetLink);
+                newEmailThing(userModel.strEmail, resetLink);
 
                 // Display a success message to the user
                 ViewBag.SuccessMessage = "An email with password reset instructions has been sent to your email address.";
@@ -123,28 +126,30 @@ namespace SobeeYou.Controllers {
             return View();
         }
 
-        private void SendPasswordResetEmail(string email, string resetLink) {
-            // Implement your email sending logic here
-            // You can use an email library like System.Net.Mail or a third-party email service
+        // Forgot password link sender 
+        private void newEmailThing(string userEmail, string resetLink) {
+            string workEmail = "eyassu.million@gmail.com"; // replace with sobee email
+            string fromPassword = "nkum abbn kcyz cvxs"; // replace with sobee app password
 
-            // Example using System.Net.Mail:
-            using (var mail = new System.Net.Mail.MailMessage()) {
-                mail.From = new System.Net.Mail.MailAddress("noreply@sobeeyou.com");
-                mail.To.Add(email);
-                mail.Subject = "Forgot Password - SoBee You!";
-                mail.Body = "Here is the link you requested to reset your password and any other of your profile information:<br><br>";
-                mail.Body += resetLink;
-                mail.IsBodyHtml = true;
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.EnableSsl = true;
+            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(workEmail, fromPassword);
 
-                using (var smtp = new System.Net.Mail.SmtpClient("smtp.gmail.com")) {
-                    //need to change this to the correct email and password when I get the correct email from the girls
-                    smtp.Port = 587;
-                    smtp.Credentials = new System.Net.NetworkCredential("sobeeyoutesting@gmail.com", "Soren1492");
-                    smtp.EnableSsl = true;
-                    smtp.Send(mail);
-                }
-            }
+            // Create the password reset email
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress(workEmail);
+            mailMessage.To.Add(userEmail);
+            mailMessage.Subject = "Forgot Password - SoBee You!";
+            mailMessage.Body = "Here is the link you requested to reset your password and any other of your profile information:<br><br>";
+
+            // Send the email
+            smtpClient.Send(mailMessage);
+
         }
+
+
 
         // GET: Register
         public ActionResult Register() {
