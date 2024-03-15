@@ -200,6 +200,7 @@
     <Content Include="Content\ProductImages\CherryChill.jpg" />
     <Content Include="Content\ProductImages\LimeLight.jpg" />
     <Content Include="Content\ProductImages\MangoMist.jpg" />
+    <Content Include="Content\stylesheets\PurchaseStyles.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />

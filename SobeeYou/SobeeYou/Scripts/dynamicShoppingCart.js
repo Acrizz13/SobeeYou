@@ -15,36 +15,36 @@
 	}
 
 	// function for adding products to shopping cart asynchronously
-	$(document).ready(function () {
-		$('.add-to-cart-btn').click(function () {
-			// Get the product details from the button's data attributes
-			var productId = $(this).data('product-id');
-			var quantity = parseInt($(this).closest('tr').find('.quantity-dropdown').val());
+	//$(document).ready(function () {
+	//	$('.add-to-cart-btn').click(function () {
+	//		// Get the product details from the button's data attributes
+	//		var productId = $(this).data('product-id');
+	//		var quantity = parseInt($(this).closest('tr').find('.quantity-dropdown').val());
 
-			// Create a new CartItems object
-			var newItem = {
-				intProductID: productId,
-				intQuantity: quantity,
-				dtmDateAdded: new Date() // Use the current date/time
-			};
+	//		// Create a new CartItems object
+	//		var newItem = {
+	//			intProductID: productId,
+	//			intQuantity: quantity,
+	//			dtmDateAdded: new Date() // Use the current date/time
+	//		};
 
-			// Make AJAX request to add the item to the cart
-			$.ajax({
-				url: '/ShoppingCart/AddToCart',
-				method: 'POST',
-				data: newItem, // Pass the new CartItems object as data
-				success: function (response) {
-					// Handle success response
-					alert('Item added to cart successfully');
-					updateCartCount();
-				},
-				error: function (xhr, status, error) {
-					// Handle error response
-					alert('Error adding item to cart: ' + error);
-				}
-			});
-		});
-	});
+	//		// Make AJAX request to add the item to the cart
+	//		$.ajax({
+	//			url: '/ShoppingCart/AddToCart',
+	//			method: 'POST',
+	//			data: newItem, // Pass the new CartItems object as data
+	//			success: function (response) {
+	//				// Handle success response
+	//				alert('Item added to cart successfully');
+	//				updateCartCount();
+	//			},
+	//			error: function (xhr, status, error) {
+	//				// Handle error response
+	//				alert('Error adding item to cart: ' + error);
+	//			}
+	//		});
+	//	});
+	//});
 
 
 	$(document).ready(function () {
