@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+
 	// Function to update shopping cart count
 	function updateCartCount() {
 		$.ajax({
@@ -14,41 +15,50 @@
 		});
 	}
 
-	// function for adding products to shopping cart asynchronously
-	//$(document).ready(function () {
-	//	$('.add-to-cart-btn').click(function () {
-	//		// Get the product details from the button's data attributes
-	//		var productId = $(this).data('product-id');
-	//		var quantity = parseInt($(this).closest('tr').find('.quantity-dropdown').val());
 
-	//		// Create a new CartItems object
-	//		var newItem = {
-	//			intProductID: productId,
-	//			intQuantity: quantity,
-	//			dtmDateAdded: new Date() // Use the current date/time
-	//		};
-
-	//		// Make AJAX request to add the item to the cart
-	//		$.ajax({
-	//			url: '/ShoppingCart/AddToCart',
-	//			method: 'POST',
-	//			data: newItem, // Pass the new CartItems object as data
-	//			success: function (response) {
-	//				// Handle success response
-	//				alert('Item added to cart successfully');
-	//				updateCartCount();
-	//			},
-	//			error: function (xhr, status, error) {
-	//				// Handle error response
-	//				alert('Error adding item to cart: ' + error);
-	//			}
-	//		});
-	//	});
-	//});
-
-
+	// add to cart ajax function
 	$(document).ready(function () {
-		// Handle click events for modify quantity buttons
+
+		$('.cs-item-form').submit(function (event) {
+			event.preventDefault(); // Prevent the default form submission
+
+			// Get the product details from the form's data attributes
+			var productId = $(this).data('product-id');
+			var productName = $(this).data('product-name');
+			var productPrice = $(this).data('product-price');
+			var quantity = parseInt($(this).find('.quantity-dropdown').val());
+
+			// Create a new CartItems object
+			var newItem = {
+				intProductID: productId,
+				strName: productName,
+				decPrice: productPrice,
+				intQuantity: quantity,
+				dtmDateAdded: new Date() // Use the current date/time
+			};
+
+			// Make AJAX request to add the item to the cart
+			$.ajax({
+				url: '/ShoppingCart/AddToCart',
+				method: 'POST',
+				data: newItem, // Pass the new CartItems object as data
+				success: function (response) {
+					// Handle success response
+					updateCartCount();
+					alert('Item added to cart successfully');
+				},
+				error: function (xhr, status, error) {
+					// Handle error response
+					alert('Error adding item to cart: ' + error);
+					console.log(item);
+				}
+			});
+		});
+	});
+
+
+	// Handle click events for modify quantity buttons
+	$(document).ready(function () {
 		$(".modify-quantity-btn").click(function () {
 			var productId = $(this).data("product-id");
 			var change = $(this).data("change");
@@ -62,6 +72,8 @@
 		});
 	});
 
+
+	// modify quantity function
 	function modifyQuantity(productId, change) {
 		$.ajax({
 			url: "/ShoppingCart/ModifyQuantity",
@@ -91,6 +103,8 @@
 		});
 	}
 
+
+	// removes item from cart
 	function removeFromCart(productId) {
 		$.ajax({
 			url: "/ShoppingCart/RemoveFromCart",
@@ -117,11 +131,13 @@
 		});
 	}
 
+
 	// Event listener for quantity elements
 	$('.quantity-text').on('input', function () {
 		// Calculate total price
 		updateTotalPrice();
 	});
+
 
 	// Function to update total price
 	function updateTotalPrice() {
@@ -137,6 +153,7 @@
 			}
 		});
 	}
+
 
 
 	$(document).ready(function () {
