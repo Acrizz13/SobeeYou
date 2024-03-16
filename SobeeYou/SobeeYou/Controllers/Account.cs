@@ -19,18 +19,65 @@ namespace SobeeYou.Controllers {
             {
                 // Check user role and redirect accordingly
                 int userRoleId = (int)Session["UserRoleID"];
+                
                 if (userRoleId == 1)
                 {
                     return RedirectToAction("CustomerAccount", "Account");
                 }
                 else if (userRoleId == 2)
                 {
+                    //need to create AdminDashBoard model where we get all necessary info for admin dashboard
+                    //get all orders, users, products, etc from method in TableModels named GetAdminDashBoardInfo
                     return RedirectToAction("AdminDashBoard", "Account");
                 }
             }
             // If no session exists, or role is not recognized, show the login view
             return View();
         }
+
+
+        public ActionResult AdminDashBoard()
+        {
+            var adminDashBoard = GetAdminDashBoardInfo();
+            return View(adminDashBoard);
+        }
+        public AdminDashboardViewModel GetAdminDashBoardInfo()
+        {
+            using (var context = new TableModels())
+            {
+                //I should probably just make these columns integers rather than strings in the database
+                // Load the product stock amounts into memory (consider efficiency here!)
+                var lowInventoryProductsCount = context.TProducts
+                    .AsEnumerable() // This will execute the query and bring the results into memory
+                    .Count(p => Convert.ToInt64(p.strStockAmount) < 10);
+                // Calculate average product rating in-memory
+                var reviews = context.TReviews.AsEnumerable();
+                var avgProductRating = reviews.Any() ? reviews.Average(r => Convert.ToDecimal(r.strRating)) : 0;
+
+                var thirtyDaysAgo = DateTime.Now.AddDays(-30);
+
+                var adminDashBoard = new AdminDashboardViewModel
+                {
+                    //need to make total customers coincide with orders where there is a unique customer id
+                    //need to make totalusers coincide with total customer accounts
+                    TotalCustomers = context.TUsers.Count(u => u.intUserRoleID != 2),
+                    NewCustomers = context.TUsers.Count(u => u.strDateCreated >= thirtyDaysAgo && u.intUserRoleID != 2),
+                    ActiveCustomers = context.TUsers.Count(u => u.strLastLoginDate >= thirtyDaysAgo && u.intUserRoleID != 2),
+                    TotalUsers = context.TUsers.Count(u => u.intUserRoleID == 2),
+                    TotalOrders = context.TOrders.Count(u => u.strOrderStatus == "Pending"),
+                    RecentRevenue = context.TOrders.Where(o => o.dtmOrderDate >= thirtyDaysAgo).Sum(o => o.decTotalAmount),
+                    TotalProducts = context.TProducts.Count(),
+                    LowInventoryProducts = lowInventoryProductsCount,
+                    AvgProductRating = avgProductRating,
+                    AdminUsers = context.TUsers.Count(u => u.intUserRoleID == 2),
+                    RecentSupportRequests = context.TCustomerServiceTickets.Count(t => t.dtmTimeOfSubmission >= thirtyDaysAgo)
+                };
+
+                return adminDashBoard;
+            }
+        }
+
+
 
         public ActionResult Login(string email, string password)
         {
@@ -41,7 +88,6 @@ namespace SobeeYou.Controllers {
                 if (TUser != null)
                 {
                     // Store TUser details in Session to keep them available across the user's session
-                    Session["TUser"] = TUser;
                     Session["UserID"] = TUser.intUserID;
                     Session["UserRoleID"] = TUser.intUserRoleID;
 
@@ -52,7 +98,7 @@ namespace SobeeYou.Controllers {
                     }
                     else if (TUser.intUserRoleID == 2)
                     {
-                        return RedirectToAction("Admin", "Account");
+                        return RedirectToAction("AdminDashBoard", "Account");
                     }
                 }
                 else
@@ -61,6 +107,7 @@ namespace SobeeYou.Controllers {
                     ViewBag.ErrorMessage = "Can't find an account with those credentials.";
                 }
             }
+
             // If user not found, or if no role matches, redirect back to the login page (or return an appropriate view).
             return View("Index");
         }
@@ -68,19 +115,23 @@ namespace SobeeYou.Controllers {
 
         public ActionResult CustomerAccount()
         {
-            var TUser = Session["TUser"] as TUser;
-
-            if (TUser != null)
+            if (Session["UserID"] != null && Session["UserRoleID"] != null)
             {
-                using (var context = new TableModels())
-                {
-                    // Retrieve the user from the database, including their orders
-                    var user = context.TUsers.Include("TOrders").FirstOrDefault(u => u.intUserID == TUser.intUserID);
+                int userId = (int)Session["UserID"];
+                int userRoleId = (int)Session["UserRoleID"];
 
-                    if (user != null)
+                if (userRoleId == 1)
+                {
+                    using (var context = new TableModels())
                     {
-                        // Pass the user model to the view
-                        return View(user);
+                        // Retrieve the user from the database, including their orders
+                        var user = context.TUsers.Include("TOrders").FirstOrDefault(u => u.intUserID == userId);
+
+                        if (user != null)
+                        {
+                            // Pass the user model to the view
+                            return View(user);
+                        }
                     }
                 }
             }
@@ -88,7 +139,6 @@ namespace SobeeYou.Controllers {
             // If the user is not logged in or the user is not found, redirect to the login page
             return RedirectToAction("Index", "Account");
         }
-
 
 
         // GET: ResetPassword
