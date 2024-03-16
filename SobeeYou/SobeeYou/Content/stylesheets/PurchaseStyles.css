@@ -1,0 +1,36 @@
+﻿.cs-container {
+	width: 100%;
+}
+
+.cs-listing {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-gap: 20px;
+}
+
+.cs-item {
+	text-align: left;
+	padding: 8px;
+	background-color: #f9f9f9;
+}
+
+	.cs-item:nth-child(even) {
+		background-color: #f2f2f2;
+	}
+
+.quantity-dropdown {
+	padding: 4px;
+	margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+	.cs-listing {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 480px) {
+	.cs-listing {
+		grid-template-columns: 1fr;
+	}
+}
