@@ -29,6 +29,9 @@ namespace SobeeYou.Models {
         [StringLength(50)]
         public string strTrackingNumber { get; set; }
 
+        [StringLength(50)]
+        public string strOrderStatus { get; set; }
+
         public int intPaymentMethod { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

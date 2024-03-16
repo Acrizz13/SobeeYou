@@ -139,6 +139,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AdminDashboardViewModel.cs" />
     <Compile Include="Models\CartItemDTO.cs" />
     <Compile Include="Models\ProductDTO.cs" />
     <Compile Include="Models\Table Models\TableModels.cs" />
