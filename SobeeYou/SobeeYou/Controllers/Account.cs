@@ -266,18 +266,25 @@ namespace SobeeYou.Controllers {
             }
         }
 
-        private bool RegisterUser(string firstName, string lastName, string email, string password) {
-            using (var context = new TableModels()) {
+        private bool RegisterUser(string firstName, string lastName, string email, string password)
+        {
+            using (var context = new TableModels())
+            {
                 var maxUserID = context.TUsers.Max(u => u.intUserID);
                 var newUserID = maxUserID + 1;
 
-                var newUser = new TUser {
+                var currentDateTime = DateTime.Now;
+
+                var newUser = new TUser
+                {
                     intUserID = newUserID,
                     intUserRoleID = 1,
                     strFirstName = firstName,
                     strLastName = lastName,
                     strEmail = email,
-                    strPassword = password
+                    strPassword = password,
+                    strLastLoginDate = currentDateTime,
+                    strDateCreated = currentDateTime
                 };
 
                 context.TUsers.Add(newUser);
