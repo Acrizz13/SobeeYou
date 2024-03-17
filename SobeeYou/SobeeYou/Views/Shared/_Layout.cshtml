@@ -13,6 +13,7 @@
 
 	<style>
 		body {
+			margin-top: 56px;
 		background-color: white;
 		}
 		/* Custom Navigation Bar Styles */
@@ -31,6 +32,9 @@
 				}
 
 
+		#cartIcon {
+			padding-right:10px;
+		}
 
 
 		.footer {
@@ -98,11 +102,12 @@
 	</style>
 </head>
 <body>
+
 	<nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark navbar-custom">
 		<div class="container">
 
 			<!-- bootstrap positioning styles in class-->
-			<span class="navbar-text position-absolute top-0 end-0">
+			<span class="navbar-text position-absolute top-0 end-0" id="cartIcon">
 				<!-- Shopping cart icon or text -->
 				<a href="#" class="nav-link text-light">
 					<i>@Html.ActionLink("Cart", "Index", "ShoppingCart", new { area = "" }, new { @class = "nav-link" })</i>
@@ -126,11 +131,15 @@
 			</div>
 		</div>
 	</nav>
-	<div>
+
+	@RenderSection("HeroSection", required: false)
+	@RenderSection("AboutUs", required: false)
+
+	<div class="container body-content">
 		@RenderBody()
 
 	</div>
-	
+
 
 	<footer class="footer">
 		<div class="footer-content">
