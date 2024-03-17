@@ -22,41 +22,57 @@
 	}
 
 	.hero-images {
+		position: relative;
 		display: flex;
-		width: 300%;
+		width: 100%;
 		height: 100%;
 		transition: transform 0.5s ease;
 	}
 
 		.hero-images img {
-			width: 33.33%;
+			width: 100%;
 			height: 100%;
 			object-fit: cover;
 		}
 
-	.arrow {
+	.overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.5);
+	}
+
+	.hero-text {
 		position: absolute;
 		top: 50%;
-		transform: translateY(-50%);
-		width: 40px;
-		height: 40px;
-		background-color: rgba(0, 0, 0, 0.5);
-		color: #fff;
-		font-size: 24px;
+		left: 50%;
+		transform: translate(-50%, -50%);
 		text-align: center;
-		line-height: 40px;
-		cursor: pointer;
-		z-index: 1;
+		color: #fff;
 	}
 
-	.arrow-left {
-		left: 20px;
-	}
+		.hero-text h1 {
+				color:white;
+			font-size: 48px;
+			margin-bottom: 20px;
+		}
 
-	.arrow-right {
-		right: 20px;
-	}
+		.hero-text p {
+			font-size: 24px;
+			margin-bottom: 30px;
+		}
 
+		.hero-text button {
+			padding: 12px 24px;
+			font-size: 18px;
+			background-color: #fff;
+			color: #000;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
 
 
 
@@ -160,12 +176,14 @@
 
 <div class="hero-section">
 	<div class="hero-images">
-		<img src="~/Content/HomeImages/hero/hero1.jpg" alt="Hero 1">
-		<img src="~/Content/HomeImages/hero/hero2.jpg" alt="Hero 2">
-		<img src="~/Content/HomeImages/hero/hero3.jpg" alt="Hero 3">
+		<img src="~/Content/HomeImages/hero/hero-pic1.jpg" alt="Hero 1">
+		<div class="overlay"></div>
+		<div class="hero-text">
+			<h1>A Toast to Mindful Moments</h1>
+			<p><p>Discover the perfect blend of natural ingredients and effervescent flavors, crafted to help you unwind and feel your best.</p></p>
+			<button>Shop Now</button>
+		</div>
 	</div>
-	<div class="arrow arrow-left">&lt;</div>
-	<div class="arrow arrow-right">&gt;</div>
 </div>
 
 
@@ -177,7 +195,7 @@
 
 		<div class="drink-section-text">
 			<p>DISCOVER THE STARTER PACK</p>
-			<h3>Apero Hour, Every Hour</h3>
+			<h3>Sobee Hour, Every Hour</h3>
 			<p>Experience all four of our functional, feel-good flavors in one 16-pack of convenient, ready-to-sip cans.</p>
 			<a href="#" class="shop-now-btn">Shop Now</a>
 		</div>
@@ -209,7 +227,7 @@
 	
 	<div class="instagram-link">
 		<h3>Follos Us On Instagram!</h3>
-		<p>instagram link</p>
+		<p>@@SobeeYou</p>
 	</div>
 </section>
 
@@ -228,7 +246,7 @@
 
 
 
-<script>
+@*<script>
 	const heroImages = document.querySelector('.hero-images');
 	const arrowLeft = document.querySelector('.arrow-left');
 	const arrowRight = document.querySelector('.arrow-right');
@@ -261,4 +279,4 @@
 	});
 
 	startTimer();
-</script>
+</script>*@
