@@ -1,9 +1,172 @@
 ﻿@{
     ViewBag.Title = "About";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
 
-    <p>Use this area to provide additional information.</p>
+<head>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css?family=Karla:400,700" rel="stylesheet">
+</head>
+
+<style>
+
+	.header {
+		position: absolute;
+		top: 30%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 1; /* Ensure the header appears above the image */
+		color: white; /* For visibility */
+		text-align: center;
+		font-size: 64px; /* Adjust font size as needed */
+	}
+
+
+
+	.beverage-images {
+
+		display: flex;
+		justify-content: center;
+		margin-bottom: 20px;
+		width: 100%;
+		height: calc(100vh - 56px); /* Adjust for navbar height */
+	}
+
+		.beverage-images img {
+			width: 100%;
+			height: 100vh;
+			margin: 0 0px;
+			object-fit: cover;
+		}
+
+	.mission {
+		height: 100%;
+		text-align: center;
+		font-family: font-size: 18px;
+		max-width: 600px;
+		margin: 0 auto;
+		padding-top: 206px; /* navbar height adjustment*/
+	}
+
+	.section-headers h3 {
+		border-bottom: solid black 2px;
+		font-weight: 700;
+	}
+
+
+
+	.features {
+		display: flex;
+
+		justify-content: space-around;
+		
+
+	}
+
+	.feature {
+		display: flex;
+
+		flex-direction: column;
+		align-items: center;
+		font-weight: 700;
+		font-size:24px;
+	}
+
+		.feature img {
+			width: 75px;
+			height: 75px;
+			margin-bottom: 10px;
+		}
+
+	.founders-letter {
+
+		display:flex;
+	}
+
+		.founders-letter h2 {
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
+
+	.founders-image img {
+		margin-bottom: 20px;
+		width: 450px;
+		height: 450px;
+		margin-right: 215px;
+	}
+
+	.letter-content h3 {
+		margin-bottom: 10px;
+		margin-top: -10px;
+		text-align: center;
+	}
+
+	.letter-content p {
+		font-size: 16px;
+		text-align: center;
+	}
+
+	body {
+		font-family: 'Karla', sans-serif;
+	}
+
+	section {	
+		padding-top: 150px;
+	
+	}
+
+
+
+</style>
+<main>
+
+	<h3 class="header">About Us</h3>
+		<div class="beverage-images">
+			<img src="~/Content/HomeImages/drinks.jpg" alt="Drinks">
+		</div>
+
+
+
+		<div class="container body-content">
+
+			<section class="mission section-headers">
+				<h3>OUR MISSION</h3>
+				<p class="">We Put The Fun In Functional, Inspired By The French Ethos Of Pleasure And Restraint, Sobae Is A Range Of Non-Alcoholic Aperatifs Made With Natural Adaptogens.</p>
+			</section>
+
+			<section class="features">
+				<div class="feature">
+					<img src="~/Content/HomeImages/svgs/egg.svg" alt="No artificial colors/flavors">
+					<span>NO ARTIFICIAL COLORS/FLAVORS</span>
+				</div>
+				<div class="feature">
+					<img src="~/Content/HomeImages/svgs/liquor.svg" alt="Pure extract">
+					<span>PURE EXTRACT</span>
+				</div>
+				<div class="feature">
+					<img src="~/Content/HomeImages/svgs/star.svg" alt="Ready to sip">
+					<span>READY TO SIP</span>
+				</div>
+				<div class="feature">
+					<img src="~/Content/HomeImages/svgs/no_drinks.svg" alt="Alcohol free">
+					<span>ALCOHOL FREE</span>
+				</div>
+			</section>
+
+			<section class="founders-letter section-headers">
+				<div class="founders-image">
+					<img src="~/Content/HomeImages/founders.png" alt="Drinks">
+				</div>
+
+				
+				<div class="letter-content">
+					<h3>Letter From The Founders</h3>
+					<p>Hello There!</p>
+					<p>Welcome To Sobee You, We're Thrilled To Introduce Ourselves As The Brains Behind This Exciting New Beverage Line Paige And Erin, Two Passionate Individuals With Diverse Backgrounds And A Shared Vision, We Set Out To Redefine The Concept Of Happy Hour With Our Uncompined Expertise And Enthusiasm, We Embarked On A Mission To Create Something Truly Remarkable - A Beverage That Captures The Essence Of Joy Without The Need For Alcohol.</p>
+					<p>Whether You're Unwinding After A Long Day Or Celebrating A Special Occasion, Our Beverages Are Here To Accompany You On Your Journey.						So Join Us, As We Raise A Glass To Joy, Connection, And The Endless Possibilities That Lie Ahead. Here's To Embracing Life's Moments With Gusto And Saying "Cheers!" To All That Sobee You Has To Offer.</p>
+					<p>Cheers, Paige & Erin</p>
+				</div>
+			</section>
+
+		</div>
 </main>

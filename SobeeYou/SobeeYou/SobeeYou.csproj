@@ -276,6 +276,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Classes\" />
+    <Folder Include="Content\HomeImages\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

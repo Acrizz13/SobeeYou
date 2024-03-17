@@ -12,6 +12,9 @@
 	<script src="~/Scripts/ajax files/dynamicShoppingCart.js"></script> <!-- Include the JavaScript file -->
 
 	<style>
+		body {
+		background-color: white;
+		}
 		/* Custom Navigation Bar Styles */
 		.navbar-custom {
 			background-color: #ff8c00; /* Orange background */
@@ -26,13 +29,79 @@
 				.navbar-custom .nav-link:hover {
 					color: #ffffff; /* Lighter shade or different color on hover */
 				}
+
+
+
+
+		.footer {
+			background-color: #000;
+			color: #fff;
+			padding: 40px 0;
+			font-family: Arial, sans-serif;
+		}
+
+		.footer-content {
+			display: flex;
+			justify-content: space-around;
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+
+		.footer-column {
+			flex: 1;
+			margin-right: 20px;
+		}
+
+			.footer-column h4 {
+				font-size: 18px;
+				font-weight: bold;
+				margin-bottom: 10px;
+			}
+
+			.footer-column ul {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+
+				.footer-column ul li {
+					margin-bottom: 5px;
+				}
+
+					.footer-column ul li a {
+						color: #fff;
+						text-decoration: none;
+						font-size: 14px;
+					}
+
+		.footer-bottom {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			max-width: 1200px;
+			margin: 20px auto 0;
+			padding-top: 20px;
+			border-top: 1px solid #fff;
+		}
+
+		.footer-text p {
+			font-size: 12px;
+			margin: 0;
+		}
+
+		.footer-links a {
+			color: #fff;
+			text-decoration: none;
+			font-size: 12px;
+			margin-left: 10px;
+		}
 	</style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark navbar-custom">
+	<nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark navbar-custom">
 		<div class="container">
 
-            <!-- bootstrap positioning styles in class-->
+			<!-- bootstrap positioning styles in class-->
 			<span class="navbar-text position-absolute top-0 end-0">
 				<!-- Shopping cart icon or text -->
 				<a href="#" class="nav-link text-light">
@@ -56,15 +125,58 @@
 				</ul>
 			</div>
 		</div>
-    </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        
-    </div>
+	</nav>
+	<div>
+		@RenderBody()
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+	</div>
+	
+
+	<footer class="footer">
+		<div class="footer-content">
+			<div class="footer-column">
+				<h4>EXPLORE</h4>
+				<ul>
+					<li><a href="#">Account</a></li>
+					<li><a href="#">Wholesale</a></li>
+					<li><a href="#">Email List</a></li>
+				</ul>
+			</div>
+			<div class="footer-column">
+				<h4>GET HELP</h4>
+				<ul>
+					<li><a href="#">FAQ</a></li>
+					<li><a href="#">Shipping &amp; Returns</a></li>
+					<li><a href="#">Track Your Order</a></li>
+					<li><a href="#">Refund Policy</a></li>
+					<li><a href="#">Terms Of Service</a></li>
+				</ul>
+			</div>
+			<div class="footer-column">
+				<h4>COMPANY</h4>
+				<ul>
+					<li><a href="#">About</a></li>
+					<li><a href="#">Product Reviews</a></li>
+					<li><a href="#">Contact</a></li>
+					<li><a href="#">Find US</a></li>
+					<li><a href="#">Press</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="footer-bottom">
+			<div class="footer-text">
+				<p>&copy;2024 Sobee You, Inc.</p>
+			</div>
+			<div class="footer-links">
+				<a href="#">Privacy Policy</a>
+				<a href="#">Terms Of Use</a>
+			</div>
+		</div>
+	</footer>
+
+
+	@Scripts.Render("~/bundles/jquery")
+	@Scripts.Render("~/bundles/bootstrap")
+	@RenderSection("scripts", required: false)
 </body>
 </html>
