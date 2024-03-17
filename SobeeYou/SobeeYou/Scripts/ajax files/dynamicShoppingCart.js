@@ -158,8 +158,9 @@
 
 	$(document).ready(function () {
 		// Hide the shipping address form by default
-		$("#shipping-address-form").hide();
+		//$("#shipping-address-form").hide();
 
+		$("#shipping-address-form").slideUp();
 		// Show/hide the shipping address form based on the checkbox state
 		$("#same-address").change(function () {
 			if (this.checked) {
