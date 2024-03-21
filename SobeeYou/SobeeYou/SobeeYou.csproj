@@ -233,6 +233,8 @@
     <Content Include="Content\bootstrap-grid.rtl.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <None Include="Properties\PublishProfiles\sobee - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\sobeeyou - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\ajax files\dynamicShoppingCart.js" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
