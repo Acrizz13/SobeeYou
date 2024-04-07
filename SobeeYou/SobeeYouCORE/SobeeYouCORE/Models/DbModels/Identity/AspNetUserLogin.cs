@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels.Identity;
 
-public partial class AspNetUserLogin
-{
+public partial class AspNetUserLogin {
+    [Key]
     public string LoginProvider { get; set; } = null!;
 
     public string ProviderKey { get; set; } = null!;

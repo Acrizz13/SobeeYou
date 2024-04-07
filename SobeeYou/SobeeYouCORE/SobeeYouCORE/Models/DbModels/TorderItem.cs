@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class TorderItem
-{
+public partial class TorderItem {
+    [Key]
     public int IntOrderItemId { get; set; }
 
     public int? IntOrderId { get; set; }

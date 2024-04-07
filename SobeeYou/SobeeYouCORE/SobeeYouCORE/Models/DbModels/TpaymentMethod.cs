@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class TpaymentMethod
-{
+public partial class TpaymentMethod {
+    [Key]
     public int IntPaymentMethod { get; set; }
 
     public string? StrPaymentMethodName { get; set; }

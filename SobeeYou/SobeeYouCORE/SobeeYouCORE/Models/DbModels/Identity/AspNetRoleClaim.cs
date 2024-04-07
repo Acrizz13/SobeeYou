@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels.Identity;
 
-public partial class AspNetRoleClaim
-{
+public partial class AspNetRoleClaim {
+    [Key]
     public int Id { get; set; }
 
     public string RoleId { get; set; } = null!;

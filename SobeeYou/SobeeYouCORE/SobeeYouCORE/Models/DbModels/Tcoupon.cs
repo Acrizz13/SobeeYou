@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class Tcoupon
-{
+public partial class Tcoupon {
+    [Key]
     public int IntCouponId { get; set; }
 
     public string StrCouponCode { get; set; } = null!;

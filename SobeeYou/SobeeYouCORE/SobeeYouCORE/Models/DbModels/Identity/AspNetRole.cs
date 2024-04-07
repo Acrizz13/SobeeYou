@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels.Identity;
 
 public partial class AspNetRole {
+    [Key]
     public string Id { get; set; } = null!;
 
     public string? Name { get; set; }

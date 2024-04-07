@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class TcartItem
-{
+public partial class TcartItem {
+    [Key]
     public int IntCartItemId { get; set; }
 
     public int? IntShoppingCartId { get; set; }
