@@ -1,0 +1,76 @@
+﻿.cs-container {
+	width: 100%;
+}
+
+.cs-listing {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-gap: 20px;
+}
+
+.cs-item {
+	text-align: left;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 4px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cs-image {
+	margin-bottom: 10px;
+}
+
+.cs-name {
+	font-size: 18px;
+	margin-bottom: 5px;
+}
+
+.cs-rating {
+	margin-bottom: 10px;
+}
+
+.star {
+	color: #ccc;
+	font-size: 20px;
+}
+
+	.star.filled {
+		color: #ffc107;
+	}
+
+.cs-actions {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 10px;
+}
+
+.cs-price {
+	font-weight: bold;
+}
+
+.quantity-dropdown {
+	padding: 4px;
+	margin-right: 10px;
+}
+
+.add-to-cart-btn {
+	padding: 8px 16px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+@media (max-width: 768px) {
+	.cs-listing {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 480px) {
+	.cs-listing {
+		grid-template-columns: 1fr;
+	}
+}
