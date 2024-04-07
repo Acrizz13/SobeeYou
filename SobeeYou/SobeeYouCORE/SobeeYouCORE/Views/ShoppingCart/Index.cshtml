@@ -1,0 +1,61 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ShoppingCartViewModel
+
+<!-- Use the properties of the view model in the view -->
+
+@{
+	ViewBag.Title = "Index";
+
+	// Initialize total price variable
+	decimal totalPrice = 0;
+
+	totalPrice = Model.TotalPrice;
+}
+
+
+<head>
+	<link rel="stylesheet" href="~/css/ShoppingCartStyles.css" asp-append-version="true" /> <!-- Include the stylesheet for this page-->
+
+</head>
+
+<h2>Items in user's cart</h2>
+
+<table>
+	<tr>
+		<th>Product Name</th>
+		<th>Price</th>
+		<th>Quantity</th>
+		<th>Action</th>
+	</tr>
+
+	<!-- loops through all products in the user's cart  -->
+	@foreach (var item in Model.CartItems) {
+		<tr>
+			<td>@item.strProductName</td>
+			<td>@item.decPrice</td>
+			<td>
+				<!-- Display quantity as a text element with a specific class -->
+				<span class="quantity-text" data-product-id="@item.intProductID">@item.intQuantity</span>
+			</td>
+			<td>
+				<button class="modify-quantity-btn" data-product-id="@item.intProductID" data-change="1">+</button>
+				<button class="modify-quantity-btn" data-product-id="@item.intProductID" data-change="-1">-</button>
+				<button class="remove-from-cart-btn" data-product-id="@item.intProductID">Remove</button>
+			</td>
+		</tr>
+	}
+	<tr>
+		<td colspan="2"></td>
+		<td>Total Price</td>
+		<td id="totalPrice">@totalPrice</td> <!-- Display total price -->
+	</tr>
+</table>
+
+
+<!-- Checkout button -->
+<a href="@Url.Action("Checkout", "ShoppingCart")"><button>Checkout</button></a>
+
+
+

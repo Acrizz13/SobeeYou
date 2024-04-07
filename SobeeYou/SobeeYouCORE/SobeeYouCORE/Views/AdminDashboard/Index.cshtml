@@ -1,0 +1,79 @@
+﻿@model SobeeYouCORE.Models.AdminDashboardViewModel
+
+@{
+    ViewBag.Title = "Admin Dashboard";
+}
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300..700&family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+
+
+
+</head>
+
+<h2>AdminDashboard</h2>
+
+<!-- Rest of the view code -->
+<!-- Row for Customer and Order Analysis -->
+<div class="row">
+
+    <!-- Customer Analysis Card -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Customer Analysis</div>
+            <div class="card-body">
+                <!-- Customer analysis information -->
+                <p>Total Customers: @Model.TotalCustomers</p>
+                <p>New Customers (Last 30 Days): @Model.NewCustomers</p>
+                <p>Active Customers: @Model.ActiveCustomers</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Analysis Card -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Order Analysis</div>
+            <div class="card-body">
+                <!-- Order analysis information -->
+                <p>Total Orders: @Model.TotalOrders</p>
+                <p>Orders Pending Fulfillment: @Model.PendingOrders</p>
+                <p>Revenue (Last 30 Days): @Model.RecentRevenue</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Row for Product and User Analysis -->
+<div class="row mt-4">
+
+    <!-- Product Analysis Card -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Product Analysis</div>
+            <div class="card-body">
+                <!-- Product analysis information -->
+                <p>Total Products: @Model.TotalProducts</p>
+                <p>Low Inventory Products: @Model.LowInventoryProducts</p>
+                <p>Average Product Rating: @Model.AvgProductRating</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Analysis Card -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">User Analysis</div>
+            <div class="card-body">
+                <!-- User analysis information -->
+                <p>Total Users: @Model.TotalUsers</p>
+                <p>Admin Users: @Model.AdminUsers</p>
+                <p>Customer Support Requests (Last 30 Days): @Model.RecentSupportRequests</p>
+            </div>
+        </div>
+    </div>
+
+</div>
