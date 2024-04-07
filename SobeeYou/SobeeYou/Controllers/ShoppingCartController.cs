@@ -74,7 +74,7 @@ namespace SobeeYou.Controllers {
         [HttpPost]
         public ActionResult AddToCart(TCartItem newItem) {
             try {
-                newItem.intShoppingCartID = 2; // Replace with the actual ShoppingCartID
+                newItem.intShoppingCartID = 56; // Using the hardcoded ID for demonstration
                 newItem.dtmDateAdded = DateTime.Now;
 
                 using (var context = new TableModels()) {
@@ -86,8 +86,7 @@ namespace SobeeYou.Controllers {
                     if (existingCartItem != null) {
                         // Update the quantity of the existing cart item
                         existingCartItem.intQuantity += newItem.intQuantity;
-                    }
-                    else {
+                    } else {
                         // Add a new cart item
                         context.TCartItems.Add(newItem);
                     }
@@ -95,17 +94,25 @@ namespace SobeeYou.Controllers {
                     context.SaveChanges();
                 }
 
-                return Content("Item added to cart successfully");
+                TempData["SuccessMessage"] = "Item added to cart successfully.";
+                return RedirectToAction("Details", "Purchase", new { id = newItem.intProductID }); // Replace "YourControllerName" with the name of the controller that has the Details view
             }
             catch (Exception ex) {
-                return Content("An error occurred: " + ex.Message);
+                // Dig to the innermost exception
+                var innermostException = ex;
+                while (innermostException.InnerException != null) {
+                    innermostException = innermostException.InnerException;
+                }
+
+                TempData["ErrorMessage"] = "An error occurred: " + innermostException.Message;
+                return RedirectToAction("Details", "YourControllerName", new { id = newItem.intProductID }); // Adjust accordingly
             }
         }
 
 
 
 
-        [HttpPost]
+		[HttpPost]
         public ActionResult RemoveFromCart(int productId) {
             try {
                 int shoppingCartId = 2; // Replace with the actual ShoppingCartID

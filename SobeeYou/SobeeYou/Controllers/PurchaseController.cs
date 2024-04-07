@@ -28,6 +28,31 @@ namespace SobeeYou.Controllers {
             }
         }
 
+		public ActionResult Details(int id)
+		{
+			using (var context = new TableModels())
+			{
+				var product = context.TProducts
+					.Where(p => p.intProductID == id)
+					.Select(p => new ProductDTO
+					{
+						intProductID = p.intProductID,
+						strName = p.strName,
+						decPrice = p.decPrice,
+						strStockAmount = p.strStockAmount,
+						// Add additional properties as needed
+					})
+					.FirstOrDefault();
 
-    }
+				if (product == null)
+				{
+					return HttpNotFound();
+				}
+
+				return View(product);
+			}
+		}
+
+
+	}
 }

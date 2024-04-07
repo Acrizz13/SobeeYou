@@ -1,0 +1,40 @@
+﻿@model SobeeYou.Models.ProductDTO
+
+@{
+	Layout = "~/Views/Shared/_Layout.cshtml"; // Assuming you have a layout file. Adjust the path if necessary.
+	ViewBag.Title = "Product Details";
+}
+
+<div class="container">
+	<h2>@Model.strName</h2>
+	<p>Price: @Model.decPrice.ToString("C")</p>
+	<img src="@Url.Content("~/Content/ProductImages/" + Model.strName.Replace(" ", "") + ".jpg")" alt="@Model.strName" style="width: 33%; height: auto;" />
+
+	<!-- Display success or error message -->
+	@if (TempData["SuccessMessage"] != null)
+	{
+		<div class="alert alert-success">
+			@TempData["SuccessMessage"]
+		</div>
+	}
+	@if (TempData["ErrorMessage"] != null)
+	{
+		<div class="alert alert-danger">
+			@TempData["ErrorMessage"]
+		</div>
+	}
+
+	<!-- Add to Cart Form -->
+	<form action="@Url.Action("AddToCart", "ShoppingCart")" method="post">
+		@Html.AntiForgeryToken()
+		<input type="hidden" name="newItem.intProductID" value="@Model.intProductID" />
+		<label for="quantity">Quantity:</label>
+		<select id="quantity" name="newItem.intQuantity">
+			@for (int i = 1; i <= 10; i++)
+			{
+				<option value="@i">@i</option>
+			}
+		</select>
+		<button type="submit" class="btn btn-primary">Add to Cart</button>
+	</form>
+</div>

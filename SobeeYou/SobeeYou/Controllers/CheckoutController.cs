@@ -112,7 +112,7 @@ namespace SobeeYou.Controllers {
         private void RemoveCartItems() {
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.AppSettings["AppDBConnect"])) {
                 conn.Open();
-                string query = "DELETE FROM TCartItems WHERE intShoppingCartID = 2";
+                string query = "DELETE FROM TCartItems WHERE intShoppingCartID = 56";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.ExecuteNonQuery();
             }
@@ -121,7 +121,7 @@ namespace SobeeYou.Controllers {
         private void RemoveShoppingCart() {
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.AppSettings["AppDBConnect"])) {
                 conn.Open();
-                string query = "DELETE FROM TShoppingCarts WHERE intShoppingCartID = 2";
+                string query = "DELETE FROM TShoppingCarts WHERE intShoppingCartID = 56";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.ExecuteNonQuery();
             }
