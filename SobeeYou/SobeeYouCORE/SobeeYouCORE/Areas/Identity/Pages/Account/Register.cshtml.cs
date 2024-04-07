@@ -31,7 +31,7 @@ public class RegisterModel : PageModel {
     private readonly ILogger<RegisterModel> _logger;
     private readonly IEmailSender _emailSender;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly SobeedbContext _context;
+    private readonly SobeecoredbContext _context;
     private readonly IShoppingCartService _shoppingCartService;
 
     public RegisterModel(
@@ -40,7 +40,7 @@ public class RegisterModel : PageModel {
         ILogger<RegisterModel> logger,
         IEmailSender emailSender,
         IHttpContextAccessor httpContextAccessor,
-        SobeedbContext context,
+        SobeecoredbContext context,
         IShoppingCartService shoppingCartService) {
         _userManager = userManager;
         _signInManager = signInManager;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using SobeeYouCORE.Models.DbModels.Identity;
 
 namespace SobeeYouCORE.Models.DbModels;
 
@@ -18,6 +17,4 @@ public partial class TshoppingCart {
     public string? SessionId { get; set; }
 
     public virtual ICollection<TcartItem> TcartItems { get; set; } = new List<TcartItem>();
-
-    public virtual AspNetUser? User { get; set; }
 }

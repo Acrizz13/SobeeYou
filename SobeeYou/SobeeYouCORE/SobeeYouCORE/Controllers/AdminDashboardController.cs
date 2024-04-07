@@ -8,10 +8,10 @@ using SobeeYouCORE.Models.DbModels;
 namespace SobeeYouCORE.Controllers {
     [Authorize(Roles = "Admin")]
     public class AdminDashboardController : Controller {
-        private readonly SobeedbContext _context;
+        private readonly SobeecoredbContext _context;
         private readonly ApplicationDbContext _identityContext;
 
-        public AdminDashboardController(SobeedbContext context, ApplicationDbContext identityContext) {
+        public AdminDashboardController(SobeecoredbContext context, ApplicationDbContext identityContext) {
             _context = context;
             _identityContext = identityContext;
         }

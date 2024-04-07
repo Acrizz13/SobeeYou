@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using SobeeYouCORE.Models.DbModels.Identity;
 
 namespace SobeeYouCORE.Models.DbModels;
 
@@ -36,6 +35,4 @@ public partial class Torder {
     public virtual Tuser? IntUser { get; set; }
 
     public virtual ICollection<TorderItem> TorderItems { get; set; } = new List<TorderItem>();
-
-    public virtual AspNetUser? User { get; set; }
 }

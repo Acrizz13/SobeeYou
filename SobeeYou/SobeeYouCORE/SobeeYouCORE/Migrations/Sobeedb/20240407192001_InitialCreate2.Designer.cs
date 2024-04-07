@@ -11,7 +11,7 @@ using SobeeYouCORE.Models.DbModels;
 
 namespace SobeeYouCORE.Migrations.Sobeedb
 {
-    [DbContext(typeof(SobeedbContext))]
+    [DbContext(typeof(SobeecoredbContext))]
     [Migration("20240407192001_InitialCreate2")]
     partial class InitialCreate2
     {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using SobeeYouCORE.Models.DbModels.Identity;
 
 namespace SobeeYouCORE.Models.DbModels;
 
@@ -24,6 +23,4 @@ public partial class TproductRecommendation {
     public virtual Tproduct IntProduct { get; set; } = null!;
 
     public virtual Tuser IntUser { get; set; } = null!;
-
-    public virtual AspNetUser? User { get; set; }
 }

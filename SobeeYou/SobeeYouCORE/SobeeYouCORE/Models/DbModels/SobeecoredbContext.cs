@@ -1,29 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using SobeeYouCORE.Models.DbModels.Identity;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class SobeedbContext : DbContext {
-    public SobeedbContext() {
+public partial class SobeecoredbContext : DbContext {
+    public SobeecoredbContext() {
     }
 
-    public SobeedbContext(DbContextOptions<SobeedbContext> options)
+    public SobeecoredbContext(DbContextOptions<SobeecoredbContext> options)
         : base(options) {
     }
-
-    public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
-
-    public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
-
-    public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
-
-    public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
-
-    public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
-
-    public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
 
     public virtual DbSet<Tadmin> Tadmins { get; set; }
 
@@ -89,90 +76,9 @@ public partial class SobeedbContext : DbContext {
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=sobeeyoucore.database.windows.net;Initial Catalog=sobeedb;User ID=sobeeadmin;Password=Sobeeyou123!;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False ");
+        => optionsBuilder.UseSqlServer("Server=tcp:sobeeyoucore.database.windows.net,1433;Initial Catalog=sobeecoredb;Persist Security Info=False;User ID=sobeeadmin;Password=Sobeeyou123!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        modelBuilder.Entity<AspNetRole>(entity => {
-            entity.ToTable("AspNetRoles", "db_owner");
-
-            entity.Property(e => e.Name).HasMaxLength(256);
-            entity.Property(e => e.NormalizedName).HasMaxLength(256);
-        });
-
-        modelBuilder.Entity<AspNetRoleClaim>(entity => {
-            entity.ToTable("AspNetRoleClaims", "db_owner");
-
-            entity.Property(e => e.RoleId).HasMaxLength(450);
-
-            entity.HasOne(d => d.Role).WithMany(p => p.AspNetRoleClaims).HasForeignKey(d => d.RoleId);
-        });
-
-        modelBuilder.Entity<AspNetUser>(entity => {
-            entity.ToTable("AspNetUsers", "db_owner");
-
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.Email).HasMaxLength(256);
-            entity.Property(e => e.IntUserRoleId).HasColumnName("intUserRoleID");
-            entity.Property(e => e.LastLoginDate).HasColumnType("datetime");
-            entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
-            entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
-            entity.Property(e => e.StrBillingAddress)
-                .HasDefaultValue("")
-                .HasColumnName("strBillingAddress");
-            entity.Property(e => e.StrFirstName)
-                .HasDefaultValue("")
-                .HasColumnName("strFirstName");
-            entity.Property(e => e.StrLastName)
-                .HasDefaultValue("")
-                .HasColumnName("strLastName");
-            entity.Property(e => e.StrShippingAddress)
-                .HasDefaultValue("")
-                .HasColumnName("strShippingAddress");
-            entity.Property(e => e.UserName).HasMaxLength(256);
-
-            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
-                .UsingEntity<Dictionary<string, object>>(
-                    "AspNetUserRole",
-                    r => r.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId"),
-                    l => l.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
-                    j => {
-                        j.HasKey("UserId", "RoleId");
-                        j.ToTable("AspNetUserRoles", "db_owner");
-                    });
-        });
-
-        modelBuilder.Entity<AspNetUserClaim>(entity => {
-            entity.ToTable("AspNetUserClaims", "db_owner");
-
-            entity.Property(e => e.UserId).HasMaxLength(450);
-
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
-        });
-
-        modelBuilder.Entity<AspNetUserLogin>(entity => {
-            entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
-
-            entity.ToTable("AspNetUserLogins", "db_owner");
-
-            entity.Property(e => e.LoginProvider).HasMaxLength(128);
-            entity.Property(e => e.ProviderKey).HasMaxLength(128);
-            entity.Property(e => e.UserId).HasMaxLength(450);
-
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
-        });
-
-        modelBuilder.Entity<AspNetUserToken>(entity => {
-            entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
-
-            entity.ToTable("AspNetUserTokens", "db_owner");
-
-            entity.Property(e => e.LoginProvider).HasMaxLength(128);
-            entity.Property(e => e.Name).HasMaxLength(128);
-
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
-        });
-
-
         modelBuilder.Entity<Tadmin>(entity => {
             entity.HasKey(e => e.IntAdminId).HasName("TAdmins_PK");
 
@@ -188,7 +94,7 @@ public partial class SobeedbContext : DbContext {
         });
 
         modelBuilder.Entity<TcartItem>(entity => {
-            entity.HasKey(e => e.IntCartItemId).HasName("PK__TCartIte__4A33868D73ECE44D");
+            entity.HasKey(e => e.IntCartItemId).HasName("PK__TCartIte__4A33868DF604DCCF");
 
             entity.ToTable("TCartItems", "db_owner");
 
@@ -202,11 +108,11 @@ public partial class SobeedbContext : DbContext {
 
             entity.HasOne(d => d.IntProduct).WithMany(p => p.TcartItems)
                 .HasForeignKey(d => d.IntProductId)
-                .HasConstraintName("FK__TCartItem__intPr__3493CFA7");
+                .HasConstraintName("FK__TCartItem__intPr__18EBB532");
 
             entity.HasOne(d => d.IntShoppingCart).WithMany(p => p.TcartItems)
                 .HasForeignKey(d => d.IntShoppingCartId)
-                .HasConstraintName("FK__TCartItem__intSh__3587F3E0");
+                .HasConstraintName("FK__TCartItem__intSh__19DFD96B");
         });
 
         modelBuilder.Entity<Tcity>(entity => {
@@ -280,10 +186,6 @@ public partial class SobeedbContext : DbContext {
             entity.HasOne(d => d.IntUser).WithMany(p => p.TcustomerServiceTickets)
                 .HasForeignKey(d => d.IntUserId)
                 .HasConstraintName("TCustomerServiceTickets_TUsers_FK");
-
-            entity.HasOne(d => d.User).WithMany(p => p.TcustomerServiceTickets)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_TCustomerServiceTickets_AspNetUsers");
         });
 
         modelBuilder.Entity<TdrinkCategory>(entity => {
@@ -357,7 +259,7 @@ public partial class SobeedbContext : DbContext {
         });
 
         modelBuilder.Entity<Torder>(entity => {
-            entity.HasKey(e => e.IntOrderId).HasName("PK__TOrders__447BBC4417552EA2");
+            entity.HasKey(e => e.IntOrderId).HasName("PK__TOrders__447BBC44701D10E7");
 
             entity.ToTable("TOrders", "db_owner");
 
@@ -401,15 +303,11 @@ public partial class SobeedbContext : DbContext {
 
             entity.HasOne(d => d.IntUser).WithMany(p => p.Torders)
                 .HasForeignKey(d => d.IntUserId)
-                .HasConstraintName("FK__TOrders__intUser__3C34F16F");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Torders)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_TORders_AspNetUsers");
+                .HasConstraintName("FK__TOrders__intUser__208CD6FA");
         });
 
         modelBuilder.Entity<TorderItem>(entity => {
-            entity.HasKey(e => e.IntOrderItemId).HasName("PK__TOrderIt__33B6022565C3C971");
+            entity.HasKey(e => e.IntOrderItemId).HasName("PK__TOrderIt__33B60225C247E2F9");
 
             entity.ToTable("TOrderItems", "db_owner");
 
@@ -423,11 +321,11 @@ public partial class SobeedbContext : DbContext {
 
             entity.HasOne(d => d.IntOrder).WithMany(p => p.TorderItems)
                 .HasForeignKey(d => d.IntOrderId)
-                .HasConstraintName("FK__TOrderIte__intOr__3A4CA8FD");
+                .HasConstraintName("FK__TOrderIte__intOr__1EA48E88");
 
             entity.HasOne(d => d.IntProduct).WithMany(p => p.TorderItems)
                 .HasForeignKey(d => d.IntProductId)
-                .HasConstraintName("FK__TOrderIte__intPr__3B40CD36");
+                .HasConstraintName("FK__TOrderIte__intPr__1F98B2C1");
         });
 
         modelBuilder.Entity<TordersProduct>(entity => {
@@ -466,7 +364,7 @@ public partial class SobeedbContext : DbContext {
         });
 
         modelBuilder.Entity<TpaymentMethod>(entity => {
-            entity.HasKey(e => e.IntPaymentMethod).HasName("PK__TPayment__74D498AFEB78D64F");
+            entity.HasKey(e => e.IntPaymentMethod).HasName("PK__TPayment__74D498AF47686B80");
 
             entity.ToTable("TPaymentMethods", "db_owner");
 
@@ -480,7 +378,7 @@ public partial class SobeedbContext : DbContext {
         });
 
         modelBuilder.Entity<TpaymentStatus>(entity => {
-            entity.HasKey(e => e.IntPaymentStatusId).HasName("PK__TPayment__4141EB108EB291E3");
+            entity.HasKey(e => e.IntPaymentStatusId).HasName("PK__TPayment__4141EB10ACA7B817");
 
             entity.ToTable("TPaymentStatus", "db_owner");
 
@@ -581,10 +479,6 @@ public partial class SobeedbContext : DbContext {
             entity.HasOne(d => d.IntUser).WithMany(p => p.TproductRecommendations)
                 .HasForeignKey(d => d.IntUserId)
                 .HasConstraintName("TProductRecommendations_TUsers_FK");
-
-            entity.HasOne(d => d.User).WithMany(p => p.TproductRecommendations)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_TProductRecommendations_AspNetUsers");
         });
 
         modelBuilder.Entity<Tpromotion>(entity => {
@@ -654,10 +548,6 @@ public partial class SobeedbContext : DbContext {
             entity.HasOne(d => d.IntUser).WithMany(p => p.Treviews)
                 .HasForeignKey(d => d.IntUserId)
                 .HasConstraintName("TReviews_TUsers_FK");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Treviews)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_TReviews_AspNetUsers");
         });
 
         modelBuilder.Entity<TshippingMethod>(entity => {
@@ -700,7 +590,7 @@ public partial class SobeedbContext : DbContext {
         });
 
         modelBuilder.Entity<TshoppingCart>(entity => {
-            entity.HasKey(e => e.IntShoppingCartId).HasName("PK__TShoppin__0A3129178578D1E1");
+            entity.HasKey(e => e.IntShoppingCartId).HasName("PK__TShoppin__0A3129171F137CD2");
 
             entity.ToTable("TShoppingCarts", "db_owner");
 
@@ -719,10 +609,6 @@ public partial class SobeedbContext : DbContext {
             entity.Property(e => e.UserId)
                 .HasMaxLength(450)
                 .HasColumnName("user_id");
-
-            entity.HasOne(d => d.User).WithMany(p => p.TshoppingCarts)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_TShoppingCarts_AspNetUsers");
         });
 
         modelBuilder.Entity<Tstate>(entity => {

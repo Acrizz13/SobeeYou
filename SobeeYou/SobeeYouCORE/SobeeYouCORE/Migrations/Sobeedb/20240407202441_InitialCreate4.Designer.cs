@@ -12,8 +12,8 @@ using SobeeYouCORE.Models.DbModels;
 namespace SobeeYouCORE.Migrations.Sobeedb
 {
     [DbContext(typeof(SobeecoredbContext))]
-    [Migration("20240407185756_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240407202441_InitialCreate4")]
+    partial class InitialCreate4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,7 +40,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("AspNetUserRoles", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetRole", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetRole", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -61,7 +61,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("AspNetRoles", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetRoleClaim", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetRoleClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,7 +87,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("AspNetRoleClaims", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUser", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -181,7 +181,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("AspNetUsers", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUserClaim", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUserClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -207,7 +207,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("AspNetUserClaims", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUserLogin", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUserLogin", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
@@ -232,7 +232,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("AspNetUserLogins", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUserToken", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUserToken", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -253,7 +253,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("AspNetUserTokens", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tadmin", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tadmin", b =>
                 {
                     b.Property<int>("IntAdminId")
                         .HasColumnType("int")
@@ -272,7 +272,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TAdmins", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TcartItem", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TcartItem", b =>
                 {
                     b.Property<int>("IntCartItemId")
                         .ValueGeneratedOnAdd()
@@ -307,7 +307,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TCartItems", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tcity", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tcity", b =>
                 {
                     b.Property<int>("IntCityId")
                         .HasColumnType("int")
@@ -326,7 +326,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TCities", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tcoupon", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tcoupon", b =>
                 {
                     b.Property<int>("IntCouponId")
                         .HasColumnType("int")
@@ -356,7 +356,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TCoupons", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TcustomerServiceTicket", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TcustomerServiceTicket", b =>
                 {
                     b.Property<int>("IntCustomerServiceTicketId")
                         .HasColumnType("int")
@@ -409,7 +409,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TCustomerServiceTickets", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TdrinkCategory", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TdrinkCategory", b =>
                 {
                     b.Property<int>("IntDrinkCategoryId")
                         .HasColumnType("int")
@@ -428,7 +428,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TDrinkCategories", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tfavorite", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tfavorite", b =>
                 {
                     b.Property<int>("IntFavoriteId")
                         .HasColumnType("int")
@@ -447,7 +447,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TFavorites", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tflavor", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tflavor", b =>
                 {
                     b.Property<int>("IntFlavorId")
                         .HasColumnType("int")
@@ -466,7 +466,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TFlavors", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tgender", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tgender", b =>
                 {
                     b.Property<int>("IntGenderId")
                         .HasColumnType("int")
@@ -485,7 +485,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TGenders", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tingredient", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tingredient", b =>
                 {
                     b.Property<int>("IntIngredientId")
                         .HasColumnType("int")
@@ -504,7 +504,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TIngredients", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Torder", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Torder", b =>
                 {
                     b.Property<int>("IntOrderId")
                         .ValueGeneratedOnAdd()
@@ -577,7 +577,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TOrders", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TorderItem", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TorderItem", b =>
                 {
                     b.Property<int>("IntOrderItemId")
                         .ValueGeneratedOnAdd()
@@ -612,7 +612,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TOrderItems", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TordersProduct", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TordersProduct", b =>
                 {
                     b.Property<int>("IntOrdersProductId")
                         .HasColumnType("int")
@@ -637,7 +637,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TOrdersProducts", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tpayment", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tpayment", b =>
                 {
                     b.Property<int>("IntPaymentId")
                         .HasColumnType("int")
@@ -664,7 +664,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TPayments", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TpaymentMethod", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TpaymentMethod", b =>
                 {
                     b.Property<int>("IntPaymentMethod")
                         .HasColumnType("int")
@@ -682,7 +682,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TPaymentMethods", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TpaymentStatus", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TpaymentStatus", b =>
                 {
                     b.Property<int>("IntPaymentStatusId")
                         .HasColumnType("int")
@@ -700,7 +700,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TPaymentStatus", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tpermission", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tpermission", b =>
                 {
                     b.Property<int>("IntPermissionId")
                         .HasColumnType("int")
@@ -726,7 +726,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TPermissions", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tproduct", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tproduct", b =>
                 {
                     b.Property<int>("IntProductId")
                         .HasColumnType("int")
@@ -762,7 +762,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TProducts", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TproductImage", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TproductImage", b =>
                 {
                     b.Property<int>("IntProductImageId")
                         .HasColumnType("int")
@@ -781,7 +781,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TProductImages", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TproductRecommendation", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TproductRecommendation", b =>
                 {
                     b.Property<int>("IntProductRecommendationId")
                         .HasColumnType("int")
@@ -828,7 +828,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TProductRecommendations", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tpromotion", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tpromotion", b =>
                 {
                     b.Property<int>("IntPromotionId")
                         .HasColumnType("int")
@@ -858,7 +858,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TPromotions", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Trace", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Trace", b =>
                 {
                     b.Property<int>("IntRaceId")
                         .HasColumnType("int")
@@ -877,7 +877,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TRaces", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Treview", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Treview", b =>
                 {
                     b.Property<int>("IntReviewId")
                         .HasColumnType("int")
@@ -927,7 +927,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TReviews", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TshippingMethod", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TshippingMethod", b =>
                 {
                     b.Property<int>("IntShippingMethodId")
                         .HasColumnType("int")
@@ -964,7 +964,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TShippingMethods", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TshippingStatus", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TshippingStatus", b =>
                 {
                     b.Property<int>("IntShippingStatusId")
                         .HasColumnType("int")
@@ -983,7 +983,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TShippingStatus", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TshoppingCart", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TshoppingCart", b =>
                 {
                     b.Property<int>("IntShoppingCartId")
                         .ValueGeneratedOnAdd()
@@ -1022,7 +1022,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TShoppingCarts", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tstate", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tstate", b =>
                 {
                     b.Property<int>("IntStateId")
                         .HasColumnType("int")
@@ -1041,7 +1041,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TStates", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TticketCategory", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TticketCategory", b =>
                 {
                     b.Property<int>("IntTicketCategoryId")
                         .HasColumnType("int")
@@ -1060,7 +1060,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TTicketCategories", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TticketStatus", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TticketStatus", b =>
                 {
                     b.Property<int>("IntTicketStatusId")
                         .HasColumnType("int")
@@ -1079,7 +1079,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TTicketStatus", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tuser", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tuser", b =>
                 {
                     b.Property<int>("IntUserId")
                         .HasColumnType("int")
@@ -1143,7 +1143,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.ToTable("TUsers", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TuserRole", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TuserRole", b =>
                 {
                     b.Property<int>("IntUserRoleId")
                         .HasColumnType("int")
@@ -1164,22 +1164,22 @@ namespace SobeeYouCORE.Migrations.Sobeedb
 
             modelBuilder.Entity("AspNetUserRole", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetRole", null)
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", null)
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetRoleClaim", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetRoleClaim", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetRole", "Role")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetRole", "Role")
                         .WithMany("AspNetRoleClaims")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1188,9 +1188,9 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUserClaim", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUserClaim", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "User")
                         .WithMany("AspNetUserClaims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1199,9 +1199,9 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUserLogin", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUserLogin", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "User")
                         .WithMany("AspNetUserLogins")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1210,9 +1210,9 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUserToken", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUserToken", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "User")
                         .WithMany("AspNetUserTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1221,14 +1221,14 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TcartItem", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TcartItem", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tproduct", "IntProduct")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Tproduct", "IntProduct")
                         .WithMany("TcartItems")
                         .HasForeignKey("IntProductId")
                         .HasConstraintName("FK__TCartItem__intPr__3493CFA7");
 
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.TshoppingCart", "IntShoppingCart")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.TshoppingCart", "IntShoppingCart")
                         .WithMany("TcartItems")
                         .HasForeignKey("IntShoppingCartId")
                         .HasConstraintName("FK__TCartItem__intSh__3587F3E0");
@@ -1238,30 +1238,30 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("IntShoppingCart");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TcustomerServiceTicket", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TcustomerServiceTicket", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.TticketCategory", "IntTicketCategory")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.TticketCategory", "IntTicketCategory")
                         .WithMany("TcustomerServiceTickets")
                         .HasForeignKey("IntTicketCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("TCustomerServiceTickets_TTicketCategories_FK");
 
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.TticketStatus", "IntTicketStatus")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.TticketStatus", "IntTicketStatus")
                         .WithMany("TcustomerServiceTickets")
                         .HasForeignKey("IntTicketStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("TCustomerServiceTickets_TTicketStatus_FK");
 
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tuser", "IntUser")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Tuser", "IntUser")
                         .WithMany("TcustomerServiceTickets")
                         .HasForeignKey("IntUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("TCustomerServiceTickets_TUsers_FK");
 
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "User")
                         .WithMany("TcustomerServiceTickets")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_TCustomerServiceTickets_AspNetUsers");
@@ -1275,24 +1275,24 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Torder", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Torder", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.TpaymentMethod", "IntPaymentMethodNavigation")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.TpaymentMethod", "IntPaymentMethodNavigation")
                         .WithMany("Torders")
                         .HasForeignKey("IntPaymentMethod")
                         .HasConstraintName("FK_PaymentMethod");
 
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.TshippingStatus", "IntShippingStatus")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.TshippingStatus", "IntShippingStatus")
                         .WithMany("Torders")
                         .HasForeignKey("IntShippingStatusId")
                         .HasConstraintName("FK_TOrders_TShippingStatus");
 
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tuser", "IntUser")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Tuser", "IntUser")
                         .WithMany("Torders")
                         .HasForeignKey("IntUserId")
                         .HasConstraintName("FK__TOrders__intUser__3C34F16F");
 
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "User")
                         .WithMany("Torders")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_TORders_AspNetUsers");
@@ -1306,14 +1306,14 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TorderItem", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TorderItem", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Torder", "IntOrder")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Torder", "IntOrder")
                         .WithMany("TorderItems")
                         .HasForeignKey("IntOrderId")
                         .HasConstraintName("FK__TOrderIte__intOr__3A4CA8FD");
 
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tproduct", "IntProduct")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Tproduct", "IntProduct")
                         .WithMany("TorderItems")
                         .HasForeignKey("IntProductId")
                         .HasConstraintName("FK__TOrderIte__intPr__3B40CD36");
@@ -1323,9 +1323,9 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("IntProduct");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TordersProduct", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TordersProduct", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tproduct", "IntProduct")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Tproduct", "IntProduct")
                         .WithMany("TordersProducts")
                         .HasForeignKey("IntProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1335,23 +1335,23 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("IntProduct");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TproductRecommendation", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TproductRecommendation", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tproduct", "IntProduct")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Tproduct", "IntProduct")
                         .WithMany("TproductRecommendations")
                         .HasForeignKey("IntProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("TProductRecommendations_TProducts_FK");
 
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tuser", "IntUser")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Tuser", "IntUser")
                         .WithMany("TproductRecommendations")
                         .HasForeignKey("IntUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("TProductRecommendations_TUsers_FK");
 
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "User")
                         .WithMany("TproductRecommendations")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_TProductRecommendations_AspNetUsers");
@@ -1363,23 +1363,23 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Treview", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Treview", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tproduct", "IntProduct")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Tproduct", "IntProduct")
                         .WithMany("Treviews")
                         .HasForeignKey("IntProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("TReviews_TProducts_FK");
 
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tuser", "IntUser")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Tuser", "IntUser")
                         .WithMany("Treviews")
                         .HasForeignKey("IntUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("TReviews_TUsers_FK");
 
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "User")
                         .WithMany("Treviews")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_TReviews_AspNetUsers");
@@ -1391,9 +1391,9 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TshoppingCart", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TshoppingCart", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "User")
                         .WithMany("TshoppingCarts")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_TShoppingCarts_AspNetUsers");
@@ -1401,9 +1401,9 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tuser", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tuser", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.TuserRole", "IntUserRole")
+                    b.HasOne("SobeeYouCORE.Models.DbModels.TuserRole", "IntUserRole")
                         .WithMany("Tusers")
                         .HasForeignKey("IntUserRoleId")
                         .HasConstraintName("FK_intUserRoleID");
@@ -1411,12 +1411,12 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("IntUserRole");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetRole", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetRole", b =>
                 {
                     b.Navigation("AspNetRoleClaims");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUser", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", b =>
                 {
                     b.Navigation("AspNetUserClaims");
 
@@ -1435,17 +1435,17 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("TshoppingCarts");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Torder", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Torder", b =>
                 {
                     b.Navigation("TorderItems");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TpaymentMethod", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TpaymentMethod", b =>
                 {
                     b.Navigation("Torders");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tproduct", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tproduct", b =>
                 {
                     b.Navigation("TcartItems");
 
@@ -1458,27 +1458,27 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("Treviews");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TshippingStatus", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TshippingStatus", b =>
                 {
                     b.Navigation("Torders");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TshoppingCart", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TshoppingCart", b =>
                 {
                     b.Navigation("TcartItems");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TticketCategory", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TticketCategory", b =>
                 {
                     b.Navigation("TcustomerServiceTickets");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TticketStatus", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TticketStatus", b =>
                 {
                     b.Navigation("TcustomerServiceTickets");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tuser", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tuser", b =>
                 {
                     b.Navigation("TcustomerServiceTickets");
 
@@ -1489,7 +1489,7 @@ namespace SobeeYouCORE.Migrations.Sobeedb
                     b.Navigation("Treviews");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TuserRole", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TuserRole", b =>
                 {
                     b.Navigation("Tusers");
                 });

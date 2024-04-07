@@ -10,7 +10,7 @@ using SobeeYouCORE.Models.DbModels;
 
 namespace SobeeYouCORE.Migrations.Sobeedb
 {
-    [DbContext(typeof(SobeedbContext))]
+    [DbContext(typeof(SobeecoredbContext))]
     partial class SobeedbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

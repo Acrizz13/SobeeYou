@@ -12,12 +12,12 @@ namespace SobeeYouCORE.Controllers {
 
         // GET: Purchase
 
-        private readonly SobeedbContext _context;
+        private readonly SobeecoredbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private int shoppingCartID;
 
 
-        public PurchaseController(SobeedbContext context, UserManager<ApplicationUser> userManager) {
+        public PurchaseController(SobeecoredbContext context, UserManager<ApplicationUser> userManager) {
             _context = context;
             _userManager = userManager;
         }
