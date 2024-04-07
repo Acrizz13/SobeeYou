@@ -3,64 +3,51 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SobeeYouCORE.Data.Migrations {
+namespace SobeeYouCORE.Migrations.Sobeedb
+{
     /// <inheritdoc />
-    public partial class newUsers2 : Migration {
+    public partial class InitialAzureMigration : Migration
+    {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder) {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
             migrationBuilder.EnsureSchema(
                 name: "db_owner");
 
             migrationBuilder.CreateTable(
-                name: "ApplicationUser",
-                schema: "db_owner",
-                columns: table => new {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    strShippingAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    strBillingAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    strFirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    strLastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastLoginDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    intUserRoleID = table.Column<int>(type: "int", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                name: "__MigrationHistory",
+                columns: table => new
+                {
+                    MigrationId = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    ContextKey = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Model = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    ProductVersion = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false)
                 },
-                constraints: table => {
-                    table.PrimaryKey("PK_ApplicationUser", x => x.Id);
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_dbo.__MigrationHistory", x => new { x.MigrationId, x.ContextKey });
                 });
 
-            //migrationBuilder.CreateTable(
-            //    name: "AspNetRoles",
-            //    schema: "db_owner",
-            //    columns: table => new
-            //    {
-            //        Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-            //        Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-            //        NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-            //        ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
-            //    },
-            //    constraints: table =>
-            //    {
-            //        table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-            //    });
+            migrationBuilder.CreateTable(
+                name: "AspNetRoles",
+                schema: "db_owner",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -75,278 +62,332 @@ namespace SobeeYouCORE.Data.Migrations {
                     TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false),
+                    intUserRoleID = table.Column<int>(type: "int", nullable: false),
+                    strBillingAddress = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: ""),
+                    strFirstName = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: ""),
+                    strLastName = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: ""),
+                    strShippingAddress = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: ""),
+                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    LastLoginDate = table.Column<DateTime>(type: "datetime", nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TAdmins",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intAdminID = table.Column<int>(type: "int", nullable: false),
                     strAdminName = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TAdmins_PK", x => x.intAdminID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TCities",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intCityID = table.Column<int>(type: "int", nullable: false),
                     strCity = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TCities_PK", x => x.intCityID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TCoupons",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intCouponID = table.Column<int>(type: "int", nullable: false),
                     strCouponCode = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     strDiscountAmount = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     dtmExpirationDate = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TCoupons_PK", x => x.intCouponID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TDrinkCategories",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intDrinkCategoryID = table.Column<int>(type: "int", nullable: false),
                     strDrinkCategory = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TDrinkCategories_PK", x => x.intDrinkCategoryID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TFavorites",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intFavoriteID = table.Column<int>(type: "int", nullable: false),
                     strFavorite = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TFavorites_PK", x => x.intFavoriteID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TFlavors",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intFlavorID = table.Column<int>(type: "int", nullable: false),
                     strFlavor = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TFlavors_PK", x => x.intFlavorID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TGenders",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intGenderID = table.Column<int>(type: "int", nullable: false),
                     strGender = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TGenders_PK", x => x.intGenderID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TIngredients",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intIngredientID = table.Column<int>(type: "int", nullable: false),
                     strIngredient = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TIngredients_PK", x => x.intIngredientID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TPaymentMethods",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intPaymentMethod = table.Column<int>(type: "int", nullable: false),
-                    strPaymentMethodName = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
+                    strPaymentMethodName = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true)
                 },
-                constraints: table => {
-                    table.PrimaryKey("PK__TPayment__74D498AF41BBBA60", x => x.intPaymentMethod);
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__TPayment__74D498AFEB78D64F", x => x.intPaymentMethod);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TPayments",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intPaymentID = table.Column<int>(type: "int", nullable: false),
                     strBillingAddress = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
-                    intPaymentMethodID = table.Column<int>(type: "int", nullable: false),
-                    intPaymentMethod = table.Column<int>(type: "int", nullable: false)
+                    intPaymentMethodID = table.Column<int>(type: "int", nullable: true),
+                    intPaymentMethod = table.Column<int>(type: "int", nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TPayments_PK", x => x.intPaymentID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TPaymentStatus",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intPaymentStatusID = table.Column<int>(type: "int", nullable: false),
-                    strPaymentStatus = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
+                    strPaymentStatus = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true)
                 },
-                constraints: table => {
-                    table.PrimaryKey("PK__TPayment__4141EB108DDA446F", x => x.intPaymentStatusID);
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__TPayment__4141EB108EB291E3", x => x.intPaymentStatusID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TPermissions",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intPermissionID = table.Column<int>(type: "int", nullable: false),
                     strPermissionName = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     strDescription = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TPermissions_PK", x => x.intPermissionID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TProductImages",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intProductImageID = table.Column<int>(type: "int", nullable: false),
                     strProductImageURL = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TProductImages_PK", x => x.intProductImageID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TProducts",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intProductID = table.Column<int>(type: "int", nullable: false),
                     strName = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     strStockAmount = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
-                    decPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    strPrice = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
+                    decPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    strPrice = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TProducts_PK", x => x.intProductID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TPromotions",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intPromotionID = table.Column<int>(type: "int", nullable: false),
                     strPromoCode = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     strDiscountPercentage = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     dtmExpirationDate = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TPromotions_PK", x => x.intPromotionID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TRaces",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intRaceID = table.Column<int>(type: "int", nullable: false),
                     strRace = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TRaces_PK", x => x.intRaceID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TShippingMethods",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intShippingMethodID = table.Column<int>(type: "int", nullable: false),
                     strShippingName = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     strBillingAddress = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     dtmEstimatedDelivery = table.Column<DateTime>(type: "datetime", nullable: false),
                     strCost = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TShippingMethods_PK", x => x.intShippingMethodID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TShippingStatus",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intShippingStatusID = table.Column<int>(type: "int", nullable: false),
                     strShippingStatus = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TShippingStatus_PK", x => x.intShippingStatusID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TStates",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intStateID = table.Column<int>(type: "int", nullable: false),
                     strState = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TStates_PK", x => x.intStateID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TTicketCategories",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intTicketCategoryID = table.Column<int>(type: "int", nullable: false),
                     strTicketCategory = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TTicketCategories_PK", x => x.intTicketCategoryID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TTicketStatus",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intTicketStatusID = table.Column<int>(type: "int", nullable: false),
                     strTicketStatus = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TTicketStatus_PK", x => x.intTicketStatusID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TUserRoles",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intUserRoleID = table.Column<int>(type: "int", nullable: false),
                     strRole = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TUserRoles_PK", x => x.intUserRoleID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
@@ -360,14 +401,16 @@ namespace SobeeYouCORE.Data.Migrations {
             migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetUserClaims_AspNetUsers_UserId",
@@ -381,13 +424,15 @@ namespace SobeeYouCORE.Data.Migrations {
             migrationBuilder.CreateTable(
                 name: "AspNetUserLogins",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
@@ -401,11 +446,13 @@ namespace SobeeYouCORE.Data.Migrations {
             migrationBuilder.CreateTable(
                 name: "AspNetUserRoles",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
@@ -426,13 +473,15 @@ namespace SobeeYouCORE.Data.Migrations {
             migrationBuilder.CreateTable(
                 name: "AspNetUserTokens",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
@@ -444,15 +493,40 @@ namespace SobeeYouCORE.Data.Migrations {
                 });
 
             migrationBuilder.CreateTable(
+                name: "TShoppingCarts",
+                schema: "db_owner",
+                columns: table => new
+                {
+                    intShoppingCartID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    dtmDateCreated = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
+                    dtmDateLastUpdated = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
+                    user_id = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    session_id = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__TShoppin__0A3129178578D1E1", x => x.intShoppingCartID);
+                    table.ForeignKey(
+                        name: "FK_TShoppingCarts_AspNetUsers",
+                        column: x => x.user_id,
+                        principalSchema: "db_owner",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TOrdersProducts",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
+                    intOrdersProductID = table.Column<int>(type: "int", nullable: false),
                     intProductID = table.Column<int>(type: "int", nullable: false),
-                    IntOrdersProductId = table.Column<int>(type: "int", nullable: false),
                     strOrdersProduct = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
                 },
-                constraints: table => {
-                    table.PrimaryKey("TOrdersProducts_PK", x => x.intProductID);
+                constraints: table =>
+                {
+                    table.PrimaryKey("TOrdersProducts_PK", x => x.intOrdersProductID);
                     table.ForeignKey(
                         name: "TOrdersProducts_TProducts_FK",
                         column: x => x.intProductID,
@@ -465,43 +539,83 @@ namespace SobeeYouCORE.Data.Migrations {
             migrationBuilder.CreateTable(
                 name: "TUsers",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intUserID = table.Column<int>(type: "int", nullable: false),
-                    ID = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    strShippingAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    strShippingAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     strEmail = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     strPassword = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
-                    intUserRoleID = table.Column<int>(type: "int", nullable: false),
-                    strBillingAddress = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    strFirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    strLastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    strDateCreated = table.Column<DateTime>(type: "datetime", nullable: false),
-                    strLastLoginDate = table.Column<DateTime>(type: "datetime", nullable: false)
+                    intUserRoleID = table.Column<int>(type: "int", nullable: true),
+                    strBillingAddress = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    strFirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    strLastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    strDateCreated = table.Column<DateTime>(type: "datetime", nullable: true),
+                    strLastLoginDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    ID = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TUsers_PK", x => x.intUserID);
                     table.ForeignKey(
                         name: "FK_intUserRoleID",
                         column: x => x.intUserRoleID,
                         principalSchema: "db_owner",
                         principalTable: "TUserRoles",
-                        principalColumn: "intUserRoleID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "intUserRoleID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TCartItems",
+                schema: "db_owner",
+                columns: table => new
+                {
+                    intCartItemID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    intShoppingCartID = table.Column<int>(type: "int", nullable: true),
+                    intProductID = table.Column<int>(type: "int", nullable: true),
+                    intQuantity = table.Column<int>(type: "int", nullable: true),
+                    dtmDateAdded = table.Column<DateTime>(type: "datetime", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__TCartIte__4A33868D73ECE44D", x => x.intCartItemID);
+                    table.ForeignKey(
+                        name: "FK__TCartItem__intPr__3493CFA7",
+                        column: x => x.intProductID,
+                        principalSchema: "db_owner",
+                        principalTable: "TProducts",
+                        principalColumn: "intProductID");
+                    table.ForeignKey(
+                        name: "FK__TCartItem__intSh__3587F3E0",
+                        column: x => x.intShoppingCartID,
+                        principalSchema: "db_owner",
+                        principalTable: "TShoppingCarts",
+                        principalColumn: "intShoppingCartID");
                 });
 
             migrationBuilder.CreateTable(
                 name: "TCustomerServiceTickets",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intCustomerServiceTicketID = table.Column<int>(type: "int", nullable: false),
                     intUserID = table.Column<int>(type: "int", nullable: false),
                     intTicketCategoryID = table.Column<int>(type: "int", nullable: false),
                     intTicketStatusID = table.Column<int>(type: "int", nullable: false),
                     dtmTimeOfSubmission = table.Column<DateTime>(type: "datetime", nullable: false),
-                    strDescription = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
+                    strDescription = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
+                    user_id = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    session_id = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TCustomerServiceTickets_PK", x => x.intCustomerServiceTicketID);
+                    table.ForeignKey(
+                        name: "FK_TCustomerServiceTickets_AspNetUsers",
+                        column: x => x.user_id,
+                        principalSchema: "db_owner",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "TCustomerServiceTickets_TTicketCategories_FK",
                         column: x => x.intTicketCategoryID,
@@ -528,55 +642,72 @@ namespace SobeeYouCORE.Data.Migrations {
             migrationBuilder.CreateTable(
                 name: "TOrders",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intOrderID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    intUserID = table.Column<int>(type: "int", nullable: false),
-                    dtmOrderDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    decTotalAmount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    intShippingStatusID = table.Column<int>(type: "int", nullable: false),
-                    strShippingAddress = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
-                    strTrackingNumber = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    intPaymentMethod = table.Column<int>(type: "int", nullable: false),
-                    strOrderStatus = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false, defaultValue: "Pending")
+                    intUserID = table.Column<int>(type: "int", nullable: true),
+                    dtmOrderDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    decTotalAmount = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    intShippingStatusID = table.Column<int>(type: "int", nullable: true),
+                    strShippingAddress = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: true),
+                    strTrackingNumber = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+                    intPaymentMethod = table.Column<int>(type: "int", nullable: true),
+                    strOrderStatus = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true, defaultValue: "Pending"),
+                    user_id = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    session_id = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true)
                 },
-                constraints: table => {
-                    table.PrimaryKey("PK__TOrders__447BBC4445C2DAD9", x => x.intOrderID);
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__TOrders__447BBC4417552EA2", x => x.intOrderID);
                     table.ForeignKey(
                         name: "FK_PaymentMethod",
                         column: x => x.intPaymentMethod,
                         principalSchema: "db_owner",
                         principalTable: "TPaymentMethods",
-                        principalColumn: "intPaymentMethod",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "intPaymentMethod");
+                    table.ForeignKey(
+                        name: "FK_TORders_AspNetUsers",
+                        column: x => x.user_id,
+                        principalSchema: "db_owner",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_TOrders_TShippingStatus",
                         column: x => x.intShippingStatusID,
                         principalSchema: "db_owner",
                         principalTable: "TShippingStatus",
-                        principalColumn: "intShippingStatusID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "intShippingStatusID");
                     table.ForeignKey(
-                        name: "FK__TOrders__intUser__0FEC5ADD",
+                        name: "FK__TOrders__intUser__3C34F16F",
                         column: x => x.intUserID,
                         principalSchema: "db_owner",
                         principalTable: "TUsers",
-                        principalColumn: "intUserID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "intUserID");
                 });
 
             migrationBuilder.CreateTable(
                 name: "TProductRecommendations",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intProductRecommendationID = table.Column<int>(type: "int", nullable: false),
                     intUserID = table.Column<int>(type: "int", nullable: false),
                     intProductID = table.Column<int>(type: "int", nullable: false),
                     dtmTimeOfRecommendation = table.Column<DateTime>(type: "datetime", nullable: false),
-                    strRelevantScore = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
+                    strRelevantScore = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
+                    user_id = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    session_id = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TProductRecommendations_PK", x => x.intProductRecommendationID);
+                    table.ForeignKey(
+                        name: "FK_TProductRecommendations_AspNetUsers",
+                        column: x => x.user_id,
+                        principalSchema: "db_owner",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "TProductRecommendations_TProducts_FK",
                         column: x => x.intProductID,
@@ -596,15 +727,25 @@ namespace SobeeYouCORE.Data.Migrations {
             migrationBuilder.CreateTable(
                 name: "TReviews",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intReviewID = table.Column<int>(type: "int", nullable: false),
                     intUserID = table.Column<int>(type: "int", nullable: false),
                     intProductID = table.Column<int>(type: "int", nullable: false),
                     strReviewText = table.Column<string>(type: "varchar(1000)", unicode: false, maxLength: 1000, nullable: false),
-                    strRating = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
+                    strRating = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
+                    user_id = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
+                    session_id = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("TReviews_PK", x => x.intReviewID);
+                    table.ForeignKey(
+                        name: "FK_TReviews_AspNetUsers",
+                        column: x => x.user_id,
+                        principalSchema: "db_owner",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "TReviews_TProducts_FK",
                         column: x => x.intProductID,
@@ -622,89 +763,32 @@ namespace SobeeYouCORE.Data.Migrations {
                 });
 
             migrationBuilder.CreateTable(
-                name: "TShoppingCarts",
-                schema: "db_owner",
-                columns: table => new {
-                    intShoppingCartID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    intUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    dtmDateCreated = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    dtmDateLastUpdated = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    TuserintUserID = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table => {
-                    table.PrimaryKey("PK__TShoppin__0A31291739EF1EA0", x => x.intShoppingCartID);
-                    table.ForeignKey(
-                        name: "FK_TShoppingCarts_TUsers_TuserintUserID",
-                        column: x => x.TuserintUserID,
-                        principalSchema: "db_owner",
-                        principalTable: "TUsers",
-                        principalColumn: "intUserID");
-                    table.ForeignKey(
-                        name: "FK__TShopping__intUs__178D7CA5",
-                        column: x => x.intUserID,
-                        principalSchema: "db_owner",
-                        principalTable: "ApplicationUser",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TOrderItems",
                 schema: "db_owner",
-                columns: table => new {
+                columns: table => new
+                {
                     intOrderItemID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    intOrderID = table.Column<int>(type: "int", nullable: false),
-                    intProductID = table.Column<int>(type: "int", nullable: false),
-                    intQuantity = table.Column<int>(type: "int", nullable: false),
-                    monPricePerUnit = table.Column<decimal>(type: "money", nullable: false)
+                    intOrderID = table.Column<int>(type: "int", nullable: true),
+                    intProductID = table.Column<int>(type: "int", nullable: true),
+                    intQuantity = table.Column<int>(type: "int", nullable: true),
+                    monPricePerUnit = table.Column<decimal>(type: "money", nullable: true)
                 },
-                constraints: table => {
-                    table.PrimaryKey("PK__TOrderIt__33B60225A0D3B9FE", x => x.intOrderItemID);
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__TOrderIt__33B6022565C3C971", x => x.intOrderItemID);
                     table.ForeignKey(
-                        name: "FK__TOrderIte__intOr__12C8C788",
+                        name: "FK__TOrderIte__intOr__3A4CA8FD",
                         column: x => x.intOrderID,
                         principalSchema: "db_owner",
                         principalTable: "TOrders",
-                        principalColumn: "intOrderID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "intOrderID");
                     table.ForeignKey(
-                        name: "FK__TOrderIte__intPr__13BCEBC1",
+                        name: "FK__TOrderIte__intPr__3B40CD36",
                         column: x => x.intProductID,
                         principalSchema: "db_owner",
                         principalTable: "TProducts",
-                        principalColumn: "intProductID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TCartItems",
-                schema: "db_owner",
-                columns: table => new {
-                    intCartItemID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    intShoppingCartID = table.Column<int>(type: "int", nullable: false),
-                    intProductID = table.Column<int>(type: "int", nullable: false),
-                    intQuantity = table.Column<int>(type: "int", nullable: false),
-                    dtmDateAdded = table.Column<DateTime>(type: "datetime", nullable: false)
-                },
-                constraints: table => {
-                    table.PrimaryKey("PK__TCartIte__4A33868DCDF2DFE8", x => x.intCartItemID);
-                    table.ForeignKey(
-                        name: "FK__TCartItem__intPr__1D4655FB",
-                        column: x => x.intProductID,
-                        principalSchema: "db_owner",
-                        principalTable: "TProducts",
-                        principalColumn: "intProductID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK__TCartItem__intSh__1C5231C2",
-                        column: x => x.intShoppingCartID,
-                        principalSchema: "db_owner",
-                        principalTable: "TShoppingCarts",
-                        principalColumn: "intShoppingCartID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "intProductID");
                 });
 
             migrationBuilder.CreateIndex(
@@ -712,14 +796,6 @@ namespace SobeeYouCORE.Data.Migrations {
                 schema: "db_owner",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "RoleNameIndex",
-                schema: "db_owner",
-                table: "AspNetRoles",
-                column: "NormalizedName",
-                unique: true,
-                filter: "([NormalizedName] IS NOT NULL)");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -738,20 +814,6 @@ namespace SobeeYouCORE.Data.Migrations {
                 schema: "db_owner",
                 table: "AspNetUserRoles",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "EmailIndex",
-                schema: "db_owner",
-                table: "AspNetUsers",
-                column: "NormalizedEmail");
-
-            migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
-                schema: "db_owner",
-                table: "AspNetUsers",
-                column: "NormalizedUserName",
-                unique: true,
-                filter: "([NormalizedUserName] IS NOT NULL)");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TCartItems_intProductID",
@@ -784,6 +846,12 @@ namespace SobeeYouCORE.Data.Migrations {
                 column: "intUserID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TCustomerServiceTickets_user_id",
+                schema: "db_owner",
+                table: "TCustomerServiceTickets",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TOrderItems_intOrderID",
                 schema: "db_owner",
                 table: "TOrderItems",
@@ -814,6 +882,18 @@ namespace SobeeYouCORE.Data.Migrations {
                 column: "intUserID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TOrders_user_id",
+                schema: "db_owner",
+                table: "TOrders",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TOrdersProducts_intProductID",
+                schema: "db_owner",
+                table: "TOrdersProducts",
+                column: "intProductID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TProductRecommendations_intProductID",
                 schema: "db_owner",
                 table: "TProductRecommendations",
@@ -824,6 +904,12 @@ namespace SobeeYouCORE.Data.Migrations {
                 schema: "db_owner",
                 table: "TProductRecommendations",
                 column: "intUserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TProductRecommendations_user_id",
+                schema: "db_owner",
+                table: "TProductRecommendations",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TReviews_intProductID",
@@ -838,16 +924,16 @@ namespace SobeeYouCORE.Data.Migrations {
                 column: "intUserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TShoppingCarts_intUserID",
+                name: "IX_TReviews_user_id",
                 schema: "db_owner",
-                table: "TShoppingCarts",
-                column: "intUserID");
+                table: "TReviews",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TShoppingCarts_TuserintUserID",
+                name: "IX_TShoppingCarts_user_id",
                 schema: "db_owner",
                 table: "TShoppingCarts",
-                column: "TuserintUserID");
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TUsers_intUserRoleID",
@@ -857,7 +943,11 @@ namespace SobeeYouCORE.Data.Migrations {
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder) {
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "__MigrationHistory");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims",
                 schema: "db_owner");
@@ -971,10 +1061,6 @@ namespace SobeeYouCORE.Data.Migrations {
                 schema: "db_owner");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers",
-                schema: "db_owner");
-
-            migrationBuilder.DropTable(
                 name: "TShoppingCarts",
                 schema: "db_owner");
 
@@ -995,11 +1081,11 @@ namespace SobeeYouCORE.Data.Migrations {
                 schema: "db_owner");
 
             migrationBuilder.DropTable(
-                name: "ApplicationUser",
+                name: "TPaymentMethods",
                 schema: "db_owner");
 
             migrationBuilder.DropTable(
-                name: "TPaymentMethods",
+                name: "AspNetUsers",
                 schema: "db_owner");
 
             migrationBuilder.DropTable(

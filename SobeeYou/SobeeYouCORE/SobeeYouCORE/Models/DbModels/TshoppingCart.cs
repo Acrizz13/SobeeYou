@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using SobeeYouCORE.Models.DbModels.Identity;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class TshoppingCart {
-    [Key]
+public partial class TshoppingCart
+{
     public int IntShoppingCartId { get; set; }
 
     public DateTime? DtmDateCreated { get; set; }

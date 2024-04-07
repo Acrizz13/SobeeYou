@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class Tuser {
-    [Key]
+public partial class Tuser
+{
     public int IntUserId { get; set; }
 
     public string? StrShippingAddress { get; set; }

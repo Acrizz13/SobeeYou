@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class Tcity {
-    [Key]
+public partial class Tcity
+{
     public int IntCityId { get; set; }
 
     public string StrCity { get; set; } = null!;

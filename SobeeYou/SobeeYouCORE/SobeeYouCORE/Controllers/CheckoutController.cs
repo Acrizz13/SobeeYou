@@ -8,13 +8,13 @@ using SobeeYouCORE.Services;
 
 namespace SobeeYouCORE.Controllers {
 	public class CheckoutController : Controller {
-		private readonly NewDbContext _context;
+		private readonly SobeedbContext _context;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly IShoppingCartService _shoppingCartService;
 		private readonly IOrderService _orderService;
 
-		public CheckoutController(NewDbContext context, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager, IShoppingCartService shoppingCartService, IOrderService orderService) {
+		public CheckoutController(SobeedbContext context, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager, IShoppingCartService shoppingCartService, IOrderService orderService) {
 			_context = context;
 			_httpContextAccessor = httpContextAccessor;
 			_userManager = userManager;

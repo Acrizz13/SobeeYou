@@ -18,7 +18,7 @@ builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
 // Register AppDbContext for database models
-builder.Services.AddDbContext<NewDbContext>(options =>
+builder.Services.AddDbContext<SobeedbContext>(options =>
 	options.UseSqlServer(connectionString));
 
 

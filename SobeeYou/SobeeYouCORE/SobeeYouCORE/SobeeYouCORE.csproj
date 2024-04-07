@@ -22,6 +22,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Data\Migrations\" />
 		<Folder Include="Migrations\" />
 		<Folder Include="Models\AzureDbModels\" />
 	</ItemGroup>

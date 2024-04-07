@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class Tfavorite {
-    [Key]
+public partial class Tfavorite
+{
     public int IntFavoriteId { get; set; }
 
     public string StrFavorite { get; set; } = null!;

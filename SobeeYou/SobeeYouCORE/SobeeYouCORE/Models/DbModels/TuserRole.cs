@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class TuserRole {
-    [Key]
+public partial class TuserRole
+{
     public int IntUserRoleId { get; set; }
 
     public string StrRole { get; set; } = null!;

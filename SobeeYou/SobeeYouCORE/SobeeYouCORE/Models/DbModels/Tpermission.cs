@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class Tpermission {
-    [Key]
+public partial class Tpermission
+{
     public int IntPermissionId { get; set; }
 
     public string StrPermissionName { get; set; } = null!;

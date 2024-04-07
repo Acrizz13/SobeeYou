@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class TordersProduct {
-    [Key]
+public partial class TordersProduct
+{
     public int IntOrdersProductId { get; set; }
 
     public int IntProductId { get; set; }

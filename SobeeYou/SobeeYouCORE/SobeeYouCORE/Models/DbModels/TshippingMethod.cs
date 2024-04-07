@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class TshippingMethod {
-    [Key]
+public partial class TshippingMethod
+{
     public int IntShippingMethodId { get; set; }
 
     public string StrShippingName { get; set; } = null!;

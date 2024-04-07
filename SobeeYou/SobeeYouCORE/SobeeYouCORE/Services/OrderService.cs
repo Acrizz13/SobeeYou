@@ -4,9 +4,9 @@ using SobeeYouCORE.Models;
 namespace SobeeYouCORE.Services {
 
 	public class OrderService : IOrderService {
-		private readonly NewDbContext _context;
+		private readonly SobeedbContext _context;
 
-		public OrderService(NewDbContext context) {
+		public OrderService(SobeedbContext context) {
 			_context = context;
 		}
 

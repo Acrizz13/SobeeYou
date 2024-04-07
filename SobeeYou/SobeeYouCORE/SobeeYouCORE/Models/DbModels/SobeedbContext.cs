@@ -5,11 +5,11 @@ using SobeeYouCORE.Models.DbModels.Identity;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class NewDbContext : DbContext {
-    public NewDbContext() {
+public partial class SobeedbContext : DbContext {
+    public SobeedbContext() {
     }
 
-    public NewDbContext(DbContextOptions<NewDbContext> options)
+    public SobeedbContext(DbContextOptions<SobeedbContext> options)
         : base(options) {
     }
 
@@ -24,8 +24,6 @@ public partial class NewDbContext : DbContext {
     public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
 
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
-
-    public virtual DbSet<MigrationHistory> MigrationHistories { get; set; }
 
     public virtual DbSet<Tadmin> Tadmins { get; set; }
 
@@ -89,35 +87,28 @@ public partial class NewDbContext : DbContext {
 
     public virtual DbSet<TuserRole> TuserRoles { get; set; }
 
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("data source=itd2.cincinnatistate.edu;initial catalog=WAPP2-ChrismerA;user id=WAPP2-aChrismer;password=0695152;trustservercertificate=True;MultipleActiveResultSets=True;App=EntityFramework");
+        => optionsBuilder.UseSqlServer("Data Source=sobeeyoucore.database.windows.net;Initial Catalog=sobeedb;User ID=sobeeadmin;Password=Sobeeyou123!;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False ");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        modelBuilder.HasDefaultSchema("db_owner");
-
         modelBuilder.Entity<AspNetRole>(entity => {
-            entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
-                .IsUnique()
-                .HasFilter("([NormalizedName] IS NOT NULL)");
+            entity.ToTable("AspNetRoles", "db_owner");
 
             entity.Property(e => e.Name).HasMaxLength(256);
             entity.Property(e => e.NormalizedName).HasMaxLength(256);
         });
 
         modelBuilder.Entity<AspNetRoleClaim>(entity => {
-            entity.HasIndex(e => e.RoleId, "IX_AspNetRoleClaims_RoleId");
+            entity.ToTable("AspNetRoleClaims", "db_owner");
+
+            entity.Property(e => e.RoleId).HasMaxLength(450);
 
             entity.HasOne(d => d.Role).WithMany(p => p.AspNetRoleClaims).HasForeignKey(d => d.RoleId);
         });
 
         modelBuilder.Entity<AspNetUser>(entity => {
-            entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
-
-            entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
-                .IsUnique()
-                .HasFilter("([NormalizedUserName] IS NOT NULL)");
+            entity.ToTable("AspNetUsers", "db_owner");
 
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.Email).HasMaxLength(256);
@@ -146,13 +137,14 @@ public partial class NewDbContext : DbContext {
                     l => l.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
                     j => {
                         j.HasKey("UserId", "RoleId");
-                        j.ToTable("AspNetUserRoles");
-                        j.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
+                        j.ToTable("AspNetUserRoles", "db_owner");
                     });
         });
 
         modelBuilder.Entity<AspNetUserClaim>(entity => {
-            entity.HasIndex(e => e.UserId, "IX_AspNetUserClaims_UserId");
+            entity.ToTable("AspNetUserClaims", "db_owner");
+
+            entity.Property(e => e.UserId).HasMaxLength(450);
 
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
         });
@@ -160,16 +152,19 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<AspNetUserLogin>(entity => {
             entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
 
-            entity.HasIndex(e => e.UserId, "IX_AspNetUserLogins_UserId");
+            entity.ToTable("AspNetUserLogins", "db_owner");
 
             entity.Property(e => e.LoginProvider).HasMaxLength(128);
             entity.Property(e => e.ProviderKey).HasMaxLength(128);
+            entity.Property(e => e.UserId).HasMaxLength(450);
 
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
         });
 
         modelBuilder.Entity<AspNetUserToken>(entity => {
             entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+
+            entity.ToTable("AspNetUserTokens", "db_owner");
 
             entity.Property(e => e.LoginProvider).HasMaxLength(128);
             entity.Property(e => e.Name).HasMaxLength(128);
@@ -178,20 +173,10 @@ public partial class NewDbContext : DbContext {
         });
 
 
-        modelBuilder.Entity<MigrationHistory>(entity => {
-            entity.HasKey(e => new { e.MigrationId, e.ContextKey }).HasName("PK_dbo.__MigrationHistory");
-
-            entity.ToTable("__MigrationHistory", "dbo");
-
-            entity.Property(e => e.MigrationId).HasMaxLength(150);
-            entity.Property(e => e.ContextKey).HasMaxLength(300);
-            entity.Property(e => e.ProductVersion).HasMaxLength(32);
-        });
-
         modelBuilder.Entity<Tadmin>(entity => {
             entity.HasKey(e => e.IntAdminId).HasName("TAdmins_PK");
 
-            entity.ToTable("TAdmins");
+            entity.ToTable("TAdmins", "db_owner");
 
             entity.Property(e => e.IntAdminId)
                 .ValueGeneratedNever()
@@ -203,9 +188,9 @@ public partial class NewDbContext : DbContext {
         });
 
         modelBuilder.Entity<TcartItem>(entity => {
-            entity.HasKey(e => e.IntCartItemId).HasName("PK__TCartIte__4A33868DCDF2DFE8");
+            entity.HasKey(e => e.IntCartItemId).HasName("PK__TCartIte__4A33868D73ECE44D");
 
-            entity.ToTable("TCartItems");
+            entity.ToTable("TCartItems", "db_owner");
 
             entity.Property(e => e.IntCartItemId).HasColumnName("intCartItemID");
             entity.Property(e => e.DtmDateAdded)
@@ -217,17 +202,17 @@ public partial class NewDbContext : DbContext {
 
             entity.HasOne(d => d.IntProduct).WithMany(p => p.TcartItems)
                 .HasForeignKey(d => d.IntProductId)
-                .HasConstraintName("FK__TCartItem__intPr__1D4655FB");
+                .HasConstraintName("FK__TCartItem__intPr__3493CFA7");
 
             entity.HasOne(d => d.IntShoppingCart).WithMany(p => p.TcartItems)
                 .HasForeignKey(d => d.IntShoppingCartId)
-                .HasConstraintName("FK__TCartItem__intSh__1C5231C2");
+                .HasConstraintName("FK__TCartItem__intSh__3587F3E0");
         });
 
         modelBuilder.Entity<Tcity>(entity => {
             entity.HasKey(e => e.IntCityId).HasName("TCities_PK");
 
-            entity.ToTable("TCities");
+            entity.ToTable("TCities", "db_owner");
 
             entity.Property(e => e.IntCityId)
                 .ValueGeneratedNever()
@@ -241,7 +226,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<Tcoupon>(entity => {
             entity.HasKey(e => e.IntCouponId).HasName("TCoupons_PK");
 
-            entity.ToTable("TCoupons");
+            entity.ToTable("TCoupons", "db_owner");
 
             entity.Property(e => e.IntCouponId)
                 .ValueGeneratedNever()
@@ -262,7 +247,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<TcustomerServiceTicket>(entity => {
             entity.HasKey(e => e.IntCustomerServiceTicketId).HasName("TCustomerServiceTickets_PK");
 
-            entity.ToTable("TCustomerServiceTickets");
+            entity.ToTable("TCustomerServiceTickets", "db_owner");
 
             entity.Property(e => e.IntCustomerServiceTicketId)
                 .ValueGeneratedNever()
@@ -304,7 +289,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<TdrinkCategory>(entity => {
             entity.HasKey(e => e.IntDrinkCategoryId).HasName("TDrinkCategories_PK");
 
-            entity.ToTable("TDrinkCategories");
+            entity.ToTable("TDrinkCategories", "db_owner");
 
             entity.Property(e => e.IntDrinkCategoryId)
                 .ValueGeneratedNever()
@@ -318,7 +303,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<Tfavorite>(entity => {
             entity.HasKey(e => e.IntFavoriteId).HasName("TFavorites_PK");
 
-            entity.ToTable("TFavorites");
+            entity.ToTable("TFavorites", "db_owner");
 
             entity.Property(e => e.IntFavoriteId)
                 .ValueGeneratedNever()
@@ -332,7 +317,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<Tflavor>(entity => {
             entity.HasKey(e => e.IntFlavorId).HasName("TFlavors_PK");
 
-            entity.ToTable("TFlavors");
+            entity.ToTable("TFlavors", "db_owner");
 
             entity.Property(e => e.IntFlavorId)
                 .ValueGeneratedNever()
@@ -346,7 +331,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<Tgender>(entity => {
             entity.HasKey(e => e.IntGenderId).HasName("TGenders_PK");
 
-            entity.ToTable("TGenders");
+            entity.ToTable("TGenders", "db_owner");
 
             entity.Property(e => e.IntGenderId)
                 .ValueGeneratedNever()
@@ -360,7 +345,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<Tingredient>(entity => {
             entity.HasKey(e => e.IntIngredientId).HasName("TIngredients_PK");
 
-            entity.ToTable("TIngredients");
+            entity.ToTable("TIngredients", "db_owner");
 
             entity.Property(e => e.IntIngredientId)
                 .ValueGeneratedNever()
@@ -372,9 +357,9 @@ public partial class NewDbContext : DbContext {
         });
 
         modelBuilder.Entity<Torder>(entity => {
-            entity.HasKey(e => e.IntOrderId).HasName("PK__TOrders__447BBC4445C2DAD9");
+            entity.HasKey(e => e.IntOrderId).HasName("PK__TOrders__447BBC4417552EA2");
 
-            entity.ToTable("TOrders");
+            entity.ToTable("TOrders", "db_owner");
 
             entity.Property(e => e.IntOrderId).HasColumnName("intOrderID");
             entity.Property(e => e.DecTotalAmount)
@@ -416,7 +401,7 @@ public partial class NewDbContext : DbContext {
 
             entity.HasOne(d => d.IntUser).WithMany(p => p.Torders)
                 .HasForeignKey(d => d.IntUserId)
-                .HasConstraintName("FK__TOrders__intUser__0FEC5ADD");
+                .HasConstraintName("FK__TOrders__intUser__3C34F16F");
 
             entity.HasOne(d => d.User).WithMany(p => p.Torders)
                 .HasForeignKey(d => d.UserId)
@@ -424,9 +409,9 @@ public partial class NewDbContext : DbContext {
         });
 
         modelBuilder.Entity<TorderItem>(entity => {
-            entity.HasKey(e => e.IntOrderItemId).HasName("PK__TOrderIt__33B60225A0D3B9FE");
+            entity.HasKey(e => e.IntOrderItemId).HasName("PK__TOrderIt__33B6022565C3C971");
 
-            entity.ToTable("TOrderItems");
+            entity.ToTable("TOrderItems", "db_owner");
 
             entity.Property(e => e.IntOrderItemId).HasColumnName("intOrderItemID");
             entity.Property(e => e.IntOrderId).HasColumnName("intOrderID");
@@ -438,17 +423,17 @@ public partial class NewDbContext : DbContext {
 
             entity.HasOne(d => d.IntOrder).WithMany(p => p.TorderItems)
                 .HasForeignKey(d => d.IntOrderId)
-                .HasConstraintName("FK__TOrderIte__intOr__12C8C788");
+                .HasConstraintName("FK__TOrderIte__intOr__3A4CA8FD");
 
             entity.HasOne(d => d.IntProduct).WithMany(p => p.TorderItems)
                 .HasForeignKey(d => d.IntProductId)
-                .HasConstraintName("FK__TOrderIte__intPr__13BCEBC1");
+                .HasConstraintName("FK__TOrderIte__intPr__3B40CD36");
         });
 
         modelBuilder.Entity<TordersProduct>(entity => {
             entity.HasKey(e => e.IntOrdersProductId).HasName("TOrdersProducts_PK");
 
-            entity.ToTable("TOrdersProducts");
+            entity.ToTable("TOrdersProducts", "db_owner");
 
             entity.Property(e => e.IntOrdersProductId)
                 .ValueGeneratedNever()
@@ -467,7 +452,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<Tpayment>(entity => {
             entity.HasKey(e => e.IntPaymentId).HasName("TPayments_PK");
 
-            entity.ToTable("TPayments");
+            entity.ToTable("TPayments", "db_owner");
 
             entity.Property(e => e.IntPaymentId)
                 .ValueGeneratedNever()
@@ -481,9 +466,9 @@ public partial class NewDbContext : DbContext {
         });
 
         modelBuilder.Entity<TpaymentMethod>(entity => {
-            entity.HasKey(e => e.IntPaymentMethod).HasName("PK__TPayment__74D498AF41BBBA60");
+            entity.HasKey(e => e.IntPaymentMethod).HasName("PK__TPayment__74D498AFEB78D64F");
 
-            entity.ToTable("TPaymentMethods");
+            entity.ToTable("TPaymentMethods", "db_owner");
 
             entity.Property(e => e.IntPaymentMethod)
                 .ValueGeneratedNever()
@@ -495,9 +480,9 @@ public partial class NewDbContext : DbContext {
         });
 
         modelBuilder.Entity<TpaymentStatus>(entity => {
-            entity.HasKey(e => e.IntPaymentStatusId).HasName("PK__TPayment__4141EB108DDA446F");
+            entity.HasKey(e => e.IntPaymentStatusId).HasName("PK__TPayment__4141EB108EB291E3");
 
-            entity.ToTable("TPaymentStatus");
+            entity.ToTable("TPaymentStatus", "db_owner");
 
             entity.Property(e => e.IntPaymentStatusId)
                 .ValueGeneratedNever()
@@ -511,7 +496,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<Tpermission>(entity => {
             entity.HasKey(e => e.IntPermissionId).HasName("TPermissions_PK");
 
-            entity.ToTable("TPermissions");
+            entity.ToTable("TPermissions", "db_owner");
 
             entity.Property(e => e.IntPermissionId)
                 .ValueGeneratedNever()
@@ -529,7 +514,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<Tproduct>(entity => {
             entity.HasKey(e => e.IntProductId).HasName("TProducts_PK");
 
-            entity.ToTable("TProducts");
+            entity.ToTable("TProducts", "db_owner");
 
             entity.Property(e => e.IntProductId)
                 .ValueGeneratedNever()
@@ -554,7 +539,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<TproductImage>(entity => {
             entity.HasKey(e => e.IntProductImageId).HasName("TProductImages_PK");
 
-            entity.ToTable("TProductImages");
+            entity.ToTable("TProductImages", "db_owner");
 
             entity.Property(e => e.IntProductImageId)
                 .ValueGeneratedNever()
@@ -568,7 +553,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<TproductRecommendation>(entity => {
             entity.HasKey(e => e.IntProductRecommendationId).HasName("TProductRecommendations_PK");
 
-            entity.ToTable("TProductRecommendations");
+            entity.ToTable("TProductRecommendations", "db_owner");
 
             entity.Property(e => e.IntProductRecommendationId)
                 .ValueGeneratedNever()
@@ -605,7 +590,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<Tpromotion>(entity => {
             entity.HasKey(e => e.IntPromotionId).HasName("TPromotions_PK");
 
-            entity.ToTable("TPromotions");
+            entity.ToTable("TPromotions", "db_owner");
 
             entity.Property(e => e.IntPromotionId)
                 .ValueGeneratedNever()
@@ -626,7 +611,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<Trace>(entity => {
             entity.HasKey(e => e.IntRaceId).HasName("TRaces_PK");
 
-            entity.ToTable("TRaces");
+            entity.ToTable("TRaces", "db_owner");
 
             entity.Property(e => e.IntRaceId)
                 .ValueGeneratedNever()
@@ -640,7 +625,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<Treview>(entity => {
             entity.HasKey(e => e.IntReviewId).HasName("TReviews_PK");
 
-            entity.ToTable("TReviews");
+            entity.ToTable("TReviews", "db_owner");
 
             entity.Property(e => e.IntReviewId)
                 .ValueGeneratedNever()
@@ -678,7 +663,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<TshippingMethod>(entity => {
             entity.HasKey(e => e.IntShippingMethodId).HasName("TShippingMethods_PK");
 
-            entity.ToTable("TShippingMethods");
+            entity.ToTable("TShippingMethods", "db_owner");
 
             entity.Property(e => e.IntShippingMethodId)
                 .ValueGeneratedNever()
@@ -703,7 +688,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<TshippingStatus>(entity => {
             entity.HasKey(e => e.IntShippingStatusId).HasName("TShippingStatus_PK");
 
-            entity.ToTable("TShippingStatus");
+            entity.ToTable("TShippingStatus", "db_owner");
 
             entity.Property(e => e.IntShippingStatusId)
                 .ValueGeneratedNever()
@@ -715,9 +700,9 @@ public partial class NewDbContext : DbContext {
         });
 
         modelBuilder.Entity<TshoppingCart>(entity => {
-            entity.HasKey(e => e.IntShoppingCartId).HasName("PK__TShoppin__0A31291739EF1EA0");
+            entity.HasKey(e => e.IntShoppingCartId).HasName("PK__TShoppin__0A3129178578D1E1");
 
-            entity.ToTable("TShoppingCarts");
+            entity.ToTable("TShoppingCarts", "db_owner");
 
             entity.Property(e => e.IntShoppingCartId).HasColumnName("intShoppingCartID");
             entity.Property(e => e.DtmDateCreated)
@@ -743,7 +728,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<Tstate>(entity => {
             entity.HasKey(e => e.IntStateId).HasName("TStates_PK");
 
-            entity.ToTable("TStates");
+            entity.ToTable("TStates", "db_owner");
 
             entity.Property(e => e.IntStateId)
                 .ValueGeneratedNever()
@@ -757,7 +742,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<TticketCategory>(entity => {
             entity.HasKey(e => e.IntTicketCategoryId).HasName("TTicketCategories_PK");
 
-            entity.ToTable("TTicketCategories");
+            entity.ToTable("TTicketCategories", "db_owner");
 
             entity.Property(e => e.IntTicketCategoryId)
                 .ValueGeneratedNever()
@@ -771,7 +756,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<TticketStatus>(entity => {
             entity.HasKey(e => e.IntTicketStatusId).HasName("TTicketStatus_PK");
 
-            entity.ToTable("TTicketStatus");
+            entity.ToTable("TTicketStatus", "db_owner");
 
             entity.Property(e => e.IntTicketStatusId)
                 .ValueGeneratedNever()
@@ -785,7 +770,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<Tuser>(entity => {
             entity.HasKey(e => e.IntUserId).HasName("TUsers_PK");
 
-            entity.ToTable("TUsers");
+            entity.ToTable("TUsers", "db_owner");
 
             entity.Property(e => e.IntUserId)
                 .ValueGeneratedNever()
@@ -827,7 +812,7 @@ public partial class NewDbContext : DbContext {
         modelBuilder.Entity<TuserRole>(entity => {
             entity.HasKey(e => e.IntUserRoleId).HasName("TUserRoles_PK");
 
-            entity.ToTable("TUserRoles");
+            entity.ToTable("TUserRoles", "db_owner");
 
             entity.Property(e => e.IntUserRoleId)
                 .ValueGeneratedNever()
@@ -837,7 +822,6 @@ public partial class NewDbContext : DbContext {
                 .IsUnicode(false)
                 .HasColumnName("strRole");
         });
-
 
         OnModelCreatingPartial(modelBuilder);
     }

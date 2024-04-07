@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using SobeeYouCORE.Models.DbModels.Identity;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class Treview {
-    [Key]
+public partial class Treview
+{
     public int IntReviewId { get; set; }
 
     public int IntUserId { get; set; }

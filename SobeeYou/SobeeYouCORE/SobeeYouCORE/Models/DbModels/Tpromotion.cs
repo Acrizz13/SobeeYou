@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class Tpromotion {
-    [Key]
+public partial class Tpromotion
+{
     public int IntPromotionId { get; set; }
 
     public string StrPromoCode { get; set; } = null!;

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels;
 
-public partial class TticketStatus {
-    [Key]
+public partial class TticketStatus
+{
     public int IntTicketStatusId { get; set; }
 
     public string StrTicketStatus { get; set; } = null!;

@@ -3,24 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SobeeYouCORE.Models.DbModels.Identity;
+using SobeeYouCORE.Models.DbModels;
 
 #nullable disable
 
-namespace SobeeYouCORE.Data.Migrations
+namespace SobeeYouCORE.Migrations.Sobeedb
 {
-    [DbContext(typeof(AppDbContext))]
-    [Migration("20240403011056_sessionIdColumn")]
-    partial class sessionIdColumn
+    [DbContext(typeof(SobeedbContext))]
+    partial class SobeedbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("db_owner")
                 .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -36,12 +32,12 @@ namespace SobeeYouCORE.Data.Migrations
 
                     b.HasKey("UserId", "RoleId");
 
-                    b.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetRole", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetRole", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -59,14 +55,10 @@ namespace SobeeYouCORE.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "NormalizedName" }, "RoleNameIndex")
-                        .IsUnique()
-                        .HasFilter("([NormalizedName] IS NOT NULL)");
-
                     b.ToTable("AspNetRoles", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetRoleClaim", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetRoleClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -82,16 +74,17 @@ namespace SobeeYouCORE.Data.Migrations
 
                     b.Property<string>("RoleId")
                         .IsRequired()
+                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "RoleId" }, "IX_AspNetRoleClaims_RoleId");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -182,16 +175,10 @@ namespace SobeeYouCORE.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "NormalizedEmail" }, "EmailIndex");
-
-                    b.HasIndex(new[] { "NormalizedUserName" }, "UserNameIndex")
-                        .IsUnique()
-                        .HasFilter("([NormalizedUserName] IS NOT NULL)");
-
                     b.ToTable("AspNetUsers", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUserClaim", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUserClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -207,16 +194,17 @@ namespace SobeeYouCORE.Data.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
+                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "UserId" }, "IX_AspNetUserClaims_UserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUserLogin", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUserLogin", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
@@ -230,16 +218,18 @@ namespace SobeeYouCORE.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
-                    b.HasIndex(new[] { "UserId" }, "IX_AspNetUserLogins_UserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserLogins", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUserToken", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUserToken", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -260,290 +250,292 @@ namespace SobeeYouCORE.Data.Migrations
                     b.ToTable("AspNetUserTokens", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tadmin", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tadmin", b =>
                 {
-                    b.Property<int>("intAdminID")
+                    b.Property<int>("IntAdminId")
                         .HasColumnType("int")
                         .HasColumnName("intAdminID");
 
-                    b.Property<string>("strAdminName")
+                    b.Property<string>("StrAdminName")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strAdminName");
 
-                    b.HasKey("intAdminID")
+                    b.HasKey("IntAdminId")
                         .HasName("TAdmins_PK");
 
                     b.ToTable("TAdmins", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TcartItem", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TcartItem", b =>
                 {
-                    b.Property<int>("intCartItemID")
+                    b.Property<int>("IntCartItemId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("intCartItemID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("intCartItemID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IntCartItemId"));
 
-                    b.Property<DateTime>("dtmDateAdded")
+                    b.Property<DateTime?>("DtmDateAdded")
                         .HasColumnType("datetime")
                         .HasColumnName("dtmDateAdded");
 
-                    b.Property<int>("intProductID")
+                    b.Property<int?>("IntProductId")
                         .HasColumnType("int")
                         .HasColumnName("intProductID");
 
-                    b.Property<int>("intQuantity")
+                    b.Property<int?>("IntQuantity")
                         .HasColumnType("int")
                         .HasColumnName("intQuantity");
 
-                    b.Property<int>("intShoppingCartID")
+                    b.Property<int?>("IntShoppingCartId")
                         .HasColumnType("int")
                         .HasColumnName("intShoppingCartID");
 
-                    b.HasKey("intCartItemID")
-                        .HasName("PK__TCartIte__4A33868DCDF2DFE8");
+                    b.HasKey("IntCartItemId")
+                        .HasName("PK__TCartIte__4A33868D73ECE44D");
 
-                    b.HasIndex("intProductID");
+                    b.HasIndex("IntProductId");
 
-                    b.HasIndex("intShoppingCartID");
+                    b.HasIndex("IntShoppingCartId");
 
                     b.ToTable("TCartItems", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tcity", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tcity", b =>
                 {
-                    b.Property<int>("intCityID")
+                    b.Property<int>("IntCityId")
                         .HasColumnType("int")
                         .HasColumnName("intCityID");
 
-                    b.Property<string>("strCity")
+                    b.Property<string>("StrCity")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strCity");
 
-                    b.HasKey("intCityID")
+                    b.HasKey("IntCityId")
                         .HasName("TCities_PK");
 
                     b.ToTable("TCities", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tcoupon", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tcoupon", b =>
                 {
-                    b.Property<int>("intCouponID")
+                    b.Property<int>("IntCouponId")
                         .HasColumnType("int")
                         .HasColumnName("intCouponID");
 
-                    b.Property<DateTime>("dtmExpirationDate")
+                    b.Property<DateTime>("DtmExpirationDate")
                         .HasColumnType("datetime")
                         .HasColumnName("dtmExpirationDate");
 
-                    b.Property<string>("strCouponCode")
+                    b.Property<string>("StrCouponCode")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strCouponCode");
 
-                    b.Property<string>("strDiscountAmount")
+                    b.Property<string>("StrDiscountAmount")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strDiscountAmount");
 
-                    b.HasKey("intCouponID")
+                    b.HasKey("IntCouponId")
                         .HasName("TCoupons_PK");
 
                     b.ToTable("TCoupons", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TcustomerServiceTicket", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TcustomerServiceTicket", b =>
                 {
-                    b.Property<int>("intCustomerServiceTicketID")
+                    b.Property<int>("IntCustomerServiceTicketId")
                         .HasColumnType("int")
                         .HasColumnName("intCustomerServiceTicketID");
 
-                    b.Property<int>("TUserintUserID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TicketStatusintTicketStatusID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("dtmTimeOfSubmission")
+                    b.Property<DateTime>("DtmTimeOfSubmission")
                         .HasColumnType("datetime")
                         .HasColumnName("dtmTimeOfSubmission");
 
-                    b.Property<int>("intTicketCategoryID")
+                    b.Property<int>("IntTicketCategoryId")
                         .HasColumnType("int")
                         .HasColumnName("intTicketCategoryID");
 
-                    b.Property<int>("intTicketStatusID")
+                    b.Property<int>("IntTicketStatusId")
                         .HasColumnType("int")
                         .HasColumnName("intTicketStatusID");
 
-                    b.Property<int>("intUserID")
+                    b.Property<int>("IntUserId")
                         .HasColumnType("int")
                         .HasColumnName("intUserID");
 
-                    b.Property<string>("strDescription")
+                    b.Property<string>("SessionId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("session_id");
+
+                    b.Property<string>("StrDescription")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strDescription");
 
-                    b.Property<string>("userID")
-                        .IsRequired()
+                    b.Property<string>("UserId")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("user_id");
 
-                    b.HasKey("intCustomerServiceTicketID")
+                    b.HasKey("IntCustomerServiceTicketId")
                         .HasName("TCustomerServiceTickets_PK");
 
-                    b.HasIndex("TUserintUserID");
+                    b.HasIndex("IntTicketCategoryId");
 
-                    b.HasIndex("TicketStatusintTicketStatusID");
+                    b.HasIndex("IntTicketStatusId");
 
-                    b.HasIndex("intTicketStatusID");
+                    b.HasIndex("IntUserId");
 
-                    b.HasIndex("userID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("TCustomerServiceTickets", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TdrinkCategory", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TdrinkCategory", b =>
                 {
-                    b.Property<int>("intDrinkCategoryID")
+                    b.Property<int>("IntDrinkCategoryId")
                         .HasColumnType("int")
                         .HasColumnName("intDrinkCategoryID");
 
-                    b.Property<string>("strDrinkCategory")
+                    b.Property<string>("StrDrinkCategory")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strDrinkCategory");
 
-                    b.HasKey("intDrinkCategoryID")
+                    b.HasKey("IntDrinkCategoryId")
                         .HasName("TDrinkCategories_PK");
 
                     b.ToTable("TDrinkCategories", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tfavorite", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tfavorite", b =>
                 {
-                    b.Property<int>("intFavoriteID")
+                    b.Property<int>("IntFavoriteId")
                         .HasColumnType("int")
                         .HasColumnName("intFavoriteID");
 
-                    b.Property<string>("strFavorite")
+                    b.Property<string>("StrFavorite")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strFavorite");
 
-                    b.HasKey("intFavoriteID")
+                    b.HasKey("IntFavoriteId")
                         .HasName("TFavorites_PK");
 
                     b.ToTable("TFavorites", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tflavor", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tflavor", b =>
                 {
-                    b.Property<int>("intFlavorID")
+                    b.Property<int>("IntFlavorId")
                         .HasColumnType("int")
                         .HasColumnName("intFlavorID");
 
-                    b.Property<string>("strFlavor")
+                    b.Property<string>("StrFlavor")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strFlavor");
 
-                    b.HasKey("intFlavorID")
+                    b.HasKey("IntFlavorId")
                         .HasName("TFlavors_PK");
 
                     b.ToTable("TFlavors", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tgender", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tgender", b =>
                 {
-                    b.Property<int>("intGenderID")
+                    b.Property<int>("IntGenderId")
                         .HasColumnType("int")
                         .HasColumnName("intGenderID");
 
-                    b.Property<string>("strGender")
+                    b.Property<string>("StrGender")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strGender");
 
-                    b.HasKey("intGenderID")
+                    b.HasKey("IntGenderId")
                         .HasName("TGenders_PK");
 
                     b.ToTable("TGenders", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tingredient", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tingredient", b =>
                 {
-                    b.Property<int>("intIngredientID")
+                    b.Property<int>("IntIngredientId")
                         .HasColumnType("int")
                         .HasColumnName("intIngredientID");
 
-                    b.Property<string>("strIngredient")
+                    b.Property<string>("StrIngredient")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strIngredient");
 
-                    b.HasKey("intIngredientID")
+                    b.HasKey("IntIngredientId")
                         .HasName("TIngredients_PK");
 
                     b.ToTable("TIngredients", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Torder", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Torder", b =>
                 {
-                    b.Property<int>("intOrderID")
+                    b.Property<int>("IntOrderId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("intOrderID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("intOrderID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IntOrderId"));
 
-                    b.Property<decimal>("decTotalAmount")
+                    b.Property<decimal?>("DecTotalAmount")
                         .HasColumnType("decimal(10, 2)")
                         .HasColumnName("decTotalAmount");
 
-                    b.Property<DateTime>("dtmOrderDate")
+                    b.Property<DateTime?>("DtmOrderDate")
                         .HasColumnType("datetime")
                         .HasColumnName("dtmOrderDate");
 
-                    b.Property<int>("intPaymentMethod")
+                    b.Property<int?>("IntPaymentMethod")
                         .HasColumnType("int")
                         .HasColumnName("intPaymentMethod");
 
-                    b.Property<int>("intShippingStatusID")
+                    b.Property<int?>("IntShippingStatusId")
                         .HasColumnType("int")
                         .HasColumnName("intShippingStatusID");
 
-                    b.Property<int>("intUserID")
+                    b.Property<int?>("IntUserId")
                         .HasColumnType("int")
                         .HasColumnName("intUserID");
 
-                    b.Property<string>("strOrderStatus")
-                        .IsRequired()
+                    b.Property<string>("SessionId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("session_id");
+
+                    b.Property<string>("StrOrderStatus")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
                         .IsUnicode(false)
@@ -551,661 +543,640 @@ namespace SobeeYouCORE.Data.Migrations
                         .HasDefaultValue("Pending")
                         .HasColumnName("strOrderStatus");
 
-                    b.Property<string>("strShippingAddress")
-                        .IsRequired()
+                    b.Property<string>("StrShippingAddress")
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strShippingAddress");
 
-                    b.Property<string>("strTrackingNumber")
-                        .IsRequired()
+                    b.Property<string>("StrTrackingNumber")
                         .HasMaxLength(50)
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("strTrackingNumber");
 
-                    b.Property<string>("userID")
-                        .IsRequired()
+                    b.Property<string>("UserId")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("user_id");
 
-                    b.HasKey("intOrderID")
-                        .HasName("PK__TOrders__447BBC4445C2DAD9");
+                    b.HasKey("IntOrderId")
+                        .HasName("PK__TOrders__447BBC4417552EA2");
 
-                    b.HasIndex("intPaymentMethod");
+                    b.HasIndex("IntPaymentMethod");
 
-                    b.HasIndex("intShippingStatusID");
+                    b.HasIndex("IntShippingStatusId");
 
-                    b.HasIndex("intUserID");
+                    b.HasIndex("IntUserId");
 
-                    b.HasIndex("userID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("TOrders", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TorderItem", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TorderItem", b =>
                 {
-                    b.Property<int>("intOrderItemID")
+                    b.Property<int>("IntOrderItemId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("intOrderItemID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("intOrderItemID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IntOrderItemId"));
 
-                    b.Property<int>("intOrderID")
+                    b.Property<int?>("IntOrderId")
                         .HasColumnType("int")
                         .HasColumnName("intOrderID");
 
-                    b.Property<int>("intProductID")
+                    b.Property<int?>("IntProductId")
                         .HasColumnType("int")
                         .HasColumnName("intProductID");
 
-                    b.Property<int>("intQuantity")
+                    b.Property<int?>("IntQuantity")
                         .HasColumnType("int")
                         .HasColumnName("intQuantity");
 
-                    b.Property<decimal>("monPricePerUnit")
+                    b.Property<decimal?>("MonPricePerUnit")
                         .HasColumnType("money")
                         .HasColumnName("monPricePerUnit");
 
-                    b.HasKey("intOrderItemID")
-                        .HasName("PK__TOrderIt__33B60225A0D3B9FE");
+                    b.HasKey("IntOrderItemId")
+                        .HasName("PK__TOrderIt__33B6022565C3C971");
 
-                    b.HasIndex("intOrderID");
+                    b.HasIndex("IntOrderId");
 
-                    b.HasIndex("intProductID");
+                    b.HasIndex("IntProductId");
 
                     b.ToTable("TOrderItems", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TordersProduct", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TordersProduct", b =>
                 {
-                    b.Property<int>("intOrdersProductID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<int>("IntOrdersProductId")
+                        .HasColumnType("int")
+                        .HasColumnName("intOrdersProductID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("intOrdersProductID"));
+                    b.Property<int>("IntProductId")
+                        .HasColumnType("int")
+                        .HasColumnName("intProductID");
 
-                    b.Property<int>("intProductID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("strOrdersProduct")
+                    b.Property<string>("StrOrdersProduct")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("strOrdersProduct");
 
-                    b.HasKey("intOrdersProductID");
+                    b.HasKey("IntOrdersProductId")
+                        .HasName("TOrdersProducts_PK");
 
-                    b.HasIndex("intProductID");
+                    b.HasIndex("IntProductId");
 
-                    b.ToTable("TordersProducts", "db_owner");
+                    b.ToTable("TOrdersProducts", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tpayment", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tpayment", b =>
                 {
-                    b.Property<int>("intPaymentID")
+                    b.Property<int>("IntPaymentId")
                         .HasColumnType("int")
                         .HasColumnName("intPaymentID");
 
-                    b.Property<int?>("intPaymentMethod")
+                    b.Property<int?>("IntPaymentMethod")
                         .HasColumnType("int")
                         .HasColumnName("intPaymentMethod");
 
-                    b.Property<int?>("intPaymentMethodID")
+                    b.Property<int?>("IntPaymentMethodId")
                         .HasColumnType("int")
                         .HasColumnName("intPaymentMethodID");
 
-                    b.Property<string>("strBillingAddress")
+                    b.Property<string>("StrBillingAddress")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strBillingAddress");
 
-                    b.HasKey("intPaymentID")
+                    b.HasKey("IntPaymentId")
                         .HasName("TPayments_PK");
 
                     b.ToTable("TPayments", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TpaymentMethod", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TpaymentMethod", b =>
                 {
-                    b.Property<int>("intPaymentMethod")
+                    b.Property<int>("IntPaymentMethod")
                         .HasColumnType("int")
                         .HasColumnName("intPaymentMethod");
 
-                    b.Property<string>("strPaymentMethodName")
-                        .IsRequired()
+                    b.Property<string>("StrPaymentMethodName")
                         .HasMaxLength(50)
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("strPaymentMethodName");
 
-                    b.HasKey("intPaymentMethod")
-                        .HasName("PK__TPayment__74D498AF41BBBA60");
+                    b.HasKey("IntPaymentMethod")
+                        .HasName("PK__TPayment__74D498AFEB78D64F");
 
                     b.ToTable("TPaymentMethods", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TpaymentStatus", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TpaymentStatus", b =>
                 {
-                    b.Property<int>("intPaymentStatusID")
+                    b.Property<int>("IntPaymentStatusId")
                         .HasColumnType("int")
                         .HasColumnName("intPaymentStatusID");
 
-                    b.Property<string>("strPaymentStatus")
-                        .IsRequired()
+                    b.Property<string>("StrPaymentStatus")
                         .HasMaxLength(50)
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("strPaymentStatus");
 
-                    b.HasKey("intPaymentStatusID")
-                        .HasName("PK__TPayment__4141EB108DDA446F");
+                    b.HasKey("IntPaymentStatusId")
+                        .HasName("PK__TPayment__4141EB108EB291E3");
 
                     b.ToTable("TPaymentStatus", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tpermission", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tpermission", b =>
                 {
-                    b.Property<int>("intPermissionID")
+                    b.Property<int>("IntPermissionId")
                         .HasColumnType("int")
                         .HasColumnName("intPermissionID");
 
-                    b.Property<string>("strDescription")
+                    b.Property<string>("StrDescription")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strDescription");
 
-                    b.Property<string>("strPermissionName")
+                    b.Property<string>("StrPermissionName")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strPermissionName");
 
-                    b.HasKey("intPermissionID")
+                    b.HasKey("IntPermissionId")
                         .HasName("TPermissions_PK");
 
                     b.ToTable("TPermissions", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tproduct", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tproduct", b =>
                 {
-                    b.Property<int>("intProductID")
+                    b.Property<int>("IntProductId")
                         .HasColumnType("int")
                         .HasColumnName("intProductID");
 
-                    b.Property<decimal>("decPrice")
+                    b.Property<decimal?>("DecPrice")
                         .HasColumnType("decimal(18, 2)")
                         .HasColumnName("decPrice");
 
-                    b.Property<string>("strName")
+                    b.Property<string>("StrName")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strName");
 
-                    b.Property<string>("strPrice")
-                        .IsRequired()
+                    b.Property<string>("StrPrice")
                         .HasMaxLength(50)
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("strPrice");
 
-                    b.Property<string>("strStockAmount")
+                    b.Property<string>("StrStockAmount")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strStockAmount");
 
-                    b.HasKey("intProductID")
+                    b.HasKey("IntProductId")
                         .HasName("TProducts_PK");
 
                     b.ToTable("TProducts", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TproductImage", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TproductImage", b =>
                 {
-                    b.Property<int>("intProductImageID")
+                    b.Property<int>("IntProductImageId")
                         .HasColumnType("int")
                         .HasColumnName("intProductImageID");
 
-                    b.Property<string>("strProductImageUrl")
+                    b.Property<string>("StrProductImageUrl")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .IsUnicode(false)
                         .HasColumnType("varchar(1000)")
                         .HasColumnName("strProductImageURL");
 
-                    b.HasKey("intProductImageID")
+                    b.HasKey("IntProductImageId")
                         .HasName("TProductImages_PK");
 
                     b.ToTable("TProductImages", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TproductRecommendation", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TproductRecommendation", b =>
                 {
-                    b.Property<int>("intProductRecommendationID")
+                    b.Property<int>("IntProductRecommendationId")
                         .HasColumnType("int")
                         .HasColumnName("intProductRecommendationID");
 
-                    b.Property<DateTime>("dtmTimeOfRecommendation")
+                    b.Property<DateTime>("DtmTimeOfRecommendation")
                         .HasColumnType("datetime")
                         .HasColumnName("dtmTimeOfRecommendation");
 
-                    b.Property<int>("intProductID")
+                    b.Property<int>("IntProductId")
                         .HasColumnType("int")
                         .HasColumnName("intProductID");
 
-                    b.Property<int>("intUserID")
+                    b.Property<int>("IntUserId")
                         .HasColumnType("int")
                         .HasColumnName("intUserID");
 
-                    b.Property<string>("strRelevantScore")
+                    b.Property<string>("SessionId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("session_id");
+
+                    b.Property<string>("StrRelevantScore")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strRelevantScore");
 
-                    b.Property<string>("userID")
-                        .IsRequired()
+                    b.Property<string>("UserId")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("user_id");
 
-                    b.HasKey("intProductRecommendationID")
+                    b.HasKey("IntProductRecommendationId")
                         .HasName("TProductRecommendations_PK");
 
-                    b.HasIndex("intProductID");
+                    b.HasIndex("IntProductId");
 
-                    b.HasIndex("intUserID");
+                    b.HasIndex("IntUserId");
 
-                    b.HasIndex("userID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("TProductRecommendations", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tpromotion", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tpromotion", b =>
                 {
-                    b.Property<int>("intPromotionID")
+                    b.Property<int>("IntPromotionId")
                         .HasColumnType("int")
                         .HasColumnName("intPromotionID");
 
-                    b.Property<DateTime>("dtmExpirationDate")
+                    b.Property<DateTime>("DtmExpirationDate")
                         .HasColumnType("datetime")
                         .HasColumnName("dtmExpirationDate");
 
-                    b.Property<string>("strDiscountPercentage")
+                    b.Property<string>("StrDiscountPercentage")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strDiscountPercentage");
 
-                    b.Property<string>("strPromoCode")
+                    b.Property<string>("StrPromoCode")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strPromoCode");
 
-                    b.HasKey("intPromotionID")
+                    b.HasKey("IntPromotionId")
                         .HasName("TPromotions_PK");
 
                     b.ToTable("TPromotions", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Trace", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Trace", b =>
                 {
-                    b.Property<int>("intRaceID")
+                    b.Property<int>("IntRaceId")
                         .HasColumnType("int")
                         .HasColumnName("intRaceID");
 
-                    b.Property<string>("strRace")
+                    b.Property<string>("StrRace")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strRace");
 
-                    b.HasKey("intRaceID")
+                    b.HasKey("IntRaceId")
                         .HasName("TRaces_PK");
 
                     b.ToTable("TRaces", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Treview", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Treview", b =>
                 {
-                    b.Property<int>("intReviewID")
+                    b.Property<int>("IntReviewId")
                         .HasColumnType("int")
                         .HasColumnName("intReviewID");
 
-                    b.Property<int>("intProductID")
+                    b.Property<int>("IntProductId")
                         .HasColumnType("int")
                         .HasColumnName("intProductID");
 
-                    b.Property<int>("intUserID")
+                    b.Property<int>("IntUserId")
                         .HasColumnType("int")
                         .HasColumnName("intUserID");
 
-                    b.Property<string>("strRating")
+                    b.Property<string>("SessionId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("session_id");
+
+                    b.Property<string>("StrRating")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strRating");
 
-                    b.Property<string>("strReviewText")
+                    b.Property<string>("StrReviewText")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .IsUnicode(false)
                         .HasColumnType("varchar(1000)")
                         .HasColumnName("strReviewText");
 
-                    b.Property<string>("userID")
-                        .IsRequired()
+                    b.Property<string>("UserId")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("user_id");
 
-                    b.HasKey("intReviewID")
+                    b.HasKey("IntReviewId")
                         .HasName("TReviews_PK");
 
-                    b.HasIndex("intProductID");
+                    b.HasIndex("IntProductId");
 
-                    b.HasIndex("intUserID");
+                    b.HasIndex("IntUserId");
 
-                    b.HasIndex("userID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("TReviews", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TshippingMethod", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TshippingMethod", b =>
                 {
-                    b.Property<int>("intShippingMethodID")
+                    b.Property<int>("IntShippingMethodId")
                         .HasColumnType("int")
                         .HasColumnName("intShippingMethodID");
 
-                    b.Property<DateTime>("dtmEstimatedDelivery")
+                    b.Property<DateTime>("DtmEstimatedDelivery")
                         .HasColumnType("datetime")
                         .HasColumnName("dtmEstimatedDelivery");
 
-                    b.Property<string>("strBillingAddress")
+                    b.Property<string>("StrBillingAddress")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strBillingAddress");
 
-                    b.Property<string>("strCost")
+                    b.Property<string>("StrCost")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strCost");
 
-                    b.Property<string>("strShippingName")
+                    b.Property<string>("StrShippingName")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strShippingName");
 
-                    b.HasKey("intShippingMethodID")
+                    b.HasKey("IntShippingMethodId")
                         .HasName("TShippingMethods_PK");
 
                     b.ToTable("TShippingMethods", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TshippingStatus", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TshippingStatus", b =>
                 {
-                    b.Property<int>("intShippingStatusID")
+                    b.Property<int>("IntShippingStatusId")
                         .HasColumnType("int")
                         .HasColumnName("intShippingStatusID");
 
-                    b.Property<string>("strShippingStatus")
+                    b.Property<string>("StrShippingStatus")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strShippingStatus");
 
-                    b.HasKey("intShippingStatusID")
+                    b.HasKey("IntShippingStatusId")
                         .HasName("TShippingStatus_PK");
 
                     b.ToTable("TShippingStatus", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TshoppingCart", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TshoppingCart", b =>
                 {
-                    b.Property<int>("intShoppingCartID")
+                    b.Property<int>("IntShoppingCartId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("intShoppingCartID");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("intShoppingCartID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IntShoppingCartId"));
 
-                    b.Property<DateTime>("dtmDateCreated")
+                    b.Property<DateTime?>("DtmDateCreated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasColumnName("dtmDateCreated")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<DateTime>("dtmDateLastUpdated")
+                    b.Property<DateTime?>("DtmDateLastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasColumnName("dtmDateLastUpdated")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<string>("userID")
-                        .IsRequired()
+                    b.Property<string>("SessionId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("session_id");
+
+                    b.Property<string>("UserId")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("user_id");
 
-                    b.HasKey("intShoppingCartID")
-                        .HasName("PK__TShoppin__0A31291739EF1EA0");
+                    b.HasKey("IntShoppingCartId")
+                        .HasName("PK__TShoppin__0A3129178578D1E1");
 
-                    b.HasIndex("userID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("TShoppingCarts", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tstate", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tstate", b =>
                 {
-                    b.Property<int>("intStateID")
+                    b.Property<int>("IntStateId")
                         .HasColumnType("int")
                         .HasColumnName("intStateID");
 
-                    b.Property<string>("strState")
+                    b.Property<string>("StrState")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strState");
 
-                    b.HasKey("intStateID")
+                    b.HasKey("IntStateId")
                         .HasName("TStates_PK");
 
                     b.ToTable("TStates", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TticketCategory", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TticketCategory", b =>
                 {
-                    b.Property<int>("intTicketCategoryID")
+                    b.Property<int>("IntTicketCategoryId")
                         .HasColumnType("int")
                         .HasColumnName("intTicketCategoryID");
 
-                    b.Property<string>("strTicketCategory")
+                    b.Property<string>("StrTicketCategory")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strTicketCategory");
 
-                    b.HasKey("intTicketCategoryID")
+                    b.HasKey("IntTicketCategoryId")
                         .HasName("TTicketCategories_PK");
 
                     b.ToTable("TTicketCategories", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TticketStatus", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TticketStatus", b =>
                 {
-                    b.Property<int>("intTicketStatusID")
+                    b.Property<int>("IntTicketStatusId")
                         .HasColumnType("int")
                         .HasColumnName("intTicketStatusID");
 
-                    b.Property<string>("strTicketStatus")
+                    b.Property<string>("StrTicketStatus")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strTicketStatus");
 
-                    b.HasKey("intTicketStatusID")
+                    b.HasKey("IntTicketStatusId")
                         .HasName("TTicketStatus_PK");
 
                     b.ToTable("TTicketStatus", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tuser", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tuser", b =>
                 {
-                    b.Property<int>("intUserID")
+                    b.Property<int>("IntUserId")
                         .HasColumnType("int")
                         .HasColumnName("intUserID");
 
-                    b.Property<int?>("intUserRoleID")
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("ID");
+
+                    b.Property<int?>("IntUserRoleId")
                         .HasColumnType("int")
                         .HasColumnName("intUserRoleID");
 
-                    b.Property<string>("strBillingAddress")
-                        .IsRequired()
+                    b.Property<string>("StrBillingAddress")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("strBillingAddress");
 
-                    b.Property<DateTime>("strDateCreated")
+                    b.Property<DateTime?>("StrDateCreated")
                         .HasColumnType("datetime")
                         .HasColumnName("strDateCreated");
 
-                    b.Property<string>("strEmail")
+                    b.Property<string>("StrEmail")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strEmail");
 
-                    b.Property<string>("strFirstName")
-                        .IsRequired()
+                    b.Property<string>("StrFirstName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("strFirstName");
 
-                    b.Property<DateTime>("strLastLoginDate")
+                    b.Property<DateTime?>("StrLastLoginDate")
                         .HasColumnType("datetime")
                         .HasColumnName("strLastLoginDate");
 
-                    b.Property<string>("strLastName")
-                        .IsRequired()
+                    b.Property<string>("StrLastName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("strLastName");
 
-                    b.Property<string>("strPassword")
+                    b.Property<string>("StrPassword")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strPassword");
 
-                    b.Property<string>("strShippingAddress")
-                        .IsRequired()
+                    b.Property<string>("StrShippingAddress")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("strShippingAddress");
 
-                    b.Property<string>("userID")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("ID");
-
-                    b.HasKey("intUserID")
+                    b.HasKey("IntUserId")
                         .HasName("TUsers_PK");
 
-                    b.HasIndex("intUserRoleID");
+                    b.HasIndex("IntUserRoleId");
 
                     b.ToTable("TUsers", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TuserRole", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TuserRole", b =>
                 {
-                    b.Property<int>("intUserRoleID")
+                    b.Property<int>("IntUserRoleId")
                         .HasColumnType("int")
                         .HasColumnName("intUserRoleID");
 
-                    b.Property<string>("strRole")
+                    b.Property<string>("StrRole")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("strRole");
 
-                    b.HasKey("intUserRoleID")
+                    b.HasKey("IntUserRoleId")
                         .HasName("TUserRoles_PK");
 
                     b.ToTable("TUserRoles", "db_owner");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.MigrationHistory", b =>
-                {
-                    b.Property<string>("MigrationId")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("ContextKey")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<byte[]>("Model")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ProductVersion")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
-
-                    b.HasKey("MigrationId", "ContextKey")
-                        .HasName("PK_dbo.__MigrationHistory");
-
-                    b.ToTable("__MigrationHistory", "dbo");
-                });
-
             modelBuilder.Entity("AspNetUserRole", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetRole", null)
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", null)
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetRoleClaim", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetRoleClaim", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetRole", "Role")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetRole", "Role")
                         .WithMany("AspNetRoleClaims")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1214,9 +1185,9 @@ namespace SobeeYouCORE.Data.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUserClaim", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUserClaim", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "User")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
                         .WithMany("AspNetUserClaims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1225,18 +1196,20 @@ namespace SobeeYouCORE.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUserLogin", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUserLogin", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "User")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
                         .WithMany("AspNetUserLogins")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUserToken", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUserToken", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "User")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
                         .WithMany("AspNetUserTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1245,223 +1218,202 @@ namespace SobeeYouCORE.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TcartItem", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TcartItem", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Tproduct", "Product")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tproduct", "IntProduct")
                         .WithMany("TcartItems")
-                        .HasForeignKey("intProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__TCartItem__intPr__1D4655FB");
+                        .HasForeignKey("IntProductId")
+                        .HasConstraintName("FK__TCartItem__intPr__3493CFA7");
 
-                    b.HasOne("SobeeYouCORE.Models.DbModels.TshoppingCart", "ShoppingCart")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.TshoppingCart", "IntShoppingCart")
                         .WithMany("TcartItems")
-                        .HasForeignKey("intShoppingCartID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__TCartItem__intSh__1C5231C2");
+                        .HasForeignKey("IntShoppingCartId")
+                        .HasConstraintName("FK__TCartItem__intSh__3587F3E0");
 
-                    b.Navigation("Product");
+                    b.Navigation("IntProduct");
 
-                    b.Navigation("ShoppingCart");
+                    b.Navigation("IntShoppingCart");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TcustomerServiceTicket", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TcustomerServiceTicket", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Tuser", "TUser")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.TticketCategory", "IntTicketCategory")
                         .WithMany("TcustomerServiceTickets")
-                        .HasForeignKey("TUserintUserID")
+                        .HasForeignKey("IntTicketCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("TCustomerServiceTickets_TTicketCategories_FK");
 
-                    b.HasOne("SobeeYouCORE.Models.DbModels.TticketStatus", "TicketStatus")
-                        .WithMany("tcustomerServiceTickets")
-                        .HasForeignKey("TicketStatusintTicketStatusID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SobeeYouCORE.Models.DbModels.TticketCategory", "TicketCategory")
-                        .WithMany("TcustomerServiceTicket")
-                        .HasForeignKey("intTicketStatusID")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.TticketStatus", "IntTicketStatus")
+                        .WithMany("TcustomerServiceTickets")
+                        .HasForeignKey("IntTicketStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("TCustomerServiceTickets_TTicketStatus_FK");
 
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "User")
-                        .WithMany("TcustomerServiceTicket")
-                        .HasForeignKey("userID")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tuser", "IntUser")
+                        .WithMany("TcustomerServiceTickets")
+                        .HasForeignKey("IntUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
+                        .HasConstraintName("TCustomerServiceTickets_TUsers_FK");
+
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
+                        .WithMany("TcustomerServiceTickets")
+                        .HasForeignKey("UserId")
                         .HasConstraintName("FK_TCustomerServiceTickets_AspNetUsers");
 
-                    b.Navigation("TUser");
+                    b.Navigation("IntTicketCategory");
 
-                    b.Navigation("TicketCategory");
+                    b.Navigation("IntTicketStatus");
 
-                    b.Navigation("TicketStatus");
+                    b.Navigation("IntUser");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Torder", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Torder", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.TpaymentMethod", "intPaymentMethodNavigation")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.TpaymentMethod", "IntPaymentMethodNavigation")
                         .WithMany("Torders")
-                        .HasForeignKey("intPaymentMethod")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
+                        .HasForeignKey("IntPaymentMethod")
                         .HasConstraintName("FK_PaymentMethod");
 
-                    b.HasOne("SobeeYouCORE.Models.DbModels.TshippingStatus", "intShippingStatus")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.TshippingStatus", "IntShippingStatus")
                         .WithMany("Torders")
-                        .HasForeignKey("intShippingStatusID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
+                        .HasForeignKey("IntShippingStatusId")
                         .HasConstraintName("FK_TOrders_TShippingStatus");
 
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Tuser", "Tuser")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tuser", "IntUser")
                         .WithMany("Torders")
-                        .HasForeignKey("intUserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__TOrders__intUser__0FEC5ADD");
+                        .HasForeignKey("IntUserId")
+                        .HasConstraintName("FK__TOrders__intUser__3C34F16F");
 
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "User")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
                         .WithMany("Torders")
-                        .HasForeignKey("userID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
+                        .HasForeignKey("UserId")
                         .HasConstraintName("FK_TORders_AspNetUsers");
 
-                    b.Navigation("Tuser");
+                    b.Navigation("IntPaymentMethodNavigation");
+
+                    b.Navigation("IntShippingStatus");
+
+                    b.Navigation("IntUser");
 
                     b.Navigation("User");
-
-                    b.Navigation("intPaymentMethodNavigation");
-
-                    b.Navigation("intShippingStatus");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TorderItem", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TorderItem", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Torder", "intOrder")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Torder", "IntOrder")
                         .WithMany("TorderItems")
-                        .HasForeignKey("intOrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__TOrderIte__intOr__12C8C788");
+                        .HasForeignKey("IntOrderId")
+                        .HasConstraintName("FK__TOrderIte__intOr__3A4CA8FD");
 
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Tproduct", "intProduct")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tproduct", "IntProduct")
                         .WithMany("TorderItems")
-                        .HasForeignKey("intProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__TOrderIte__intPr__13BCEBC1");
+                        .HasForeignKey("IntProductId")
+                        .HasConstraintName("FK__TOrderIte__intPr__3B40CD36");
 
-                    b.Navigation("intOrder");
+                    b.Navigation("IntOrder");
 
-                    b.Navigation("intProduct");
+                    b.Navigation("IntProduct");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TordersProduct", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TordersProduct", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Tproduct", "intProduct")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tproduct", "IntProduct")
                         .WithMany("TordersProducts")
-                        .HasForeignKey("intProductID")
+                        .HasForeignKey("IntProductId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("TOrdersProducts_TProducts_FK");
 
-                    b.Navigation("intProduct");
+                    b.Navigation("IntProduct");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TproductRecommendation", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TproductRecommendation", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Tproduct", "intProduct")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tproduct", "IntProduct")
                         .WithMany("TproductRecommendations")
-                        .HasForeignKey("intProductID")
+                        .HasForeignKey("IntProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("TProductRecommendations_TProducts_FK");
 
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Tuser", "intUser")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tuser", "IntUser")
                         .WithMany("TproductRecommendations")
-                        .HasForeignKey("intUserID")
+                        .HasForeignKey("IntUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("TProductRecommendations_TUsers_FK");
 
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "user")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
                         .WithMany("TproductRecommendations")
-                        .HasForeignKey("userID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
+                        .HasForeignKey("UserId")
                         .HasConstraintName("FK_TProductRecommendations_AspNetUsers");
 
-                    b.Navigation("intProduct");
+                    b.Navigation("IntProduct");
 
-                    b.Navigation("intUser");
+                    b.Navigation("IntUser");
 
-                    b.Navigation("user");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Treview", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Treview", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Tproduct", "intProduct")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tproduct", "IntProduct")
                         .WithMany("Treviews")
-                        .HasForeignKey("intProductID")
+                        .HasForeignKey("IntProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("TReviews_TProducts_FK");
 
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Tuser", "intUser")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.Tuser", "IntUser")
                         .WithMany("Treviews")
-                        .HasForeignKey("intUserID")
+                        .HasForeignKey("IntUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("TReviews_TUsers_FK");
 
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "user")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
                         .WithMany("Treviews")
-                        .HasForeignKey("userID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
+                        .HasForeignKey("UserId")
                         .HasConstraintName("FK_TReviews_AspNetUsers");
 
-                    b.Navigation("intProduct");
+                    b.Navigation("IntProduct");
 
-                    b.Navigation("intUser");
+                    b.Navigation("IntUser");
 
-                    b.Navigation("user");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TshoppingCart", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TshoppingCart", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", "user")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.AspNetUser", "User")
                         .WithMany("TshoppingCarts")
-                        .HasForeignKey("userID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
+                        .HasForeignKey("UserId")
                         .HasConstraintName("FK_TShoppingCarts_AspNetUsers");
 
-                    b.Navigation("user");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tuser", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tuser", b =>
                 {
-                    b.HasOne("SobeeYouCORE.Models.DbModels.TuserRole", "intUserRole")
+                    b.HasOne("SobeeYouCORE.Models.AzureDbModels.TuserRole", "IntUserRole")
                         .WithMany("Tusers")
-                        .HasForeignKey("intUserRoleID")
+                        .HasForeignKey("IntUserRoleId")
                         .HasConstraintName("FK_intUserRoleID");
 
-                    b.Navigation("intUserRole");
+                    b.Navigation("IntUserRole");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetRole", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetRole", b =>
                 {
                     b.Navigation("AspNetRoleClaims");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Identity.AspNetUser", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.AspNetUser", b =>
                 {
                     b.Navigation("AspNetUserClaims");
 
@@ -1469,7 +1421,7 @@ namespace SobeeYouCORE.Data.Migrations
 
                     b.Navigation("AspNetUserTokens");
 
-                    b.Navigation("TcustomerServiceTicket");
+                    b.Navigation("TcustomerServiceTickets");
 
                     b.Navigation("Torders");
 
@@ -1480,17 +1432,17 @@ namespace SobeeYouCORE.Data.Migrations
                     b.Navigation("TshoppingCarts");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Torder", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Torder", b =>
                 {
                     b.Navigation("TorderItems");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TpaymentMethod", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TpaymentMethod", b =>
                 {
                     b.Navigation("Torders");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tproduct", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tproduct", b =>
                 {
                     b.Navigation("TcartItems");
 
@@ -1503,27 +1455,27 @@ namespace SobeeYouCORE.Data.Migrations
                     b.Navigation("Treviews");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TshippingStatus", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TshippingStatus", b =>
                 {
                     b.Navigation("Torders");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TshoppingCart", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TshoppingCart", b =>
                 {
                     b.Navigation("TcartItems");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TticketCategory", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TticketCategory", b =>
                 {
-                    b.Navigation("TcustomerServiceTicket");
+                    b.Navigation("TcustomerServiceTickets");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TticketStatus", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TticketStatus", b =>
                 {
-                    b.Navigation("tcustomerServiceTickets");
+                    b.Navigation("TcustomerServiceTickets");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.Tuser", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.Tuser", b =>
                 {
                     b.Navigation("TcustomerServiceTickets");
 
@@ -1534,7 +1486,7 @@ namespace SobeeYouCORE.Data.Migrations
                     b.Navigation("Treviews");
                 });
 
-            modelBuilder.Entity("SobeeYouCORE.Models.DbModels.TuserRole", b =>
+            modelBuilder.Entity("SobeeYouCORE.Models.AzureDbModels.TuserRole", b =>
                 {
                     b.Navigation("Tusers");
                 });

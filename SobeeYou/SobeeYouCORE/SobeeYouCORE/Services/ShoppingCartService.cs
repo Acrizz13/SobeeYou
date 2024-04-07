@@ -6,11 +6,11 @@ using System.Security.Claims;
 
 namespace SobeeYouCORE.Services {
 	public class ShoppingCartService : IShoppingCartService {
-		private readonly NewDbContext _context;
+		private readonly SobeedbContext _context;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly UserManager<ApplicationUser> _userManager;
 
-		public ShoppingCartService(NewDbContext context, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager) {
+		public ShoppingCartService(SobeedbContext context, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager) {
 			_context = context;
 			_httpContextAccessor = httpContextAccessor;
 			_userManager = userManager;

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SobeeYouCORE.Models.DbModels.Identity;
 
-public partial class AspNetUserClaim {
-    [Key]
+public partial class AspNetUserClaim
+{
     public int Id { get; set; }
 
     public string UserId { get; set; } = null!;

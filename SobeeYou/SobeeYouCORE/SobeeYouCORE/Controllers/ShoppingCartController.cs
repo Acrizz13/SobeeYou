@@ -11,12 +11,12 @@ using SobeeYouCORE.Services;
 
 namespace SobeeYouCORE.Controllers {
 	public class ShoppingCartController : Controller {
-		private readonly NewDbContext _context;
+		private readonly SobeedbContext _context;
 		private readonly IShoppingCartService _shoppingCartService;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly UserManager<ApplicationUser> _userManager;
 
-		public ShoppingCartController(NewDbContext context, IShoppingCartService shoppingCartService, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager) {
+		public ShoppingCartController(SobeedbContext context, IShoppingCartService shoppingCartService, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager) {
 			_context = context;
 			_shoppingCartService = shoppingCartService;
 			_httpContextAccessor = httpContextAccessor;
