@@ -1,0 +1,23 @@
+﻿table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th,
+td {
+	text-align: left;
+	padding: 8px;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+	background-color: #f9f9f9;
+}
+
+.quantity-text {
+	display: inline-block; /* Display quantity as inline element */
+	min-width: 30px; /* Set a minimum width for better alignment */
+}

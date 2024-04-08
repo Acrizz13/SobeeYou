@@ -1,0 +1,97 @@
+﻿.header {
+	position: absolute;
+	top: 104px;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 1; /* Ensure the header appears above the image */
+	color: white; /* For visibility */
+	text-align: center;
+	font-size: 64px; /* Adjust font size as needed */
+}
+
+
+
+.beverage-images {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 20px;
+	width: 100%;
+	height: calc(100vh - 56px); /* Adjust for navbar height */
+}
+
+	.beverage-images img {
+		width: 100%;
+		height: 100vh;
+		margin: 0 0px;
+		object-fit: cover;
+	}
+
+.mission {
+	height: 100%;
+	text-align: center;
+	font-family: font-size: 18px;
+	max-width: 600px;
+	margin: 0 auto;
+	padding-top: 206px; /* navbar height adjustment*/
+}
+
+.section-headers h3 {
+	border-bottom: solid black 2px;
+	font-weight: 700;
+}
+
+
+
+.features {
+	display: flex;
+	justify-content: space-around;
+}
+
+.feature {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-weight: 700;
+	font-size: 24px;
+}
+
+	.feature img {
+		width: 75px;
+		height: 75px;
+		margin-bottom: 10px;
+	}
+
+.founders-letter {
+	display: flex;
+}
+
+	.founders-letter h2 {
+		font-size: 24px;
+		margin-bottom: 20px;
+	}
+
+.founders-image img {
+	margin-bottom: 20px;
+	width: 450px;
+	height: 600px;
+	margin-right: 215px;
+}
+
+.letter-content h3 {
+	margin-bottom: 10px;
+	margin-top: -10px;
+	text-align: center;
+}
+
+.letter-content p {
+	font-size: 16px;
+	text-align: center;
+}
+
+body {
+	font-family: 'Karla', sans-serif;
+}
+
+section {
+	padding-top: 150px;
+}
