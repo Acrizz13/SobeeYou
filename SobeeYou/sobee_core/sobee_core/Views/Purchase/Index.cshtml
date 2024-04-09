@@ -19,7 +19,10 @@
 							<img src="@Url.Content("~/Images/Products/" + item.strName.Replace(" ", "") + ".jpg")" alt="Product Image" style="width:100%; height:auto;">
 						</div>
 						<div class="cs-details">
-							<h3 class="cs-name">@item.strName</h3>
+							<!-- hyperlink to go to details page -->
+							<h3 class="cs-name">
+								<a href="@Url.Action("Details", new { id = item.intProductID })">@item.strName</a>
+							</h3>
 							<div class="cs-rating">
 
 								<!-- calculate rating from db data and add functionality -->
