@@ -74,7 +74,7 @@ namespace SobeeYou.Controllers {
         [HttpPost]
         public ActionResult AddToCart(TCartItem newItem) {
             try {
-                newItem.intShoppingCartID = 2; // Replace with the actual ShoppingCartID
+                newItem.intShoppingCartID = 106; // Replace with the actual ShoppingCartID
                 newItem.dtmDateAdded = DateTime.Now;
 
                 using (var context = new TableModels()) {
