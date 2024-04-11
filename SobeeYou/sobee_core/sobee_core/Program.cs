@@ -4,6 +4,7 @@ using sobee_core.Data;
 using sobee_core.Models.AzureModels;
 using sobee_core.Models;
 using sobee_core.Services;
+using sobee_core.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,9 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 		.AddRoles<IdentityRole>() // Add this line to enable admin role support
 	.AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+// Unhashses password, overrides Hash class for identtiy with the one i made
+builder.Services.AddScoped<IPasswordHasher<ApplicationUser>, CustomPasswordHasher>();
 
 // Configure session services
 builder.Services.AddSession(options => {
