@@ -19,6 +19,13 @@
                 <p>Total Customers: @Model.TotalCustomers</p>
                 <p>New Customers (Last 30 Days): @Model.NewCustomers</p>
                 <p>Active Customers: @Model.ActiveCustomers</p>
+                <!-- Add the "Send Discount Email" button -->
+                @using (Html.BeginForm("SendDiscountEmail", "Account", FormMethod.Post))
+                {
+                    <button type="submit" class="btn btn-primary">Send Discount Email</button>
+                }
+
+
             </div>
         </div>
     </div>

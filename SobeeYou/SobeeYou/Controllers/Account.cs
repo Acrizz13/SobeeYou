@@ -334,7 +334,55 @@ namespace SobeeYou.Controllers {
             Session.Clear();  // Clears all session data
             return RedirectToAction("Index", "Home");  // Redirect to home or login page
         }
+        [HttpPost]
+        public ActionResult SendDiscountEmail()
+        {
+            using (var context = new TableModels())
+            {
+                DateTime thirtyDaysAgo = DateTime.Now.AddDays(-30);
+                var inactiveUsers = context.TUsers
+                    .Where(u => u.strLastLoginDate < thirtyDaysAgo)
+                    .ToList();
 
+                string workEmail = "eyassu.million@gmail.com"; // replace with sobee email
+                string fromPassword = "nkum abbn kcyz cvxs"; // replace with sobee app password
+
+                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+                smtpClient.EnableSsl = true;
+                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtpClient.UseDefaultCredentials = false;
+                smtpClient.Credentials = new NetworkCredential(workEmail, fromPassword);
+
+                foreach (var user in inactiveUsers)
+                {
+                    // Create the discount email
+                    MailMessage mailMessage = new MailMessage();
+                    mailMessage.From = new MailAddress(workEmail);
+                    mailMessage.To.Add(user.strEmail);
+                    mailMessage.Subject = "We Miss You! Here's a Special Discount";
+                    mailMessage.Body = "Dear " + user.strFirstName + ",<br><br>" +
+                                      "We miss you! As a special offer, we're giving you a discount on your next purchase. " +
+                                      "Use the code COMEBACK10 to get 10% off.<br><br>" +
+                                      "Best regards,<br>The SoBee You Team";
+                    mailMessage.IsBodyHtml = true;
+
+                    try
+                    {
+                        // Send the email
+                        smtpClient.Send(mailMessage);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle any exceptions that occur during email sending
+                        // You can log the error or take appropriate action
+                        // For example:
+                        // Log.Error("Error sending discount email to user " + user.strEmail, ex);
+                    }
+                }
+            }
+
+            return RedirectToAction("AdminDashboard");
+        }
 
 
 
