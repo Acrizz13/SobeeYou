@@ -196,6 +196,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\HomeImages\Sobee4.jpg" />
+    <Content Include="Content\HomeImages\Sobee5.jpg" />
     <Content Include="Content\ProductImages\BananaBlitz.jpg" />
     <Content Include="Content\ProductImages\BerryBreeze.jpg" />
     <Content Include="Content\ProductImages\CherryChill.jpg" />
@@ -279,7 +281,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Classes\" />
-    <Folder Include="Content\HomeImages\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

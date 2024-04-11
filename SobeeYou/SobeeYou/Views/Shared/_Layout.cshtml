@@ -22,14 +22,20 @@
 			color: #ff69b4; /* Pink text */
 		}
 
-			.navbar-custom .navbar-brand,
-			.navbar-custom .nav-link {
-				color: #ff69b4; /* Pink text for links */
-			}
+            .navbar-custom .navbar-brand,
+            .navbar-custom .nav-link {
+                color: #ff69b4;
+                font-weight: bold;
+                font-size: 18px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                font-family: "Arial", sans-serif;
+            }
 
-				.navbar-custom .nav-link:hover {
-					color: #ffffff; /* Lighter shade or different color on hover */
-				}
+                .navbar-custom .nav-link:hover {
+                    color: #ffffff;
+                    background-color: rgba(255, 255, 255, 0.2);
+                    border-bottom: 2px solid #ffffff;
+                }
 
 
 		#cartIcon {
@@ -117,15 +123,15 @@
 				</a>
 			</span>
 
-			@Html.ActionLink("Sobee You", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+			@Html.ActionLink("SoBee You", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
 			<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
 					aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
 				<ul class="navbar-nav flex-grow-1">
-					<li>@Html.ActionLink("About the Founders", "Index", "About", new { area = "" }, new { @class = "nav-link" })</li>
-					<li>@Html.ActionLink("Purchase Our Beverages", "Index", "Purchase", new { area = "" }, new { @class = "nav-link" })</li>
+					<li>@Html.ActionLink("Story", "Index", "About", new { area = "" }, new { @class = "nav-link" })</li>
+					<li>@Html.ActionLink("Shop", "Index", "Purchase", new { area = "" }, new { @class = "nav-link" })</li>
 					<li>@Html.ActionLink("Account", "Index", "Account", new { area = "" }, new { @class = "nav-link" })</li>
 				</ul>
 			</div>
@@ -143,35 +149,17 @@
 
 	<footer class="footer">
 		<div class="footer-content">
-			<div class="footer-column">
-				<h4>EXPLORE</h4>
-				<ul>
-					<li><a href="#">Account</a></li>
-					<li><a href="#">Wholesale</a></li>
-					<li><a href="#">Email List</a></li>
-				</ul>
-			</div>
+			
 			<div class="footer-column">
 				<h4>GET HELP</h4>
-				<ul>
-					<li><a href="#">FAQ</a></li>
-					<li><a href="#">Shipping &amp; Returns</a></li>
-					<li><a href="#">Track Your Order</a></li>
-					<li><a href="#">Refund Policy</a></li>
-					<li><a href="#">Terms Of Service</a></li>
-				</ul>
-			</div>
-			<div class="footer-column">
-				<h4>COMPANY</h4>
-				<ul>
-					<li><a href="#">About</a></li>
-					<li><a href="#">Product Reviews</a></li>
-					<li><a href="#">Contact</a></li>
-					<li><a href="#">Find US</a></li>
-					<li><a href="#">Press</a></li>
-				</ul>
-			</div>
-		</div>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping &amp; Returns</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Refund Policy</a></li>
+                    <li><a href="#">Terms Of Service</a></li>
+                </ul>
+			</div>		
 		<div class="footer-bottom">
 			<div class="footer-text">
 				<p>&copy;2024 Sobee You, Inc.</p>
