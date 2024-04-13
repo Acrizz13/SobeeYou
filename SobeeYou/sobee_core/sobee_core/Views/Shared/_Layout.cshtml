@@ -39,9 +39,8 @@
 				</button>
 				<div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
 					<ul class="navbar-nav flex-grow-1">
-						<li>@Html.ActionLink("About the Founders", "Index", "About", new { area = "" }, new { @class = "nav-link" })</li>
-						<li>@Html.ActionLink("Purchase Our Beverages", "Index", "Purchase", new { area = "" }, new { @class = "nav-link" })</li>
-						<li>@Html.ActionLink("Account", "Index", "Account", new { area = "" }, new { @class = "nav-link" })</li>
+						<li>@Html.ActionLink("Story", "Index", "About", new { area = "" }, new { @class = "nav-link" })</li>
+						<li>@Html.ActionLink("Shop", "Index", "Purchase", new { area = "" }, new { @class = "nav-link" })</li>
 
 						<!-- Identity UI Page Links for Login/Register/Admin Dashboard -->
 						<partial name="_LoginPartial" class="auth_links" />
@@ -66,48 +65,27 @@
 
 	<!-- Footer -->
 	<footer class="footer" id="footer-container">
-		<div class="footer-content">
-			<div class="footer-column">
-				<h4>EXPLORE</h4>
-				<ul>
-					<li><a href="#">Account</a></li>
-					<li><a href="#">Wholesale</a></li>
-					<li><a href="#">Email List</a></li>
-				</ul>
-			</div>
+		<div class="footer-content" >
 			<div class="footer-column">
 				<h4>GET HELP</h4>
 				<ul>
 					<li><a href="#">FAQ</a></li>
 					<li><a href="#">Shipping &amp; Returns</a></li>
-					<li><a href="#">Track Your Order</a></li>
+					<li><a href="#">Contact</a></li>
 					<li><a href="#">Refund Policy</a></li>
 					<li><a href="#">Terms Of Service</a></li>
 				</ul>
 			</div>
-			<div class="footer-column">
-				<h4>COMPANY</h4>
-				<ul>
-					<li><a href="#">About</a></li>
-					<li><a href="#">Product Reviews</a></li>
-					<li><a href="#">Contact</a></li>
-					<li><a href="#">Find US</a></li>
-					<li><a href="#">Press</a></li>
-				</ul>
+			<div class="footer-bottom">
+				<div class="footer-text">
+					<p>&copy;2024 Sobee You, Inc.</p>
+				</div>
+				<div class="footer-links">
+					<a href="#">Privacy Policy</a>
+					<a href="#">Terms Of Use</a>
+				</div>
 			</div>
-		</div>
-		<div class="footer-bottom">
-			<div class="footer-text">
-				<p>&copy;2024 Sobee You, Inc.</p>
-			</div>
-			<div class="footer-links">
-				<a href="#">Privacy Policy</a>
-				<a href="#">Terms Of Use</a>
-			</div>
-		</div>
 	</footer>
-
-
 
 
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
