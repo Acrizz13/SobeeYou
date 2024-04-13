@@ -129,6 +129,8 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Classes\ProductSalesData.cs" />
+    <Compile Include="Classes\WebsiteTrafficData.cs" />
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
@@ -280,7 +282,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Classes\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

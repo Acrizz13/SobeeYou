@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
+using SobeeYou.Classes;
 
 namespace SobeeYou.Controllers {
     public class AccountController : Controller {
@@ -43,8 +44,31 @@ namespace SobeeYou.Controllers {
         }
         public AdminDashboardViewModel GetAdminDashBoardInfo()
         {
+            var websiteTraffic = new List<WebsiteTrafficData>
+{
+    new WebsiteTrafficData { Month = "January", Visitors = 5000 },
+    new WebsiteTrafficData { Month = "February", Visitors = 6200 },
+    new WebsiteTrafficData { Month = "March", Visitors = 7500 },
+    new WebsiteTrafficData { Month = "April", Visitors = 8100 },
+    new WebsiteTrafficData { Month = "May", Visitors = 9300 },
+    new WebsiteTrafficData { Month = "June", Visitors = 10500 },
+    new WebsiteTrafficData { Month = "July", Visitors = 11200 },
+    new WebsiteTrafficData { Month = "August", Visitors = 10800 },
+    new WebsiteTrafficData { Month = "September", Visitors = 9800 },
+    new WebsiteTrafficData { Month = "October", Visitors = 8900 },
+    new WebsiteTrafficData { Month = "November", Visitors = 7800 },
+    new WebsiteTrafficData { Month = "December", Visitors = 9200 }
+};
+
+            var adminDashboard = new AdminDashboardViewModel
+            {
+                // ...
+                WebsiteTraffic = websiteTraffic
+            };
             using (var context = new TableModels())
             {
+
+               
                 //I should probably just make these columns integers rather than strings in the database
                 // Load the product stock amounts into memory (consider efficiency here!)
                 var lowInventoryProductsCount = context.TProducts
@@ -55,6 +79,14 @@ namespace SobeeYou.Controllers {
                 var avgProductRating = reviews.Any() ? reviews.Average(r => Convert.ToDecimal(r.strRating)) : 0;
 
                 var thirtyDaysAgo = DateTime.Now.AddDays(-30);
+                var productSales = context.TOrderItems
+    .GroupBy(oi => oi.TProduct.strName)
+    .Select(g => new ProductSalesData
+    {
+        ProductName = g.Key,
+        TotalSales = g.Sum(oi => oi.intQuantity * oi.monPricePerUnit)
+    })
+    .ToList();
 
                 var adminDashBoard = new AdminDashboardViewModel
                 {
@@ -70,7 +102,9 @@ namespace SobeeYou.Controllers {
                     LowInventoryProducts = lowInventoryProductsCount,
                     AvgProductRating = avgProductRating,
                     AdminUsers = context.TUsers.Count(u => u.intUserRoleID == 2),
-                    RecentSupportRequests = context.TCustomerServiceTickets.Count(t => t.dtmTimeOfSubmission >= thirtyDaysAgo)
+                    RecentSupportRequests = context.TCustomerServiceTickets.Count(t => t.dtmTimeOfSubmission >= thirtyDaysAgo),
+                    ProductSales = productSales,
+                    WebsiteTraffic = websiteTraffic
                 };
 
                 return adminDashBoard;
