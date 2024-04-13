@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SobeeYou.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,6 +8,8 @@ namespace SobeeYou.Models
 {
     public class AdminDashboardViewModel
     {
+        public List<ProductSalesData> ProductSales { get; set; }
+        public List<WebsiteTrafficData> WebsiteTraffic { get; set; }
         public int TotalCustomers { get; set; }
         public int NewCustomers { get; set; }
         public int ActiveCustomers { get; set; }
@@ -19,5 +22,6 @@ namespace SobeeYou.Models
         public int TotalUsers { get; set; }
         public int AdminUsers { get; set; }
         public int RecentSupportRequests { get; set; }
+       
     }
 }
