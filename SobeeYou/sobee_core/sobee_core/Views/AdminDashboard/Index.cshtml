@@ -18,7 +18,6 @@
 <!-- Rest of the view code -->
 <!-- Row for Customer and Order Analysis -->
 <div class="row">
-
     <!-- Customer Analysis Card -->
     <div class="col-md-6">
         <div class="card">
@@ -28,6 +27,11 @@
                 <p>Total Customers: @Model.TotalCustomers</p>
                 <p>New Customers (Last 30 Days): @Model.NewCustomers</p>
                 <p>Active Customers: @Model.ActiveCustomers</p>
+
+                <!-- Add the "Send Discount Email" button -->
+                <button id="sendDiscountEmailBtn" class="btn btn-primary">Send Discount Email</button>
+
+
             </div>
         </div>
     </div>
