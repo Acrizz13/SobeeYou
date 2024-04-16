@@ -195,6 +195,33 @@
 
 
 
+
+	$(document).ready(function () {
+		$('#applyPromoCode').click(function () {
+			var promoCode = $('#promoCode').val();
+			$.ajax({
+				url: '/Checkout/ApplyPromoCode',
+				type: 'POST',
+				data: { promoCode: promoCode },
+				success: function (response) {
+					if (response.success) {
+						// Update the total price and display the discount amount
+						$('strong').text(response.newTotalPrice);
+						$('.text-success').html('<h6 class="my-0">Promo code</h6><small>' + promoCode + '</small>');
+						$('.text-success').next().text('-$' + response.discountAmount);
+					} else {
+						alert(response.message);
+					}
+				}
+			});
+		});
+	});
+
+
+
+
+
+
 	// Call updateCartCount function initially and then at regular intervals (e.g., every 5 seconds)
 	updateCartCount();
 	//setInterval(updateCartCount, 5000); // Update every 5 seconds
