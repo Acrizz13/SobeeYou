@@ -6,65 +6,215 @@
 
 <h2>AdminDashboard</h2>
 
-<!-- Rest of the view code -->
-<!-- Row for Customer and Order Analysis -->
 <div class="row">
-
-    <!-- Customer Analysis Card -->
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">Customer Analysis</div>
             <div class="card-body">
-                <!-- Customer analysis information -->
                 <p>Total Customers: @Model.TotalCustomers</p>
                 <p>New Customers (Last 30 Days): @Model.NewCustomers</p>
                 <p>Active Customers: @Model.ActiveCustomers</p>
+                @using (Html.BeginForm("SendDiscountEmail", "Account", FormMethod.Post))
+                {
+                    <button type="submit" class="btn btn-primary">Send Discount Email</button>
+                }
             </div>
         </div>
     </div>
-
-    <!-- Order Analysis Card -->
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">Order Analysis</div>
             <div class="card-body">
-                <!-- Order analysis information -->
                 <p>Total Orders: @Model.TotalOrders</p>
                 <p>Orders Pending Fulfillment: @Model.PendingOrders</p>
                 <p>Revenue (Last 30 Days): @Model.RecentRevenue</p>
             </div>
         </div>
     </div>
-
 </div>
 
-<!-- Row for Product and User Analysis -->
 <div class="row mt-4">
-
-    <!-- Product Analysis Card -->
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">Product Analysis</div>
             <div class="card-body">
-                <!-- Product analysis information -->
                 <p>Total Products: @Model.TotalProducts</p>
                 <p>Low Inventory Products: @Model.LowInventoryProducts</p>
                 <p>Average Product Rating: @Model.AvgProductRating</p>
             </div>
         </div>
     </div>
-
-    <!-- User Analysis Card -->
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">User Analysis</div>
             <div class="card-body">
-                <!-- User analysis information -->
                 <p>Total Users: @Model.TotalUsers</p>
                 <p>Admin Users: @Model.AdminUsers</p>
                 <p>Customer Support Requests (Last 30 Days): @Model.RecentSupportRequests</p>
             </div>
         </div>
     </div>
-
 </div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Product Sales</div>
+            <div class="card-body">
+                <canvas id="productSalesChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Website Traffic</div>
+            <div class="card-body">
+                <canvas id="websiteTrafficChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">Store Traffic Heat Map</div>
+            <div class="card-body">
+                <div id="map" style="height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbRq_3QzdaHjD4SzYSvhNY382iXAQuUP0&libraries=visualization"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Product Sales Chart
+            var ctx = document.getElementById('productSalesChart').getContext('2d');
+            var productSales = @Html.Raw(Json.Encode(Model.ProductSales));
+            var data = {
+                labels: productSales.map(function (item) { return item.ProductName; }),
+                datasets: [{
+                    data: productSales.map(function (item) { return item.TotalSales; }),
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#FF9F40'
+                    ]
+                }]
+            };
+            var options = {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Product Sales'
+                },
+                plugins: {
+                    datalabels: {
+                        formatter: function (value, context) {
+                            var dataset = context.dataset;
+                            var total = dataset.data.reduce(function (previousValue, currentValue) {
+                                return previousValue + currentValue;
+                            });
+                            var percentage = Math.floor((value / total) * 100 + 0.5);
+                            return percentage + '%';
+                        },
+                        color: 'white',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            };
+            new Chart(ctx, {
+                type: 'pie',
+                data: data,
+                options: options,
+                plugins: [ChartDataLabels]
+            });
+
+            // Website Traffic Chart
+            var ctx2 = document.getElementById('websiteTrafficChart').getContext('2d');
+            var websiteTraffic = @Html.Raw(Json.Encode(Model.WebsiteTraffic));
+            var data2 = {
+                labels: websiteTraffic.map(function (item) { return item.Month; }),
+                datasets: [{
+                    label: 'Website Traffic',
+                    data: websiteTraffic.map(function (item) { return item.Visitors; }),
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#FF9F40',
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#FF9F40'
+                    ]
+                }]
+            };
+            var options2 = {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1000
+                        }
+                    }
+                },
+                plugins: {
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        color: 'black',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            };
+            new Chart(ctx2, {
+                type: 'bar',
+                data: data2,
+                options: options2,
+                plugins: [ChartDataLabels]
+            });
+
+            // Google Maps Heat Map Initialization
+            function initMap() {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 7,
+                    center: { lat: 40.4173, lng: -82.9071 } // Centered on Ohio
+                });
+
+                var heatMapData = [
+                    { location: new google.maps.LatLng(39.9612, -82.9988), weight: 5 }, // Kroger, Columbus
+                    { location: new google.maps.LatLng(39.1031, -84.5120), weight: 3 }, // Walmart, Cincinnati
+                    { location: new google.maps.LatLng(41.4993, -81.6944), weight: 4 }, // Target, Cleveland
+                    { location: new google.maps.LatLng(41.0814, -81.5190), weight: 2 }, // Whole Foods, Akron
+                    { location: new google.maps.LatLng(39.7589, -84.1916), weight: 6 }  // Costco, Dayton
+                ];
+
+                var heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: heatMapData,
+                    map: map
+                });
+            }
+
+            // Execute the map initialization
+            initMap();
+        });
+    </script>
+}

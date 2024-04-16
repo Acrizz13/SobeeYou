@@ -78,6 +78,7 @@ namespace sobee_core.Controllers {
 			}
 		}
 
+
 		// first check if discount code is valid IsDiscountValid(string DISCOUNT_CODE)
 		// if valid, get percentage discount  GetDiscountAmount(decimal DISCOUNT)
 		// calculate new total price  CalculateDiscountedPrice(decimal newTotal)
@@ -173,16 +174,6 @@ namespace sobee_core.Controllers {
 			_context.TPromoCodeUsageHistory.Add(usageHistory);
 			await _context.SaveChangesAsync();
 		}
-
-		//public async Task<decimal> CalculateDiscountedPrice(decimal newTotal) {
-
-		//    return null;
-
-		//}
-
-
-
-
 
 
 		public ActionResult OrderConfirmed() {

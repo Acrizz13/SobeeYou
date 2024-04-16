@@ -155,6 +155,27 @@
 	}
 
 
+	// Function to send disount email
+	$(document).ready(function () {
+		$('#sendDiscountEmailBtn').click(function () {
+			$.ajax({
+				url: 'AdminDashboard/SendDiscountEmail',
+				type: 'GET',
+				success: function (result) {
+					// Handle the success response
+					alert('Discount emails sent successfully!');
+				},
+				error: function (xhr, status, error) {
+					// Handle the error response
+					console.log(error);
+					alert('An error occurred while sending discount emails.');
+				}
+			});
+		});
+	});
+
+
+
 
 	$(document).ready(function () {
 		// Hide the shipping address form by default
@@ -170,6 +191,7 @@
 			}
 		});
 	});
+
 
 
 
@@ -194,6 +216,7 @@
 			});
 		});
 	});
+
 
 
 

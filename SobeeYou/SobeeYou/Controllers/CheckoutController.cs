@@ -10,7 +10,8 @@ using System.Web.Mvc;
 namespace SobeeYou.Controllers {
     public class CheckoutController : Controller {
         // GET: Checkout
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             // Retrieve the cart items from the session
             List<CartItemDTO> cartItems = (List<CartItemDTO>)Session["CartItems"];
 
@@ -20,6 +21,24 @@ namespace SobeeYou.Controllers {
             // Pass the cart items and total price to the view
             ViewBag.CartItems = cartItems;
             ViewBag.TotalPrice = totalPrice;
+
+            // Check if the user is logged in
+            if (Session["UserID"] != null)
+            {
+                int userId = (int)Session["UserID"];
+
+                using (var context = new TableModels())
+                {
+                    // Retrieve the user data from the database
+                    var user = context.TUsers.FirstOrDefault(u => u.intUserID == userId);
+
+                    if (user != null)
+                    {
+                        // Pass the user data to the view
+                        ViewBag.User = user;
+                    }
+                }
+            }
 
             return View();
         }
