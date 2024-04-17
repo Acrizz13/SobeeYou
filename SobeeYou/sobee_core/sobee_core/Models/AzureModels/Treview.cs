@@ -17,6 +17,8 @@ public partial class Treview {
 
     public string StrRating { get; set; } = null!;
 
+    public int? IntRating { get; set; } = null!;
+
     public string? UserId { get; set; }
 
     public string? SessionId { get; set; }

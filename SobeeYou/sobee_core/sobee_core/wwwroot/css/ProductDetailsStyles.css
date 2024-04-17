@@ -1,8 +1,44 @@
-﻿.product-detail {
+﻿.star {
+	color: #ccc;
+	font-size: 24px;
+}
+
+	.star.filled {
+		color: #ffc107;
+	}
+
+.star {
+	font-size: 24px; /* Adjust the size of the stars as needed */
+	cursor: pointer; /* Show pointer cursor on hover */
+	/*position: relative;*/ /* Set position to relative to position the click icon */
+}
+
+	.star:hover::after {
+		content: "\2605"; /* Unicode for star */
+		position: absolute;
+		top: 0;
+		left: 0;
+		color: gold; /* Set the color of the click icon */
+		font-size: 24px; /* Adjust the size of the click icon */
+	}
+
+.filled::after {
+	content: "\2605"; /* Unicode for filled star */
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: gold; /* Set the color of the click icon */
+	font-size: 24px; /* Adjust the size of the click icon */
+}
+
+
+
+
+.product-detail {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 20px;
-	margin-top: 20px;
+	margin-top: 75px;
 }
 
 .product-images img {
