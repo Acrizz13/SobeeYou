@@ -8,18 +8,20 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using sobee_core.Models;
 
-namespace sobee_core.Areas.Identity.Pages.Account.Manage {
-    public class ResetAuthenticatorModel : PageModel {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+namespace sobee_core.Areas.Identity.Pages.Account.Manage
+{
+    public class ResetAuthenticatorModel : PageModel
+    {
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<ResetAuthenticatorModel> _logger;
 
         public ResetAuthenticatorModel(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            ILogger<ResetAuthenticatorModel> logger) {
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
+            ILogger<ResetAuthenticatorModel> logger)
+        {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
@@ -32,18 +34,22 @@ namespace sobee_core.Areas.Identity.Pages.Account.Manage {
         [TempData]
         public string StatusMessage { get; set; }
 
-        public async Task<IActionResult> OnGet() {
+        public async Task<IActionResult> OnGet()
+        {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null) {
+            if (user == null)
+            {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync() {
+        public async Task<IActionResult> OnPostAsync()
+        {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null) {
+            if (user == null)
+            {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 

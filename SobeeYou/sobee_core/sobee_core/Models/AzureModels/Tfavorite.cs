@@ -8,5 +8,9 @@ public partial class Tfavorite {
     [Key]
     public int IntFavoriteId { get; set; }
 
-    public string StrFavorite { get; set; } = null!;
+    public int IntProductId { get; set; }
+
+    public DateTime DtmDateAdded { get; set; }
+
+    public virtual Tproduct IntProduct { get; set; } = null!;
 }

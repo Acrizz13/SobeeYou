@@ -1,5 +1,4 @@
-namespace SobeeYou.Models
-{
+namespace SobeeYou.Models {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -7,13 +6,12 @@ namespace SobeeYou.Models
     using System.Data.Entity.Spatial;
 
     [Table("db_owner.TReviews")]
-    public partial class TReview
-    {
+    public partial class TReview {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int intReviewID { get; set; }
 
-        public int intUserID { get; set; }
+        public int? intUserID { get; set; }
 
         public int intProductID { get; set; }
 

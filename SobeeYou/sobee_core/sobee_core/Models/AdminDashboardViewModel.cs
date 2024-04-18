@@ -1,6 +1,5 @@
 ﻿namespace sobee_core.Models {
     public class AdminDashboardViewModel {
-
         // model for admin dashboard info
         public int TotalCustomers { get; set; }
         public int NewCustomers { get; set; }

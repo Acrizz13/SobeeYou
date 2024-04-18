@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using sobee_core.Data;
-using sobee_core.Models;
 using sobee_core.Models.AzureModels;
+using sobee_core.Models;
 using System.Net.Mail;
 using System.Net;
 
@@ -46,7 +45,7 @@ namespace sobee_core.Controllers {
                 RecentRevenue = (decimal)_context.Torders.Where(o => o.DtmOrderDate >= thirtyDaysAgo).Sum(o => o.DecTotalAmount),
                 TotalProducts = _context.Tproducts.Count(),
                 LowInventoryProducts = _context.Tproducts.Count(p => Convert.ToInt32(p.StrStockAmount) < 10), // Using SQL Cast function
-                AvgProductRating = _context.Treviews.Any() ? _context.Treviews.Average(r => decimal.Parse(r.StrRating)) : 0,
+                AvgProductRating = _context.Treviews.Any() ? _context.Treviews.Average(r => (decimal)r.IntRating) : 0,
                 AdminUsers = adminUserIds.Count,
                 RecentSupportRequests = _context.TcustomerServiceTickets.Count(t => t.DtmTimeOfSubmission >= thirtyDaysAgo)
 
@@ -104,11 +103,4 @@ namespace sobee_core.Controllers {
 
 
     }
-
-
-
-
-
-
-
 }

@@ -1,59 +1,57 @@
-﻿
+﻿@using sobee_core.Models.AzureModels
+@model List<ProductDTO>
 
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Your Web App</title>
-	<link href="~/css/PurchaseStyles.css" rel="stylesheet" type="text/css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Web App</title>
+    <link href="~/css/PurchaseStyles.css" rel="stylesheet" type="text/css" />
 </head>
 
-<section id="collection">
-	<div class="cs-container">
-		<div class="cs-listing">
+@section Purchase {
+    <section id="collection">
+        <div class="cs-custom-container">
+            <div class="cs-sidebar">
+                <h3>Filters</h3>
+                <form method="get" action="@Url.Action("Index", "Purchase")">
+                    <div class="cs-filter">
+                        <h4>Price Range</h4>
+                        <input type="number" name="minPrice" placeholder="Min Price" class="cs-price-input">
+                        <input type="number" name="maxPrice" placeholder="Max Price" class="cs-price-input">
+                    </div>
+                    <div class="cs-sorting">
+                        <h4>Sort By</h4>
+                        <select name="sortBy" class="cs-sort-select">
+                            <option value="">Default</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                            <option value="rating-asc">Rating: Low to High</option>
+                            <option value="rating-desc">Rating: High to Low</option>
+                        </select>
+                    </div>
+                    <button type="submit">Apply Filters</button>
+                </form>
+            </div>
+            <div class="cs-main-content">
+                @await Html.PartialAsync("_ProductList", Model)
+            </div>
+        </div>
+    </section>
+}
 
-			<!-- displays all products in catalog and their info -->
-			@foreach (var item in Model) {
-				<form class="cs-item-form" data-product-id="@item.intProductID" data-product-name="@item.strName" data-product-price="@item.decPrice" data-product-stock="@item.strStockAmount">
-					<div class="cs-item">
-						<div class="cs-image">
-							<img src="@Url.Content("~/Images/Products/" + item.strName.Replace(" ", "") + ".jpg")" alt="Product Image" style="width:100%; height:auto;">
-						</div>
-						<div class="cs-details">
-							<!-- hyperlink to go to details page -->
-							<h3 class="cs-name">
-								<a href="@Url.Action("Details", new { id = item.intProductID })">@item.strName</a>
-							</h3>
-							<div class="cs-rating">
-
-								<!-- calculate rating from db data and add functionality -->
-								@*@for (int i = 1; i <= 5; i++) {
-							if (i <= item.intRating) {*@
-								<span class="star filled">&#9733;</span>
-								<span class="star filled">&#9733;</span>
-
-								@*}
-							else {*@
-								@*<span class="star">&#9734;</span>*@
-								@*}
-							}*@
-							</div>
-							<div class="cs-actions">
-								<span class="cs-price">Price: @item.decPrice.ToString("C")</span>
-							</div>
-						</div>
-						<div class="cs-actions">
-							<!-- dropdown 1-9 -->
-							<select class="quantity-dropdown" name="quantity">
-								@for (int i = 1; i <= 9; i++) {
-									<option value="@i">@i</option>
-								}
-							</select>
-							<button type="submit" class="add-to-cart-btn">Add to Cart</button>
-						</div>
-					</div>
-				</form>
-			}
-		</div>
-	</div>
-</section>
-
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: data,
+            success: function (result) {
+                $('.cs-main-content').html(result);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+            }
+        });
+    </script>
+}

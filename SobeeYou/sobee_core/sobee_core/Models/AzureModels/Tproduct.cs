@@ -10,17 +10,17 @@ public partial class Tproduct {
 
     public string StrName { get; set; } = null!;
 
+    public string StrDescription { get; set; } = null!;
+
+    public decimal DecPrice { get; set; }
+
     public string StrStockAmount { get; set; } = null!;
-
-    public decimal? DecPrice { get; set; }
-
-    public string? StrPrice { get; set; }
 
     public virtual ICollection<TcartItem> TcartItems { get; set; } = new List<TcartItem>();
 
-    public virtual ICollection<TorderItem> TorderItems { get; set; } = new List<TorderItem>();
+    public virtual ICollection<Tfavorite> Tfavorites { get; set; } = new List<Tfavorite>();
 
-    public virtual ICollection<TordersProduct> TordersProducts { get; set; } = new List<TordersProduct>();
+    public virtual ICollection<TorderItem> TorderItems { get; set; } = new List<TorderItem>();
 
     public virtual ICollection<TproductRecommendation> TproductRecommendations { get; set; } = new List<TproductRecommendation>();
 

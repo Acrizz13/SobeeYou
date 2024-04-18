@@ -1,16 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using sobee_core.Models;
 
-
 namespace sobee_core.Controllers {
+    public class CustomPasswordHasher : IPasswordHasher<ApplicationUser> {
+        public string HashPassword(ApplicationUser user, string password) {
+            return password;
+        }
 
-	public class CustomPasswordHasher : IPasswordHasher<ApplicationUser> {
-		public string HashPassword(ApplicationUser user, string password) {
-			return password;
-		}
-
-		public PasswordVerificationResult VerifyHashedPassword(ApplicationUser user, string hashedPassword, string providedPassword) {
-			return hashedPassword.Equals(providedPassword) ? PasswordVerificationResult.Success : PasswordVerificationResult.Failed;
-		}
-	}
+        public PasswordVerificationResult VerifyHashedPassword(ApplicationUser user, string hashedPassword, string providedPassword) {
+            return hashedPassword.Equals(providedPassword) ? PasswordVerificationResult.Success : PasswordVerificationResult.Failed;
+        }
+    }
 }

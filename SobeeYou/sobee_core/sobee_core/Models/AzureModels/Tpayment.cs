@@ -13,4 +13,6 @@ public partial class Tpayment {
     public int? IntPaymentMethodId { get; set; }
 
     public int? IntPaymentMethod { get; set; }
+
+    public virtual TpaymentMethod? IntPaymentMethodNavigation { get; set; }
 }

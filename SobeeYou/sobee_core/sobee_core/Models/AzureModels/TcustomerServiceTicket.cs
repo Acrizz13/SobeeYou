@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using sobee_core.Models.AzureModels.Identity;
+using sobee_core.Models.Identity;
 
 namespace sobee_core.Models.AzureModels;
 
 public partial class TcustomerServiceTicket {
     [Key]
     public int IntCustomerServiceTicketId { get; set; }
-
-    public int IntUserId { get; set; }
 
     public int IntTicketCategoryId { get; set; }
 
@@ -26,8 +24,6 @@ public partial class TcustomerServiceTicket {
     public virtual TticketCategory IntTicketCategory { get; set; } = null!;
 
     public virtual TticketStatus IntTicketStatus { get; set; } = null!;
-
-    public virtual Tuser IntUser { get; set; } = null!;
 
     public virtual AspNetUser? User { get; set; }
 }
