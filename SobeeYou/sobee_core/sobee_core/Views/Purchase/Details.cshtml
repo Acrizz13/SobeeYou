@@ -19,27 +19,37 @@
 
         <div class="product-description">
             <h2>Details</h2>
-            <p>Introducing "Zestful Oasis" - a refreshing blend of tropical fruits and invigorating herbs, 
+            <p>
+                Introducing "Zestful Oasis" - a refreshing blend of tropical fruits and invigorating herbs,
                 meticulously crafted to transport you to a vibrant paradise with every sip. Immerse yourself
-                in the tantalizing fusion of ripe mangoes, succulent pineapple, and zesty citrus, perfectly 
+                in the tantalizing fusion of ripe mangoes, succulent pineapple, and zesty citrus, perfectly
                 balanced with a hint of tangy passionfruit and the subtle warmth of ginger. Each bottle is a
                 symphony of flavors, carefully curated to awaken your senses and revitalize your spirit.
-                Whether you're lounging by the pool, enjoying a picnic in the park, or simply seeking a moment 
-                of pure refreshment, "Zestful Oasis" is your passport to a blissful escape. Indulge in this 
-                exotic elixir and let its tropical allure whisk you away to a sun-drenched paradise, sip by sip. 
-                Experience the essence of paradise in every bottle - experience "Zestful Oasis" today.</p>
+                Whether you're lounging by the pool, enjoying a picnic in the park, or simply seeking a moment
+                of pure refreshment, "Zestful Oasis" is your passport to a blissful escape. Indulge in this
+                exotic elixir and let its tropical allure whisk you away to a sun-drenched paradise, sip by sip.
+                Experience the essence of paradise in every bottle - experience "Zestful Oasis" today.
+            </p>
 
         </div>
     </div>
 
     <div class="product-info">
         <h1>@Model.strName</h1>
-        <div class="rating-name">
-            <!-- Add rating stars based on the model -->
-            @for (int i = 0; i < 5; i++) {
-                <span class="star">*</span>
-            }
-        </div>
+
+        @if (User.Identity.IsAuthenticated) {
+            <div class="rating-name">
+                <!-- Display the average rating -->
+                <span class="average-rating">@ViewBag.AverageRating</span>
+
+                <!-- Add rating stars based on the model -->
+                <span id="rate1" class="star filled" onclick="setRating(1)">&#9733;</span>
+                <span id="rate2" class="star filled" onclick="setRating(2)">&#9733;</span>
+                <span id="rate3" class="star filled" onclick="setRating(3)">&#9733;</span>
+                <span id="rate4" class="star filled" onclick="setRating(4)">&#9733;</span>
+                <span id="rate5" class="star filled" onclick="setRating(5)">&#9733;</span>
+            </div>
+        }
 
         <h1 class="price">@Model.decPrice.ToString("C")</h1>
 
@@ -76,63 +86,60 @@
         <div class="product-reviews">
             <h2>Reviews</h2>
             <div class="rating-summary">
-                <div class="average-rating">4.7</div>
-                <div class="total-reviews">(58 reviews)</div>
+                <div class="average-rating">@ViewBag.AverageRating</div>
+                <div class="total-reviews">(@ViewBag.TotalReviews reviews)</div>
+            </div>
+            <div class="rating-bars">
+                @foreach (var ratingCount in ViewBag.RatingCounts) {
+                    var ratingPercentage = ViewBag.TotalReviews > 0 ? (int)Math.Round((double)ratingCount.Count / ViewBag.TotalReviews * 100) : 0;
+                    <div class="rating-bar">
+                        <div class="stars">@ratingCount.Rating stars</div>
+                        <div class="bar">
+                            <div class="fill" style="width: @ratingPercentage%;"></div>
+                        </div>
+                        <div class="count">@ratingCount.Count</div>
+                    </div>
+                }
             </div>
 
-            @*
-            <div class="rating-bars">
-            <!-- Add rating bars based on the model -->
-            @foreach (var ratingCount in Model.lstRatingCounts) {
-            var ratingPercentage = (int)Math.Round((double)ratingCount.Value / Model.intTotalReviews * 100);
+
+            @* <div class="rating-bars">
             <div class="rating-bar">
-            <div class="stars">@ratingCount.Key stars</div>
+            <div class="stars">5 stars</div>
             <div class="bar">
-            <div class="fill" style="width: @ratingPercentage%;"></div>
+            <div class="fill" style="width: 80%;"></div>
             </div>
-            <div class="count">@ratingCount.Value</div>
+            <div class="count">45</div>
             </div>
-            }
+            <div class="rating-bar">
+            <div class="stars">4 stars</div>
+            <div class="bar">
+            <div class="fill" style="width: 15%;"></div>
+            </div>
+            <div class="count">8</div>
+            </div>
+            <div class="rating-bar">
+            <div class="stars">3 stars</div>
+            <div class="bar">
+            <div class="fill" style="width: 5%;"></div>
+            </div>
+            <div class="count">3</div>
+            </div>
+            <div class="rating-bar">
+            <div class="stars">2 stars</div>
+            <div class="bar">
+            <div class="fill" style="width: 0%;"></div>
+            </div>
+            <div class="count">0</div>
+            </div>
+            <div class="rating-bar">
+            <div class="stars">1 star</div>
+            <div class="bar">
+            <div class="fill" style="width: 2%;"></div>
+            </div>
+            <div class="count">2</div>
+            </div>
             </div> *@
-
-
-            <div class="rating-bars">
-                <div class="rating-bar">
-                    <div class="stars">5 stars</div>
-                    <div class="bar">
-                        <div class="fill" style="width: 80%;"></div>
-                    </div>
-                    <div class="count">45</div>
-                </div>
-                <div class="rating-bar">
-                    <div class="stars">4 stars</div>
-                    <div class="bar">
-                        <div class="fill" style="width: 15%;"></div>
-                    </div>
-                    <div class="count">8</div>
-                </div>
-                <div class="rating-bar">
-                    <div class="stars">3 stars</div>
-                    <div class="bar">
-                        <div class="fill" style="width: 5%;"></div>
-                    </div>
-                    <div class="count">3</div>
-                </div>
-                <div class="rating-bar">
-                    <div class="stars">2 stars</div>
-                    <div class="bar">
-                        <div class="fill" style="width: 0%;"></div>
-                    </div>
-                    <div class="count">0</div>
-                </div>
-                <div class="rating-bar">
-                    <div class="stars">1 star</div>
-                    <div class="bar">
-                        <div class="fill" style="width: 2%;"></div>
-                    </div>
-                    <div class="count">2</div>
-                </div>
-            </div>
 
 
         </div>
@@ -159,7 +166,7 @@
             <h3>Related Product 1</h3>
             <p>Short description of related product 1</p>
         </div>
-     
+
         <div class="product-card">
             <img src="@Url.Content("~/Images/Products/LimeLight.jpg")" alt="Drinks">
             <h3>Related Product 1</h3>
@@ -187,15 +194,45 @@
 
     </div>
 
-<!-- Display success or error message -->
-@if (TempData["SuccessMessage"] != null) {
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-}
+    <!-- Display success or error message -->
+    @if (TempData["SuccessMessage"] != null) {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
 
-@if (TempData["ErrorMessage"] != null) {
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div>
-}
+    @if (TempData["ErrorMessage"] != null) {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+</div>
+
+<script>
+    function setRating(value) {
+        // Remove filled class from all stars
+        for (let i = 1; i <= 5; i++) {
+            let star = document.getElementById(`rate${i}`);
+            star.classList.remove("filled");
+        }
+
+        // Fill stars up to the selected value
+        for (let i = 1; i <= value; i++) {
+            let star = document.getElementById(`rate${i}`);
+            star.classList.add("filled");
+        }
+
+        // Make an AJAX request to submit the rating
+        $.ajax({
+            url: '@Url.Action("SubmitRating", "Purchase")',
+            type: 'POST',
+            data: { productId: @Model.intProductID, rating: value },
+            success: function (data) {
+                console.log('Rating submitted successfully');
+            },
+            error: function () {
+                console.log('Error submitting rating');
+            }
+        });
+    }
+</script>

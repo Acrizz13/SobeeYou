@@ -2,7 +2,6 @@
 using sobee_core.Models.AzureModels;
 
 namespace sobee_core.Services {
-
     public class OrderService : IOrderService {
         private readonly Models.AzureModels.SobeecoredbContext _context;
 
@@ -24,7 +23,7 @@ namespace sobee_core.Services {
                 DecTotalAmount = totalPrice,
                 IntShippingStatusId = 1,
                 StrTrackingNumber = trackingNumber,
-                IntPaymentMethod = paymentMethod
+                IntPaymentMethodId = paymentMethod
             };
 
             // Add the order to the database and save changes
@@ -49,3 +48,4 @@ namespace sobee_core.Services {
         }
     }
 }
+

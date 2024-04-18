@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using sobee_core.Models.AzureModels.Identity;
+using sobee_core.Models.Identity;
 
 namespace sobee_core.Models.AzureModels;
 
@@ -12,6 +12,8 @@ public partial class SobeecoredbContext : DbContext {
 	public SobeecoredbContext(DbContextOptions<SobeecoredbContext> options)
 		: base(options) {
 	}
+
+
 
 	public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
 
@@ -25,7 +27,6 @@ public partial class SobeecoredbContext : DbContext {
 
 	public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
 
-	public virtual DbSet<Tadmin> Tadmins { get; set; }
 
 	public virtual DbSet<TcartItem> TcartItems { get; set; }
 
@@ -45,6 +46,8 @@ public partial class SobeecoredbContext : DbContext {
 
 	public virtual DbSet<Tingredient> Tingredients { get; set; }
 
+	public virtual DbSet<Tinteraction> Tinteractions { get; set; }
+
 	public virtual DbSet<Torder> Torders { get; set; }
 
 	public virtual DbSet<TorderItem> TorderItems { get; set; }
@@ -55,23 +58,25 @@ public partial class SobeecoredbContext : DbContext {
 
 	public virtual DbSet<TpaymentMethod> TpaymentMethods { get; set; }
 
-	public virtual DbSet<TpaymentStatus> TpaymentStatuses { get; set; }
-
-	public virtual DbSet<Tpermission> Tpermissions { get; set; }
-
 	public virtual DbSet<Tproduct> Tproducts { get; set; }
-
-	public DbSet<TPromoCodeUsageHistory> TPromoCodeUsageHistory { get; set; }
 
 	public virtual DbSet<TproductImage> TproductImages { get; set; }
 
 	public virtual DbSet<TproductRecommendation> TproductRecommendations { get; set; }
+
+	public virtual DbSet<TpromoCodeUsageHistory> TpromoCodeUsageHistories { get; set; }
 
 	public virtual DbSet<Tpromotion> Tpromotions { get; set; }
 
 	public virtual DbSet<Trace> Traces { get; set; }
 
 	public virtual DbSet<Treview> Treviews { get; set; }
+
+	public virtual DbSet<TrewardsOption> TrewardsOptions { get; set; }
+
+	public virtual DbSet<TrewardsPoint> TrewardsPoints { get; set; }
+
+	public virtual DbSet<TrewardsTransaction> TrewardsTransactions { get; set; }
 
 	public virtual DbSet<TshippingMethod> TshippingMethods { get; set; }
 
@@ -85,15 +90,17 @@ public partial class SobeecoredbContext : DbContext {
 
 	public virtual DbSet<TticketStatus> TticketStatuses { get; set; }
 
-	public virtual DbSet<Tuser> Tusers { get; set; }
+	public virtual DbSet<TtransactionType> TtransactionTypes { get; set; }
 
-	public virtual DbSet<TuserRole> TuserRoles { get; set; }
+
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-		=> optionsBuilder.UseSqlServer("Data Source=tcp:sobeeyoucore.database.windows.net,1433;Initial Catalog=sobeecoredb;User Id=sobeeadmin@sobeeyoucore;Password=Sobeeyou123!");
+		=> optionsBuilder.UseSqlServer("Data Source=itd2.cincinnatistate.edu;Initial Catalog=WAPP2-ChrismerA;User ID=WAPP2-achrismer;Password=0695152;Trust Server Certificate=True");
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
+		modelBuilder.HasDefaultSchema("db_owner");
+
 		modelBuilder.Entity<AspNetRole>(entity => {
 			entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
 				.IsUnique()
@@ -118,7 +125,6 @@ public partial class SobeecoredbContext : DbContext {
 
 			entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 			entity.Property(e => e.Email).HasMaxLength(256);
-			entity.Property(e => e.IntUserRoleId).HasColumnName("intUserRoleID");
 			entity.Property(e => e.LastLoginDate).HasColumnType("datetime");
 			entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
 			entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
@@ -174,28 +180,12 @@ public partial class SobeecoredbContext : DbContext {
 			entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
 		});
 
-		modelBuilder.Entity<Tadmin>(entity => {
-			entity.HasKey(e => e.IntAdminId).HasName("TAdmins_PK");
 
-			entity.ToTable("TAdmins", "db_owner");
-
-			entity.Property(e => e.IntAdminId)
-				.ValueGeneratedNever()
-				.HasColumnName("intAdminID");
-			entity.Property(e => e.StrAdminName)
-				.HasMaxLength(255)
-				.IsUnicode(false)
-				.HasColumnName("strAdminName");
-		});
 
 		modelBuilder.Entity<TcartItem>(entity => {
-			entity.HasKey(e => e.IntCartItemId).HasName("PK__TCartIte__4A33868DF604DCCF");
+			entity.HasKey(e => e.IntCartItemId).HasName("TCartItems_PK");
 
-			entity.ToTable("TCartItems", "db_owner");
-
-			entity.HasIndex(e => e.IntProductId, "IX_TCartItems_intProductID");
-
-			entity.HasIndex(e => e.IntShoppingCartId, "IX_TCartItems_intShoppingCartID");
+			entity.ToTable("TCartItems");
 
 			entity.Property(e => e.IntCartItemId).HasColumnName("intCartItemID");
 			entity.Property(e => e.DtmDateAdded)
@@ -207,21 +197,21 @@ public partial class SobeecoredbContext : DbContext {
 
 			entity.HasOne(d => d.IntProduct).WithMany(p => p.TcartItems)
 				.HasForeignKey(d => d.IntProductId)
-				.HasConstraintName("FK__TCartItem__intPr__18EBB532");
+				.OnDelete(DeleteBehavior.Cascade)
+				.HasConstraintName("TCartItems_TProducts_FK");
 
 			entity.HasOne(d => d.IntShoppingCart).WithMany(p => p.TcartItems)
 				.HasForeignKey(d => d.IntShoppingCartId)
-				.HasConstraintName("FK__TCartItem__intSh__19DFD96B");
+				.OnDelete(DeleteBehavior.Cascade)
+				.HasConstraintName("TCartItems_TShoppingCarts_FK");
 		});
 
 		modelBuilder.Entity<Tcity>(entity => {
 			entity.HasKey(e => e.IntCityId).HasName("TCities_PK");
 
-			entity.ToTable("TCities", "db_owner");
+			entity.ToTable("TCities");
 
-			entity.Property(e => e.IntCityId)
-				.ValueGeneratedNever()
-				.HasColumnName("intCityID");
+			entity.Property(e => e.IntCityId).HasColumnName("intCityID");
 			entity.Property(e => e.StrCity)
 				.HasMaxLength(255)
 				.IsUnicode(false)
@@ -231,11 +221,9 @@ public partial class SobeecoredbContext : DbContext {
 		modelBuilder.Entity<Tcoupon>(entity => {
 			entity.HasKey(e => e.IntCouponId).HasName("TCoupons_PK");
 
-			entity.ToTable("TCoupons", "db_owner");
+			entity.ToTable("TCoupons");
 
-			entity.Property(e => e.IntCouponId)
-				.ValueGeneratedNever()
-				.HasColumnName("intCouponID");
+			entity.Property(e => e.IntCouponId).HasColumnName("intCouponID");
 			entity.Property(e => e.DtmExpirationDate)
 				.HasColumnType("datetime")
 				.HasColumnName("dtmExpirationDate");
@@ -252,23 +240,14 @@ public partial class SobeecoredbContext : DbContext {
 		modelBuilder.Entity<TcustomerServiceTicket>(entity => {
 			entity.HasKey(e => e.IntCustomerServiceTicketId).HasName("TCustomerServiceTickets_PK");
 
-			entity.ToTable("TCustomerServiceTickets", "db_owner");
+			entity.ToTable("TCustomerServiceTickets");
 
-			entity.HasIndex(e => e.IntTicketCategoryId, "IX_TCustomerServiceTickets_intTicketCategoryID");
-
-			entity.HasIndex(e => e.IntTicketStatusId, "IX_TCustomerServiceTickets_intTicketStatusID");
-
-			entity.HasIndex(e => e.IntUserId, "IX_TCustomerServiceTickets_intUserID");
-
-			entity.Property(e => e.IntCustomerServiceTicketId)
-				.ValueGeneratedNever()
-				.HasColumnName("intCustomerServiceTicketID");
+			entity.Property(e => e.IntCustomerServiceTicketId).HasColumnName("intCustomerServiceTicketID");
 			entity.Property(e => e.DtmTimeOfSubmission)
 				.HasColumnType("datetime")
 				.HasColumnName("dtmTimeOfSubmission");
 			entity.Property(e => e.IntTicketCategoryId).HasColumnName("intTicketCategoryID");
 			entity.Property(e => e.IntTicketStatusId).HasColumnName("intTicketStatusID");
-			entity.Property(e => e.IntUserId).HasColumnName("intUserID");
 			entity.Property(e => e.SessionId)
 				.HasMaxLength(450)
 				.HasColumnName("session_id");
@@ -288,51 +267,50 @@ public partial class SobeecoredbContext : DbContext {
 				.HasForeignKey(d => d.IntTicketStatusId)
 				.HasConstraintName("TCustomerServiceTickets_TTicketStatus_FK");
 
-			entity.HasOne(d => d.IntUser).WithMany(p => p.TcustomerServiceTickets)
-				.HasForeignKey(d => d.IntUserId)
-				.HasConstraintName("TCustomerServiceTickets_TUsers_FK");
-
 			entity.HasOne(d => d.User).WithMany(p => p.TcustomerServiceTickets)
 				.HasForeignKey(d => d.UserId)
-				.HasConstraintName("FK_AspNetUsers_TCustomerServiceTickets");
+				.OnDelete(DeleteBehavior.Cascade)
+				.HasConstraintName("tcustomerservicetickets_AspNetUsers_FK");
 		});
 
 		modelBuilder.Entity<TdrinkCategory>(entity => {
 			entity.HasKey(e => e.IntDrinkCategoryId).HasName("TDrinkCategories_PK");
 
-			entity.ToTable("TDrinkCategories", "db_owner");
+			entity.ToTable("TDrinkCategories");
 
-			entity.Property(e => e.IntDrinkCategoryId)
-				.ValueGeneratedNever()
-				.HasColumnName("intDrinkCategoryID");
-			entity.Property(e => e.StrDrinkCategory)
+			entity.Property(e => e.IntDrinkCategoryId).HasColumnName("intDrinkCategoryID");
+			entity.Property(e => e.StrDescription)
 				.HasMaxLength(255)
 				.IsUnicode(false)
-				.HasColumnName("strDrinkCategory");
+				.HasColumnName("strDescription");
+			entity.Property(e => e.StrName)
+				.HasMaxLength(255)
+				.IsUnicode(false)
+				.HasColumnName("strName");
 		});
 
 		modelBuilder.Entity<Tfavorite>(entity => {
 			entity.HasKey(e => e.IntFavoriteId).HasName("TFavorites_PK");
 
-			entity.ToTable("TFavorites", "db_owner");
+			entity.ToTable("TFavorites");
 
-			entity.Property(e => e.IntFavoriteId)
-				.ValueGeneratedNever()
-				.HasColumnName("intFavoriteID");
-			entity.Property(e => e.StrFavorite)
-				.HasMaxLength(255)
-				.IsUnicode(false)
-				.HasColumnName("strFavorite");
+			entity.Property(e => e.IntFavoriteId).HasColumnName("intFavoriteID");
+			entity.Property(e => e.DtmDateAdded)
+				.HasColumnType("datetime")
+				.HasColumnName("dtmDateAdded");
+			entity.Property(e => e.IntProductId).HasColumnName("intProductID");
+
+			entity.HasOne(d => d.IntProduct).WithMany(p => p.Tfavorites)
+				.HasForeignKey(d => d.IntProductId)
+				.HasConstraintName("TFavorites_TProducts_FK");
 		});
 
 		modelBuilder.Entity<Tflavor>(entity => {
 			entity.HasKey(e => e.IntFlavorId).HasName("TFlavors_PK");
 
-			entity.ToTable("TFlavors", "db_owner");
+			entity.ToTable("TFlavors");
 
-			entity.Property(e => e.IntFlavorId)
-				.ValueGeneratedNever()
-				.HasColumnName("intFlavorID");
+			entity.Property(e => e.IntFlavorId).HasColumnName("intFlavorID");
 			entity.Property(e => e.StrFlavor)
 				.HasMaxLength(255)
 				.IsUnicode(false)
@@ -342,11 +320,9 @@ public partial class SobeecoredbContext : DbContext {
 		modelBuilder.Entity<Tgender>(entity => {
 			entity.HasKey(e => e.IntGenderId).HasName("TGenders_PK");
 
-			entity.ToTable("TGenders", "db_owner");
+			entity.ToTable("TGenders");
 
-			entity.Property(e => e.IntGenderId)
-				.ValueGeneratedNever()
-				.HasColumnName("intGenderID");
+			entity.Property(e => e.IntGenderId).HasColumnName("intGenderID");
 			entity.Property(e => e.StrGender)
 				.HasMaxLength(255)
 				.IsUnicode(false)
@@ -356,83 +332,84 @@ public partial class SobeecoredbContext : DbContext {
 		modelBuilder.Entity<Tingredient>(entity => {
 			entity.HasKey(e => e.IntIngredientId).HasName("TIngredients_PK");
 
-			entity.ToTable("TIngredients", "db_owner");
+			entity.ToTable("TIngredients");
 
-			entity.Property(e => e.IntIngredientId)
-				.ValueGeneratedNever()
-				.HasColumnName("intIngredientID");
+			entity.Property(e => e.IntIngredientId).HasColumnName("intIngredientID");
 			entity.Property(e => e.StrIngredient)
 				.HasMaxLength(255)
 				.IsUnicode(false)
 				.HasColumnName("strIngredient");
 		});
 
+		modelBuilder.Entity<Tinteraction>(entity => {
+			entity.HasKey(e => e.IntInteractionId).HasName("TInteractions_PK");
+
+			entity.ToTable("TInteractions");
+
+			entity.Property(e => e.IntInteractionId).HasColumnName("intInteractionID");
+			entity.Property(e => e.StrDescription)
+				.HasMaxLength(255)
+				.IsUnicode(false)
+				.HasColumnName("strDescription");
+			entity.Property(e => e.StrName)
+				.HasMaxLength(255)
+				.IsUnicode(false)
+				.HasColumnName("strName");
+		});
+
 		modelBuilder.Entity<Torder>(entity => {
-			entity.HasKey(e => e.IntOrderId).HasName("PK__TOrders__447BBC44701D10E7");
+			entity.HasKey(e => e.IntOrderId).HasName("TOrders_PK");
 
-			entity.ToTable("TOrders", "db_owner");
-
-			entity.HasIndex(e => e.IntPaymentMethod, "IX_TOrders_intPaymentMethod");
-
-			entity.HasIndex(e => e.IntShippingStatusId, "IX_TOrders_intShippingStatusID");
-
-			entity.HasIndex(e => e.IntUserId, "IX_TOrders_intUserID");
+			entity.ToTable("TOrders");
 
 			entity.Property(e => e.IntOrderId).HasColumnName("intOrderID");
 			entity.Property(e => e.DecTotalAmount)
-				.HasColumnType("decimal(10, 2)")
+				.HasColumnType("decimal(18,2)")
 				.HasColumnName("decTotalAmount");
 			entity.Property(e => e.DtmOrderDate)
 				.HasColumnType("datetime")
 				.HasColumnName("dtmOrderDate");
-			entity.Property(e => e.IntPaymentMethod).HasColumnName("intPaymentMethod");
+			entity.Property(e => e.IntPaymentMethodId).HasColumnName("intPaymentMethodID");
 			entity.Property(e => e.IntShippingStatusId).HasColumnName("intShippingStatusID");
-			entity.Property(e => e.IntUserId).HasColumnName("intUserID");
 			entity.Property(e => e.SessionId)
 				.HasMaxLength(450)
 				.HasColumnName("session_id");
 			entity.Property(e => e.StrOrderStatus)
-				.HasMaxLength(50)
+				.HasMaxLength(255)
 				.IsUnicode(false)
-				.HasDefaultValue("Pending")
 				.HasColumnName("strOrderStatus");
 			entity.Property(e => e.StrShippingAddress)
 				.HasMaxLength(255)
 				.IsUnicode(false)
 				.HasColumnName("strShippingAddress");
 			entity.Property(e => e.StrTrackingNumber)
-				.HasMaxLength(50)
+				.HasMaxLength(255)
 				.IsUnicode(false)
 				.HasColumnName("strTrackingNumber");
 			entity.Property(e => e.UserId)
 				.HasMaxLength(450)
 				.HasColumnName("user_id");
 
-			entity.HasOne(d => d.IntPaymentMethodNavigation).WithMany(p => p.Torders)
-				.HasForeignKey(d => d.IntPaymentMethod)
-				.HasConstraintName("FK_PaymentMethod");
+			entity.HasOne(d => d.IntPaymentMethod).WithMany(p => p.Torders)
+				.HasForeignKey(d => d.IntPaymentMethodId)
+				.OnDelete(DeleteBehavior.Cascade)
+				.HasConstraintName("TOrders_TPaymentMethods_FK");
 
 			entity.HasOne(d => d.IntShippingStatus).WithMany(p => p.Torders)
 				.HasForeignKey(d => d.IntShippingStatusId)
-				.HasConstraintName("FK_TOrders_TShippingStatus");
-
-			entity.HasOne(d => d.IntUser).WithMany(p => p.Torders)
-				.HasForeignKey(d => d.IntUserId)
-				.HasConstraintName("FK__TOrders__intUser__208CD6FA");
+				.OnDelete(DeleteBehavior.Cascade)
+				.HasConstraintName("TOrders_TShippingStatus_FK");
 
 			entity.HasOne(d => d.User).WithMany(p => p.Torders)
 				.HasForeignKey(d => d.UserId)
-				.HasConstraintName("FK_AspNetUsers_TOrders");
+				.OnDelete(DeleteBehavior.Cascade)
+				.HasConstraintName("torders_AspNetUsers_FK");
 		});
 
 		modelBuilder.Entity<TorderItem>(entity => {
-			entity.HasKey(e => e.IntOrderItemId).HasName("PK__TOrderIt__33B60225C247E2F9");
+			entity.HasKey(e => e.IntOrderItemId).HasName("TOrderItems_PK");
 
-			entity.ToTable("TOrderItems", "db_owner");
-
-			entity.HasIndex(e => e.IntOrderId, "IX_TOrderItems_intOrderID");
-
-			entity.HasIndex(e => e.IntProductId, "IX_TOrderItems_intProductID");
+			entity.ToTable("TOrderItems");
 
 			entity.Property(e => e.IntOrderItemId).HasColumnName("intOrderItemID");
 			entity.Property(e => e.IntOrderId).HasColumnName("intOrderID");
@@ -444,115 +421,84 @@ public partial class SobeecoredbContext : DbContext {
 
 			entity.HasOne(d => d.IntOrder).WithMany(p => p.TorderItems)
 				.HasForeignKey(d => d.IntOrderId)
-				.HasConstraintName("FK__TOrderIte__intOr__1EA48E88");
+				.OnDelete(DeleteBehavior.Cascade)
+				.HasConstraintName("TOrderItems_TOrders_FK");
 
 			entity.HasOne(d => d.IntProduct).WithMany(p => p.TorderItems)
 				.HasForeignKey(d => d.IntProductId)
-				.HasConstraintName("FK__TOrderIte__intPr__1F98B2C1");
+				.OnDelete(DeleteBehavior.Cascade)
+				.HasConstraintName("TOrderItems_TProducts_FK");
 		});
 
 		modelBuilder.Entity<TordersProduct>(entity => {
 			entity.HasKey(e => e.IntOrdersProductId).HasName("TOrdersProducts_PK");
 
-			entity.ToTable("TOrdersProducts", "db_owner");
+			entity.ToTable("TOrdersProducts");
 
-			entity.HasIndex(e => e.IntProductId, "IX_TOrdersProducts_intProductID");
-
-			entity.Property(e => e.IntOrdersProductId)
-				.ValueGeneratedNever()
-				.HasColumnName("intOrdersProductID");
+			entity.Property(e => e.IntOrdersProductId).HasColumnName("intOrdersProductID");
 			entity.Property(e => e.IntProductId).HasColumnName("intProductID");
 			entity.Property(e => e.StrOrdersProduct)
 				.HasMaxLength(255)
 				.IsUnicode(false)
 				.HasColumnName("strOrdersProduct");
-
-			entity.HasOne(d => d.IntProduct).WithMany(p => p.TordersProducts)
-				.HasForeignKey(d => d.IntProductId)
-				.HasConstraintName("TOrdersProducts_TProducts_FK");
 		});
 
 		modelBuilder.Entity<Tpayment>(entity => {
 			entity.HasKey(e => e.IntPaymentId).HasName("TPayments_PK");
 
-			entity.ToTable("TPayments", "db_owner");
+			entity.ToTable("TPayments");
 
-			entity.Property(e => e.IntPaymentId)
-				.ValueGeneratedNever()
-				.HasColumnName("intPaymentID");
+			entity.Property(e => e.IntPaymentId).HasColumnName("intPaymentID");
 			entity.Property(e => e.IntPaymentMethod).HasColumnName("intPaymentMethod");
 			entity.Property(e => e.IntPaymentMethodId).HasColumnName("intPaymentMethodID");
 			entity.Property(e => e.StrBillingAddress)
 				.HasMaxLength(255)
 				.IsUnicode(false)
 				.HasColumnName("strBillingAddress");
+
+			entity.HasOne(d => d.IntPaymentMethodNavigation).WithMany(p => p.Tpayments)
+				.HasForeignKey(d => d.IntPaymentMethodId)
+				.OnDelete(DeleteBehavior.Cascade)
+				.HasConstraintName("TPayments_TPaymentMethods_FK");
 		});
 
 		modelBuilder.Entity<TpaymentMethod>(entity => {
-			entity.HasKey(e => e.IntPaymentMethod).HasName("PK__TPayment__74D498AF47686B80");
+			entity.HasKey(e => e.IntPaymentMethodId).HasName("TPaymentMethods_PK");
 
-			entity.ToTable("TPaymentMethods", "db_owner");
+			entity.ToTable("TPaymentMethods");
 
-			entity.Property(e => e.IntPaymentMethod)
-				.ValueGeneratedNever()
-				.HasColumnName("intPaymentMethod");
-			entity.Property(e => e.StrPaymentMethodName)
-				.HasMaxLength(50)
+			entity.Property(e => e.IntPaymentMethodId).HasColumnName("intPaymentMethodID");
+			entity.Property(e => e.StrBillingAddress)
+				.HasMaxLength(255)
 				.IsUnicode(false)
-				.HasColumnName("strPaymentMethodName");
-		});
-
-		modelBuilder.Entity<TpaymentStatus>(entity => {
-			entity.HasKey(e => e.IntPaymentStatusId).HasName("PK__TPayment__4141EB10ACA7B817");
-
-			entity.ToTable("TPaymentStatus", "db_owner");
-
-			entity.Property(e => e.IntPaymentStatusId)
-				.ValueGeneratedNever()
-				.HasColumnName("intPaymentStatusID");
-			entity.Property(e => e.StrPaymentStatus)
-				.HasMaxLength(50)
+				.HasColumnName("strBillingAddress");
+			entity.Property(e => e.StrCreditCardDetails)
+				.HasMaxLength(255)
 				.IsUnicode(false)
-				.HasColumnName("strPaymentStatus");
-		});
-
-		modelBuilder.Entity<Tpermission>(entity => {
-			entity.HasKey(e => e.IntPermissionId).HasName("TPermissions_PK");
-
-			entity.ToTable("TPermissions", "db_owner");
-
-			entity.Property(e => e.IntPermissionId)
-				.ValueGeneratedNever()
-				.HasColumnName("intPermissionID");
+				.HasColumnName("strCreditCardDetails");
 			entity.Property(e => e.StrDescription)
 				.HasMaxLength(255)
 				.IsUnicode(false)
 				.HasColumnName("strDescription");
-			entity.Property(e => e.StrPermissionName)
-				.HasMaxLength(255)
-				.IsUnicode(false)
-				.HasColumnName("strPermissionName");
 		});
 
 		modelBuilder.Entity<Tproduct>(entity => {
 			entity.HasKey(e => e.IntProductId).HasName("TProducts_PK");
 
-			entity.ToTable("TProducts", "db_owner");
+			entity.ToTable("TProducts");
 
-			entity.Property(e => e.IntProductId)
-				.ValueGeneratedNever()
-				.HasColumnName("intProductID");
+			entity.Property(e => e.IntProductId).HasColumnName("intProductID");
 			entity.Property(e => e.DecPrice)
 				.HasColumnType("decimal(18, 2)")
 				.HasColumnName("decPrice");
+			entity.Property(e => e.StrDescription)
+				.HasMaxLength(255)
+				.IsUnicode(false)
+				.HasColumnName("strDescription");
 			entity.Property(e => e.StrName)
 				.HasMaxLength(255)
 				.IsUnicode(false)
 				.HasColumnName("strName");
-			entity.Property(e => e.StrPrice)
-				.HasMaxLength(50)
-				.IsUnicode(false)
-				.HasColumnName("strPrice");
 			entity.Property(e => e.StrStockAmount)
 				.HasMaxLength(255)
 				.IsUnicode(false)
@@ -562,11 +508,9 @@ public partial class SobeecoredbContext : DbContext {
 		modelBuilder.Entity<TproductImage>(entity => {
 			entity.HasKey(e => e.IntProductImageId).HasName("TProductImages_PK");
 
-			entity.ToTable("TProductImages", "db_owner");
+			entity.ToTable("TProductImages");
 
-			entity.Property(e => e.IntProductImageId)
-				.ValueGeneratedNever()
-				.HasColumnName("intProductImageID");
+			entity.Property(e => e.IntProductImageId).HasColumnName("intProductImageID");
 			entity.Property(e => e.StrProductImageUrl)
 				.HasMaxLength(1000)
 				.IsUnicode(false)
@@ -576,81 +520,51 @@ public partial class SobeecoredbContext : DbContext {
 		modelBuilder.Entity<TproductRecommendation>(entity => {
 			entity.HasKey(e => e.IntProductRecommendationId).HasName("TProductRecommendations_PK");
 
-			entity.ToTable("TProductRecommendations", "db_owner");
+			entity.ToTable("TProductRecommendations");
 
-			entity.HasIndex(e => e.IntProductId, "IX_TProductRecommendations_intProductID");
-
-			entity.HasIndex(e => e.IntUserId, "IX_TProductRecommendations_intUserID");
-
-			entity.Property(e => e.IntProductRecommendationId)
-				.ValueGeneratedNever()
-				.HasColumnName("intProductRecommendationID");
+			entity.Property(e => e.IntProductRecommendationId).HasColumnName("intProductRecommendationID");
 			entity.Property(e => e.DtmTimeOfRecommendation)
 				.HasColumnType("datetime")
 				.HasColumnName("dtmTimeOfRecommendation");
+			entity.Property(e => e.IntInteractionId).HasColumnName("intInteractionID");
 			entity.Property(e => e.IntProductId).HasColumnName("intProductID");
-			entity.Property(e => e.IntUserId).HasColumnName("intUserID");
-			entity.Property(e => e.SessionId)
-				.HasMaxLength(450)
-				.HasColumnName("session_id");
-			entity.Property(e => e.StrRelevantScore)
-				.HasMaxLength(255)
-				.IsUnicode(false)
-				.HasColumnName("strRelevantScore");
-			entity.Property(e => e.UserId)
-				.HasMaxLength(450)
-				.HasColumnName("user_id");
+			entity.Property(e => e.IntRelevantScore).HasColumnName("intRelevantScore");
+
+			entity.HasOne(d => d.IntInteraction).WithMany(p => p.TproductRecommendations)
+				.HasForeignKey(d => d.IntInteractionId)
+				.HasConstraintName("TProductRecommendations_TInteractions_FK");
 
 			entity.HasOne(d => d.IntProduct).WithMany(p => p.TproductRecommendations)
 				.HasForeignKey(d => d.IntProductId)
 				.HasConstraintName("TProductRecommendations_TProducts_FK");
-
-			entity.HasOne(d => d.IntUser).WithMany(p => p.TproductRecommendations)
-				.HasForeignKey(d => d.IntUserId)
-				.HasConstraintName("TProductRecommendations_TUsers_FK");
-
-			entity.HasOne(d => d.User).WithMany(p => p.TproductRecommendations)
-				.HasForeignKey(d => d.UserId)
-				.HasConstraintName("FK_AspNetUsers_TProductRecommendations");
 		});
 
-		modelBuilder.Entity<TPromoCodeUsageHistory>(entity => {
-			entity.HasKey(e => e.Id).HasName("PK_PromoCodeUsageHistory");
+		modelBuilder.Entity<TpromoCodeUsageHistory>(entity => {
+			entity.HasKey(e => e.IntUsageHistoryId).HasName("TPromoCodeUsageHistory_PK");
 
-			entity.ToTable("TPromoCodeUsageHistory", "db_owner");
+			entity.ToTable("TPromoCodeUsageHistory");
 
-			entity.Property(e => e.Id)
-				.ValueGeneratedOnAdd()
-				.HasColumnName("Id");
-
-			entity.Property(e => e.ShoppingCartId)
-				.HasColumnName("ShoppingCartId");
-
+			entity.Property(e => e.IntUsageHistoryId).HasColumnName("intUsageHistoryID");
+			entity.Property(e => e.IntShoppingCartId).HasColumnName("intShoppingCartID");
 			entity.Property(e => e.PromoCode)
-				.IsRequired()
 				.HasMaxLength(50)
-				.IsUnicode(false)
-				.HasColumnName("PromoCode");
+				.IsUnicode(false);
+			entity.Property(e => e.UsedDateTime).HasColumnType("datetime");
 
-			entity.Property(e => e.UsedDateTime)
-				.HasColumnType("datetime")
-				.HasColumnName("UsedDateTime");
-
-			entity.HasOne(pu => pu.TShoppingCart)
-				.WithMany(sc => sc.TPromoCodeUsageHistory)
-				.HasForeignKey(pu => pu.ShoppingCartId)
-				.OnDelete(DeleteBehavior.Restrict)
-				.HasConstraintName("FK_PromoCodeUsageHistory_TShoppingCarts");
+			entity.HasOne(d => d.IntShoppingCart).WithMany(p => p.TpromoCodeUsageHistories)
+				.HasForeignKey(d => d.IntShoppingCartId)
+				.HasConstraintName("TPromoCodeUsageHistory_TShoppingCarts_FK");
 		});
 
 		modelBuilder.Entity<Tpromotion>(entity => {
 			entity.HasKey(e => e.IntPromotionId).HasName("TPromotions_PK");
 
-			entity.ToTable("TPromotions", "db_owner");
+			entity.ToTable("TPromotions");
 
-			entity.Property(e => e.IntPromotionId)
-				.ValueGeneratedNever()
-				.HasColumnName("intPromotionID");
+			entity.Property(e => e.IntPromotionId).HasColumnName("intPromotionID");
+			entity.Property(e => e.DecDiscountPercentage)
+				.HasColumnType("decimal(18, 2)")
+				.HasColumnName("decDiscountPercentage");
 			entity.Property(e => e.DtmExpirationDate)
 				.HasColumnType("datetime")
 				.HasColumnName("dtmExpirationDate");
@@ -662,20 +576,14 @@ public partial class SobeecoredbContext : DbContext {
 				.HasMaxLength(255)
 				.IsUnicode(false)
 				.HasColumnName("strPromoCode");
-			entity.Property(e => e.DecDiscountPercentage)
-				.HasColumnType("decimal(18,2)")
-				.HasColumnName("decDiscountPercentage");
-
 		});
 
 		modelBuilder.Entity<Trace>(entity => {
 			entity.HasKey(e => e.IntRaceId).HasName("TRaces_PK");
 
-			entity.ToTable("TRaces", "db_owner");
+			entity.ToTable("TRaces");
 
-			entity.Property(e => e.IntRaceId)
-				.ValueGeneratedNever()
-				.HasColumnName("intRaceID");
+			entity.Property(e => e.IntRaceId).HasColumnName("intRaceID");
 			entity.Property(e => e.StrRace)
 				.HasMaxLength(255)
 				.IsUnicode(false)
@@ -685,24 +593,17 @@ public partial class SobeecoredbContext : DbContext {
 		modelBuilder.Entity<Treview>(entity => {
 			entity.HasKey(e => e.IntReviewId).HasName("TReviews_PK");
 
-			entity.ToTable("TReviews", "db_owner");
+			entity.ToTable("TReviews");
 
-			entity.HasIndex(e => e.IntProductId, "IX_TReviews_intProductID");
-
-			entity.HasIndex(e => e.IntUserId, "IX_TReviews_intUserID");
-
-			entity.Property(e => e.IntReviewId)
-				.ValueGeneratedNever()
-				.HasColumnName("intReviewID");
+			entity.Property(e => e.IntReviewId).HasColumnName("intReviewID");
+			entity.Property(e => e.DtmReviewDate)
+				.HasColumnType("datetime")
+				.HasColumnName("dtmReviewDate");
 			entity.Property(e => e.IntProductId).HasColumnName("intProductID");
-			entity.Property(e => e.IntUserId).HasColumnName("intUserID");
+			entity.Property(e => e.IntRating).HasColumnName("intRating");
 			entity.Property(e => e.SessionId)
 				.HasMaxLength(450)
 				.HasColumnName("session_id");
-			entity.Property(e => e.StrRating)
-				.HasMaxLength(255)
-				.IsUnicode(false)
-				.HasColumnName("strRating");
 			entity.Property(e => e.StrReviewText)
 				.HasMaxLength(1000)
 				.IsUnicode(false)
@@ -715,23 +616,78 @@ public partial class SobeecoredbContext : DbContext {
 				.HasForeignKey(d => d.IntProductId)
 				.HasConstraintName("TReviews_TProducts_FK");
 
-			entity.HasOne(d => d.IntUser).WithMany(p => p.Treviews)
-				.HasForeignKey(d => d.IntUserId)
-				.HasConstraintName("TReviews_TUsers_FK");
-
 			entity.HasOne(d => d.User).WithMany(p => p.Treviews)
 				.HasForeignKey(d => d.UserId)
-				.HasConstraintName("FK_AspNetUsers_TReviews");
+				.OnDelete(DeleteBehavior.Cascade)
+				.HasConstraintName("treviews_AspNetUsers_FK");
+		});
+
+		modelBuilder.Entity<TrewardsOption>(entity => {
+			entity.HasKey(e => e.IntRewardsOptionsId).HasName("TRewardsOptions_PK");
+
+			entity.ToTable("TRewardsOptions");
+
+			entity.Property(e => e.IntRewardsOptionsId).HasColumnName("intRewardsOptionsID");
+			entity.Property(e => e.StrDescription)
+				.HasMaxLength(255)
+				.IsUnicode(false)
+				.HasColumnName("strDescription");
+			entity.Property(e => e.StrOptionName)
+				.HasMaxLength(255)
+				.IsUnicode(false)
+				.HasColumnName("strOptionName");
+			entity.Property(e => e.StrPointsRequired)
+				.HasMaxLength(255)
+				.IsUnicode(false)
+				.HasColumnName("strPointsRequired");
+		});
+
+		modelBuilder.Entity<TrewardsPoint>(entity => {
+			entity.HasKey(e => e.IntRewardsPointsId).HasName("TRewardsPoints_PK");
+
+			entity.ToTable("TRewardsPoints");
+
+			entity.Property(e => e.IntRewardsPointsId).HasColumnName("intRewardsPointsID");
+			entity.Property(e => e.StrPointsBalance)
+				.HasMaxLength(255)
+				.IsUnicode(false)
+				.HasColumnName("strPointsBalance");
+			entity.Property(e => e.StrTotalPointsEarned)
+				.HasMaxLength(255)
+				.IsUnicode(false)
+				.HasColumnName("strTotalPointsEarned");
+			entity.Property(e => e.StrTotalPointsRedeemed)
+				.HasMaxLength(255)
+				.IsUnicode(false)
+				.HasColumnName("strTotalPointsRedeemed");
+		});
+
+		modelBuilder.Entity<TrewardsTransaction>(entity => {
+			entity.HasKey(e => e.IntRewardsTransactionId).HasName("TRewardsTransactions_PK");
+
+			entity.ToTable("TRewardsTransactions");
+
+			entity.Property(e => e.IntRewardsTransactionId).HasColumnName("intRewardsTransactionID");
+			entity.Property(e => e.DtmTransactionDate)
+				.HasColumnType("datetime")
+				.HasColumnName("dtmTransactionDate");
+			entity.Property(e => e.IntTransactionTypeId).HasColumnName("intTransactionTypeID");
+			entity.Property(e => e.StrPointAmount)
+				.HasMaxLength(255)
+				.IsUnicode(false)
+				.HasColumnName("strPointAmount");
+
+			entity.HasOne(d => d.IntTransactionType).WithMany(p => p.TrewardsTransactions)
+				.HasForeignKey(d => d.IntTransactionTypeId)
+				.HasConstraintName("TRewardsTransactions_TTransactionTypes_FK");
 		});
 
 		modelBuilder.Entity<TshippingMethod>(entity => {
 			entity.HasKey(e => e.IntShippingMethodId).HasName("TShippingMethods_PK");
 
-			entity.ToTable("TShippingMethods", "db_owner");
+			entity.ToTable("TShippingMethods");
 
-			entity.Property(e => e.IntShippingMethodId)
-				.ValueGeneratedNever()
-				.HasColumnName("intShippingMethodID");
+			entity.Property(e => e.IntShippingMethodId).HasColumnName("intShippingMethodID");
 			entity.Property(e => e.DtmEstimatedDelivery)
 				.HasColumnType("datetime")
 				.HasColumnName("dtmEstimatedDelivery");
@@ -752,11 +708,9 @@ public partial class SobeecoredbContext : DbContext {
 		modelBuilder.Entity<TshippingStatus>(entity => {
 			entity.HasKey(e => e.IntShippingStatusId).HasName("TShippingStatus_PK");
 
-			entity.ToTable("TShippingStatus", "db_owner");
+			entity.ToTable("TShippingStatus");
 
-			entity.Property(e => e.IntShippingStatusId)
-				.ValueGeneratedNever()
-				.HasColumnName("intShippingStatusID");
+			entity.Property(e => e.IntShippingStatusId).HasColumnName("intShippingStatusID");
 			entity.Property(e => e.StrShippingStatus)
 				.HasMaxLength(255)
 				.IsUnicode(false)
@@ -764,17 +718,15 @@ public partial class SobeecoredbContext : DbContext {
 		});
 
 		modelBuilder.Entity<TshoppingCart>(entity => {
-			entity.HasKey(e => e.IntShoppingCartId).HasName("PK__TShoppin__0A3129171F137CD2");
+			entity.HasKey(e => e.IntShoppingCartId).HasName("TShoppingCarts_PK");
 
-			entity.ToTable("TShoppingCarts", "db_owner");
+			entity.ToTable("TShoppingCarts");
 
 			entity.Property(e => e.IntShoppingCartId).HasColumnName("intShoppingCartID");
 			entity.Property(e => e.DtmDateCreated)
-				.HasDefaultValueSql("(getdate())")
 				.HasColumnType("datetime")
 				.HasColumnName("dtmDateCreated");
 			entity.Property(e => e.DtmDateLastUpdated)
-				.HasDefaultValueSql("(getdate())")
 				.HasColumnType("datetime")
 				.HasColumnName("dtmDateLastUpdated");
 			entity.Property(e => e.SessionId)
@@ -786,17 +738,16 @@ public partial class SobeecoredbContext : DbContext {
 
 			entity.HasOne(d => d.User).WithMany(p => p.TshoppingCarts)
 				.HasForeignKey(d => d.UserId)
-				.HasConstraintName("FK_AspNetUsers_TShoppingCarts");
+				.OnDelete(DeleteBehavior.Cascade)
+				.HasConstraintName("tshoppingcarts_AspNetUsers_FK");
 		});
 
 		modelBuilder.Entity<Tstate>(entity => {
 			entity.HasKey(e => e.IntStateId).HasName("TStates_PK");
 
-			entity.ToTable("TStates", "db_owner");
+			entity.ToTable("TStates");
 
-			entity.Property(e => e.IntStateId)
-				.ValueGeneratedNever()
-				.HasColumnName("intStateID");
+			entity.Property(e => e.IntStateId).HasColumnName("intStateID");
 			entity.Property(e => e.StrState)
 				.HasMaxLength(255)
 				.IsUnicode(false)
@@ -806,11 +757,9 @@ public partial class SobeecoredbContext : DbContext {
 		modelBuilder.Entity<TticketCategory>(entity => {
 			entity.HasKey(e => e.IntTicketCategoryId).HasName("TTicketCategories_PK");
 
-			entity.ToTable("TTicketCategories", "db_owner");
+			entity.ToTable("TTicketCategories");
 
-			entity.Property(e => e.IntTicketCategoryId)
-				.ValueGeneratedNever()
-				.HasColumnName("intTicketCategoryID");
+			entity.Property(e => e.IntTicketCategoryId).HasColumnName("intTicketCategoryID");
 			entity.Property(e => e.StrTicketCategory)
 				.HasMaxLength(255)
 				.IsUnicode(false)
@@ -820,74 +769,28 @@ public partial class SobeecoredbContext : DbContext {
 		modelBuilder.Entity<TticketStatus>(entity => {
 			entity.HasKey(e => e.IntTicketStatusId).HasName("TTicketStatus_PK");
 
-			entity.ToTable("TTicketStatus", "db_owner");
+			entity.ToTable("TTicketStatus");
 
-			entity.Property(e => e.IntTicketStatusId)
-				.ValueGeneratedNever()
-				.HasColumnName("intTicketStatusID");
+			entity.Property(e => e.IntTicketStatusId).HasColumnName("intTicketStatusID");
 			entity.Property(e => e.StrTicketStatus)
 				.HasMaxLength(255)
 				.IsUnicode(false)
 				.HasColumnName("strTicketStatus");
 		});
 
-		modelBuilder.Entity<Tuser>(entity => {
-			entity.HasKey(e => e.IntUserId).HasName("TUsers_PK");
+		modelBuilder.Entity<TtransactionType>(entity => {
+			entity.HasKey(e => e.IntTransactionTypeId).HasName("TTransactionTypes_PK");
 
-			entity.ToTable("TUsers", "db_owner");
+			entity.ToTable("TTransactionTypes");
 
-			entity.HasIndex(e => e.IntUserRoleId, "IX_TUsers_intUserRoleID");
-
-			entity.Property(e => e.IntUserId)
-				.ValueGeneratedNever()
-				.HasColumnName("intUserID");
-			entity.Property(e => e.Id)
-				.HasMaxLength(50)
-				.HasColumnName("ID");
-			entity.Property(e => e.IntUserRoleId).HasColumnName("intUserRoleID");
-			entity.Property(e => e.StrBillingAddress)
-				.HasMaxLength(255)
-				.HasColumnName("strBillingAddress");
-			entity.Property(e => e.StrDateCreated)
-				.HasColumnType("datetime")
-				.HasColumnName("strDateCreated");
-			entity.Property(e => e.StrEmail)
+			entity.Property(e => e.IntTransactionTypeId).HasColumnName("intTransactionTypeID");
+			entity.Property(e => e.StrTransactionType)
 				.HasMaxLength(255)
 				.IsUnicode(false)
-				.HasColumnName("strEmail");
-			entity.Property(e => e.StrFirstName)
-				.HasMaxLength(50)
-				.HasColumnName("strFirstName");
-			entity.Property(e => e.StrLastLoginDate)
-				.HasColumnType("datetime")
-				.HasColumnName("strLastLoginDate");
-			entity.Property(e => e.StrLastName)
-				.HasMaxLength(50)
-				.HasColumnName("strLastName");
-			entity.Property(e => e.StrPassword)
-				.HasMaxLength(255)
-				.IsUnicode(false)
-				.HasColumnName("strPassword");
-			entity.Property(e => e.StrShippingAddress).HasColumnName("strShippingAddress");
-
-			entity.HasOne(d => d.IntUserRole).WithMany(p => p.Tusers)
-				.HasForeignKey(d => d.IntUserRoleId)
-				.HasConstraintName("FK_intUserRoleID");
+				.HasColumnName("strTransactionType");
 		});
 
-		modelBuilder.Entity<TuserRole>(entity => {
-			entity.HasKey(e => e.IntUserRoleId).HasName("TUserRoles_PK");
 
-			entity.ToTable("TUserRoles", "db_owner");
-
-			entity.Property(e => e.IntUserRoleId)
-				.ValueGeneratedNever()
-				.HasColumnName("intUserRoleID");
-			entity.Property(e => e.StrRole)
-				.HasMaxLength(255)
-				.IsUnicode(false)
-				.HasColumnName("strRole");
-		});
 
 		OnModelCreatingPartial(modelBuilder);
 	}

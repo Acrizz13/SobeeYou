@@ -1,10 +1,100 @@
-﻿.cs-container {
+﻿.cs-custom-container {
+	display: grid;
+	grid-template-columns: 200px 1fr; /* Adjust the sidebar width as needed */
+	grid-gap: 20px; /* Adjust the gap between the sidebar and main content */
+	max-width: none;
+	padding: 0;
+}
+
+.cs-sidebar {
+	top: 56px; /* Adjust this value based on the height of your navbar */
+	left: 0;
+	width: 200px; /* Adjust the width as needed */
+	max-height: calc(100vh - 56px - 40px); /* Adjust the values based on the navbar and footer heights */
+
+	background-color: #f8f9fa;
+	padding: 20px;
+	border-radius: 4px;
+}
+
+	.cs-sidebar h3 {
+		margin-top: 0;
+		margin-bottom: 20px;
+	}
+
+.cs-filter {
+	margin-bottom: 20px;
+}
+
+	.cs-filter h4 {
+		margin-top: 0;
+		margin-bottom: 10px;
+	}
+
+	.cs-filter ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+		.cs-filter ul li {
+			margin-bottom: 5px;
+		}
+
+			.cs-filter ul li a {
+				color: #007bff;
+				text-decoration: none;
+			}
+
+.cs-price-range {
 	width: 100%;
+}
+
+.cs-price-label {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 10px;
+}
+
+.cs-price-input {
+	display: flex;
+	max-width: 175px;
+	justify-content: space-between;
+	margin-top: 10px;
+}
+
+.cs-rating-filter {
+	margin-bottom: 5px;
+}
+
+.cs-sorting {
+	margin-bottom: 20px;
+}
+
+	.cs-sorting h4 {
+		margin-top: 0;
+		margin-bottom: 10px;
+	}
+
+.cs-sort-select {
+	width: 100%;
+	padding: 4px;
+}
+
+.cs-main-content {
+	grid-column: 2; /* Position the main content in the second column */
+	padding: 20px;
+}
+
+.cs-container {
+	width: 100%;
+	max-width: 1200px; /* Adjust the max-width as needed */
+	margin: 0 auto; /* Center the container horizontally */
 }
 
 .cs-listing {
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust the column width as needed */
 	grid-gap: 20px;
 }
 
@@ -14,6 +104,7 @@
 	background-color: #fff;
 	border-radius: 4px;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	max-width: 300px;
 }
 
 .cs-image {
@@ -63,7 +154,28 @@
 	cursor: pointer;
 }
 
+@media (max-width: 992px) {
+	.cs-listing {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
 @media (max-width: 768px) {
+	.cs-custom-container {
+		grid-template-columns: 1fr; /* Change to a single column layout */
+	}
+
+	.cs-sidebar {
+		position: static; /* Remove the fixed positioning */
+		width: 100%; /* Make the sidebar full width */
+		height: auto; /* Remove the fixed height */
+		margin-bottom: 20px;
+	}
+
+	.cs-main-content {
+		grid-column: 1; /* Position the main content in the first column */
+	}
+
 	.cs-listing {
 		grid-template-columns: repeat(2, 1fr);
 	}

@@ -8,5 +8,7 @@ public partial class TdrinkCategory {
     [Key]
     public int IntDrinkCategoryId { get; set; }
 
-    public string StrDrinkCategory { get; set; } = null!;
+    public string StrName { get; set; } = null!;
+
+    public string StrDescription { get; set; } = null!;
 }

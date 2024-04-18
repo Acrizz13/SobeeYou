@@ -8,32 +8,30 @@
 <ul class="navbar-nav">
 
     <!-- If user is signed in , then dispaly logout/check if user is admin or not  -->
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
+    @if (SignInManager.IsSignedIn(User)) {
+        <li class="nav-item">
             <a class="nav-link  nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">My Profile</a>
-    </li>
-    <li class="nav-item nav-link">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+        </li>
+        <li class="nav-item nav-link">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <a> <button type="submit" class="nav-link btn btn-link">Logout</button></a>
-        </form>
-    </li>
-    
-    // if logged in user is Admin show admin dashboard 
+            </form>
+        </li>
+
+        // if logged in user is Admin show admin dashboard
         @if (User.IsInRole("Admin")) {
             <li class="nav-item">
             <li>@Html.ActionLink("Admin Dashboard", "Index", "AdminDashboard", new { area = "" }, new { @class = "nav-link" })</li>
             </li>
         }
-}
-else
-{ 
-    <li class="nav-item">
+    }
+    else {
+        <li class="nav-item">
             <a class="nav-link nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
+        </li>
+        <li class="nav-item">
             <a class="nav-link nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
+        </li>
+    }
 
 </ul>

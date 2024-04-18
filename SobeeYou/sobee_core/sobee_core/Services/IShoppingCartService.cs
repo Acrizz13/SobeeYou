@@ -1,9 +1,9 @@
 ﻿using sobee_core.Models;
-using sobee_core.Models.AzureModels;
 using System.Security.Claims;
 
 namespace sobee_core.Services {
     public interface IShoppingCartService {
+
         Task<int> GetShoppingCartIdAsync(ClaimsPrincipal user);
         Task UpdateShoppingCartUserIdAsync(string userId);
         Task<List<CartItemDTO>> GetCartItemsAsync(int shoppingCartId);

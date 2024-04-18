@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using sobee_core.Models.AzureModels.Identity;
+using sobee_core.Models.Identity;
 
 namespace sobee_core.Models.AzureModels;
 
 public partial class Torder {
     [Key]
     public int IntOrderId { get; set; }
-
-    public int? IntUserId { get; set; }
 
     public DateTime? DtmOrderDate { get; set; }
 
@@ -21,7 +19,7 @@ public partial class Torder {
 
     public string? StrTrackingNumber { get; set; }
 
-    public int? IntPaymentMethod { get; set; }
+    public int? IntPaymentMethodId { get; set; }
 
     public string? StrOrderStatus { get; set; }
 
@@ -29,11 +27,9 @@ public partial class Torder {
 
     public string? SessionId { get; set; }
 
-    public virtual TpaymentMethod? IntPaymentMethodNavigation { get; set; }
+    public virtual TpaymentMethod? IntPaymentMethod { get; set; }
 
     public virtual TshippingStatus? IntShippingStatus { get; set; }
-
-    public virtual Tuser? IntUser { get; set; }
 
     public virtual ICollection<TorderItem> TorderItems { get; set; } = new List<TorderItem>();
 

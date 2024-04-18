@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using sobee_core.Models.AzureModels;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using sobee_core.Services;
+using sobee_core.Models.AzureModels;
 using sobee_core.Models;
+using sobee_core.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace sobee_core.Controllers {
 	public class ShoppingCartController : Controller {

@@ -1,4 +1,21 @@
-﻿body {
+﻿html, body {
+	height: 100%;
+}
+
+/*.wrapper {
+	min-height: 100%;
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+}*/
+
+.footer {
+	grid-row-start: 3;
+	grid-row-end: 4;
+}
+
+
+
+body {
 	margin-top: 56px;
 	background-color: white;
 }

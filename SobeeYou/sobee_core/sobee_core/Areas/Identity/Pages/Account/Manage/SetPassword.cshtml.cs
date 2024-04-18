@@ -8,16 +8,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using sobee_core.Models;
 
-namespace sobee_core.Areas.Identity.Pages.Account.Manage {
-    public class SetPasswordModel : PageModel {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+namespace sobee_core.Areas.Identity.Pages.Account.Manage
+{
+    public class SetPasswordModel : PageModel
+    {
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
         public SetPasswordModel(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager) {
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager)
+        {
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -40,7 +42,8 @@ namespace sobee_core.Areas.Identity.Pages.Account.Manage {
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public class InputModel {
+        public class InputModel
+        {
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -61,34 +64,42 @@ namespace sobee_core.Areas.Identity.Pages.Account.Manage {
             public string ConfirmPassword { get; set; }
         }
 
-        public async Task<IActionResult> OnGetAsync() {
+        public async Task<IActionResult> OnGetAsync()
+        {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null) {
+            if (user == null)
+            {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
             var hasPassword = await _userManager.HasPasswordAsync(user);
 
-            if (hasPassword) {
+            if (hasPassword)
+            {
                 return RedirectToPage("./ChangePassword");
             }
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync() {
-            if (!ModelState.IsValid) {
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+            {
                 return Page();
             }
 
             var user = await _userManager.GetUserAsync(User);
-            if (user == null) {
+            if (user == null)
+            {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
             var addPasswordResult = await _userManager.AddPasswordAsync(user, Input.NewPassword);
-            if (!addPasswordResult.Succeeded) {
-                foreach (var error in addPasswordResult.Errors) {
+            if (!addPasswordResult.Succeeded)
+            {
+                foreach (var error in addPasswordResult.Errors)
+                {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
                 return Page();
