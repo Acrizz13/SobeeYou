@@ -1,8 +1,14 @@
-﻿@model List<CartItemDTO>
+﻿@using sobee_core.Models
+@using Microsoft.AspNetCore.Identity
+@model List<CartItemDTO>
+
+@inject UserManager<ApplicationUser> UserManager
+
 @{
 	// gets cart items passed from previous view
 	List<CartItemDTO> cartItems = ViewBag.CartItems;
 	decimal totalPrice = (decimal)ViewBag.TotalPrice;
+	var user = await UserManager.GetUserAsync(User);
 }
 
 <head>
@@ -65,24 +71,23 @@
 			<div class="row">
 				<div class="col-md-6 mb-3">
 					<label for="firstName">First name</label>
-					@Html.TextBox("firstName", null, new { @class = "form-control", @placeholder = "", @required = "required" })
-					<div class="invalid-feedback">Valid first name is required.</div>
+					@Html.TextBox("firstName", user != null ? user.strFirstName : "", new { @class = "form-control", @placeholder = "", @required = "required" })
 				</div>
 				<div class="col-md-6 mb-3">
 					<label for="lastName">Last name</label>
-					@Html.TextBox("lastName", null, new { @class = "form-control", @placeholder = "", @required = "required" })
+					@Html.TextBox("lastName", user != null ? user.strLastName : "", new { @class = "form-control", @placeholder = "", @required = "required" })
 					<div class="invalid-feedback">Valid last name is required.</div>
 				</div>
 			</div>
 
 			<div class="mb-3">
 				<label for="email">Email <span class="text-muted">(Optional)</span></label>
-				@Html.TextBox("email", null, new { @class = "form-control", @placeholder = "you@example.com" })
+				@Html.TextBox("email", user != null ? user.Email : "", new { @class = "form-control", @placeholder = "you@example.com" })
 				<div class="invalid-feedback">Please enter a valid email address for shipping updates.</div>
 			</div>
 			<div class="mb-3">
 				<label for="address">Address</label>
-				@Html.TextBox("address", null, new { @class = "form-control", @placeholder = "1234 Main St", @required = "required" })
+				@Html.TextBox("address", user != null ? user.strBillingAddress : "", new { @class = "form-control", @placeholder = "1234 Main St", @required = "required" })
 				<div class="invalid-feedback">Please enter your shipping address.</div>
 			</div>
 			<div class="mb-3">
@@ -102,7 +107,8 @@
 				<input type="checkbox" class="custom-control-input" id="same-address" checked="checked">
 				<label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
 			</div>
-			<div id="shipping-address-form">
+
+			<div id="shipping-address-form" class="shipping-address-info">
 				<h4 class="mb-3">Shipping address</h4>
 				<div class="row">
 					<div class="col-md-6 mb-3">
@@ -210,7 +216,26 @@
 
 
 
+
 @*<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>*@
 @*<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>*@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+	$(document).ready(function () {
+		// Hide the shipping address form by default
+		$(".shipping-address-info").hide();
+
+		// Show/hide the shipping address form based on the checkbox state
+		$("#same-address").change(function () {
+			if (this.checked) {
+				$(".shipping-address-info").slideUp();
+			} else {
+				$(".shipping-address-info").slideDown();
+			}
+		});
+	});
+</script>

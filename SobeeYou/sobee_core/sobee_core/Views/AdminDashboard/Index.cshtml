@@ -79,5 +79,169 @@
             </div>
         </div>
     </div>
-
 </div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Product Sales</div>
+            <div class="card-body">
+                <canvas id="productSalesChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Website Traffic</div>
+            <div class="card-body">
+                <canvas id="websiteTrafficChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">Store Traffic Heat Map</div>
+            <div class="card-body">
+                <div id="map" style="height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbRq_3QzdaHjD4SzYSvhNY382iXAQuUP0&libraries=visualization"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Product Sales Chart
+            var ctx = document.getElementById('productSalesChart').getContext('2d');
+            var productSales = @Json.Serialize(Model.ProductSales);
+            var data = {
+                labels: productSales.map(function (item) { return item.productName; }),
+                datasets: [{
+                    data: productSales.map(function (item) { return item.totalSales; }),
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#FF9F40'
+                    ]
+                }]
+            };
+            var options = {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Product Sales'
+                },
+                plugins: {
+                    datalabels: {
+                        formatter: function (value, context) {
+                            var dataset = context.dataset;
+                            var total = dataset.data.reduce(function (previousValue, currentValue) {
+                                return previousValue + currentValue;
+                            });
+                            var percentage = Math.floor((value / total) * 100 + 0.5);
+                            return percentage + '%';
+                        },
+                        color: 'white',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            };
+            new Chart(ctx, {
+                type: 'pie',
+                data: data,
+                options: options,
+                plugins: [ChartDataLabels]
+            });
+
+            // Website Traffic Chart
+            var ctx2 = document.getElementById('websiteTrafficChart').getContext('2d');
+            var websiteTraffic = @Json.Serialize(Model.WebsiteTraffic);
+            var data2 = {
+                labels: websiteTraffic.map(function (item) { return item.month; }),
+                datasets: [{
+                    label: 'Website Traffic',
+                    data: websiteTraffic.map(function (item) { return item.visitors; }),
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#FF9F40',
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#FF9F40'
+                    ]
+                }]
+            };
+            var options2 = {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1000
+                        }
+                    }
+                },
+                plugins: {
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        color: 'black',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            };
+            new Chart(ctx2, {
+                type: 'bar',
+                data: data2,
+                options: options2,
+                plugins: [ChartDataLabels]
+            });
+
+            // Google Maps Heat Map Initialization
+            function initMap() {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 7,
+                    center: { lat: 40.4173, lng: -82.9071 } // Centered on Ohio
+                });
+
+                var heatMapData = [
+                    { location: new google.maps.LatLng(39.9612, -82.9988), weight: 5 }, // Kroger, Columbus
+                    { location: new google.maps.LatLng(39.1031, -84.5120), weight: 3 }, // Walmart, Cincinnati
+                    { location: new google.maps.LatLng(41.4993, -81.6944), weight: 4 }, // Target, Cleveland
+                    { location: new google.maps.LatLng(41.0814, -81.5190), weight: 2 }, // Whole Foods, Akron
+                    { location: new google.maps.LatLng(39.7589, -84.1916), weight: 6 }  // Costco, Dayton
+                ];
+
+                var heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: heatMapData,
+                    map: map
+                });
+            }
+
+            // Execute the map initialization
+            initMap();
+        });
+    </script>
+}

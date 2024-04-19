@@ -1,6 +1,10 @@
-﻿namespace sobee_core.Models {
+﻿using sobee_core.Classes;
+
+namespace sobee_core.Models {
     public class AdminDashboardViewModel {
         // model for admin dashboard info
+        public List<ProductSalesData> ProductSales { get; set; }
+        public List<WebsiteTrafficData> WebsiteTraffic { get; set; }
         public int TotalCustomers { get; set; }
         public int NewCustomers { get; set; }
         public int ActiveCustomers { get; set; }

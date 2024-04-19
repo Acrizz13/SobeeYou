@@ -177,20 +177,20 @@
 
 
 
-	$(document).ready(function () {
-		// Hide the shipping address form by default
-		//$("#shipping-address-form").hide();
+	//$(document).ready(function () {
+	//	// Hide the shipping address form by default
+	//	//$("#shipping-address-form").hide();
 
-		//$("#shipping-address-form").slideUp();
-		// Show/hide the shipping address form based on the checkbox state
-		$("#same-address").change(function () {
-			if (this.checked) {
-				$("#shipping-address-form").slideUp();
-			} else {
-				$("#shipping-address-form").slideDown();
-			}
-		});
-	});
+	//	$(".shipping-address-info").slideUp();
+	//	// Show/hide the shipping address form based on the checkbox state
+	//	$("#same-address").change(function () {
+	//		if (this.checked) {
+	//			$("#shipping-address-form").slideUp();
+	//		} else {
+	//			$("#shipping-address-form").slideDown();
+	//		}
+	//	});
+	//});
 
 
 

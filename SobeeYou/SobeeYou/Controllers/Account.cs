@@ -14,19 +14,15 @@ using SobeeYou.Classes;
 namespace SobeeYou.Controllers {
     public class AccountController : Controller {
         // GET: Login
-        public ActionResult Index()
-        {
-            if (Session["UserID"] != null && Session["UserRoleID"] != null)
-            {
+        public ActionResult Index() {
+            if (Session["UserID"] != null && Session["UserRoleID"] != null) {
                 // Check user role and redirect accordingly
                 int userRoleId = (int)Session["UserRoleID"];
-                
-                if (userRoleId == 1)
-                {
+
+                if (userRoleId == 1) {
                     return RedirectToAction("CustomerAccount", "Account");
                 }
-                else if (userRoleId == 2)
-                {
+                else if (userRoleId == 2) {
                     //need to create AdminDashBoard model where we get all necessary info for admin dashboard
                     //get all orders, users, products, etc from method in TableModels named GetAdminDashBoardInfo
                     return RedirectToAction("AdminDashBoard", "Account");
@@ -37,38 +33,34 @@ namespace SobeeYou.Controllers {
         }
 
 
-        public ActionResult AdminDashBoard()
-        {
+        public ActionResult AdminDashBoard() {
             var adminDashBoard = GetAdminDashBoardInfo();
             return View(adminDashBoard);
         }
-        public AdminDashboardViewModel GetAdminDashBoardInfo()
-        {
+        public AdminDashboardViewModel GetAdminDashBoardInfo() {
             var websiteTraffic = new List<WebsiteTrafficData>
-{
-    new WebsiteTrafficData { Month = "January", Visitors = 5000 },
-    new WebsiteTrafficData { Month = "February", Visitors = 6200 },
-    new WebsiteTrafficData { Month = "March", Visitors = 7500 },
-    new WebsiteTrafficData { Month = "April", Visitors = 8100 },
-    new WebsiteTrafficData { Month = "May", Visitors = 9300 },
-    new WebsiteTrafficData { Month = "June", Visitors = 10500 },
-    new WebsiteTrafficData { Month = "July", Visitors = 11200 },
-    new WebsiteTrafficData { Month = "August", Visitors = 10800 },
-    new WebsiteTrafficData { Month = "September", Visitors = 9800 },
-    new WebsiteTrafficData { Month = "October", Visitors = 8900 },
-    new WebsiteTrafficData { Month = "November", Visitors = 7800 },
-    new WebsiteTrafficData { Month = "December", Visitors = 9200 }
-};
+                {
+                    new WebsiteTrafficData { Month = "January", Visitors = 5000 },
+                    new WebsiteTrafficData { Month = "February", Visitors = 6200 },
+                    new WebsiteTrafficData { Month = "March", Visitors = 7500 },
+                    new WebsiteTrafficData { Month = "April", Visitors = 8100 },
+                    new WebsiteTrafficData { Month = "May", Visitors = 9300 },
+                    new WebsiteTrafficData { Month = "June", Visitors = 10500 },
+                    new WebsiteTrafficData { Month = "July", Visitors = 11200 },
+                    new WebsiteTrafficData { Month = "August", Visitors = 10800 },
+                    new WebsiteTrafficData { Month = "September", Visitors = 9800 },
+                    new WebsiteTrafficData { Month = "October", Visitors = 8900 },
+                    new WebsiteTrafficData { Month = "November", Visitors = 7800 },
+                    new WebsiteTrafficData { Month = "December", Visitors = 9200 }
+                };
 
-            var adminDashboard = new AdminDashboardViewModel
-            {
+            var adminDashboard = new AdminDashboardViewModel {
                 // ...
                 WebsiteTraffic = websiteTraffic
             };
-            using (var context = new TableModels())
-            {
+            using (var context = new TableModels()) {
 
-               
+
                 //I should probably just make these columns integers rather than strings in the database
                 // Load the product stock amounts into memory (consider efficiency here!)
                 var lowInventoryProductsCount = context.TProducts
@@ -81,15 +73,13 @@ namespace SobeeYou.Controllers {
                 var thirtyDaysAgo = DateTime.Now.AddDays(-30);
                 var productSales = context.TOrderItems
     .GroupBy(oi => oi.TProduct.strName)
-    .Select(g => new ProductSalesData
-    {
+    .Select(g => new ProductSalesData {
         ProductName = g.Key,
         TotalSales = g.Sum(oi => oi.intQuantity * oi.monPricePerUnit)
     })
     .ToList();
 
-                var adminDashBoard = new AdminDashboardViewModel
-                {
+                var adminDashBoard = new AdminDashboardViewModel {
                     //need to make total customers coincide with orders where there is a unique customer id
                     //need to make totalusers coincide with total customer accounts
                     TotalCustomers = context.TUsers.Count(u => u.intUserRoleID != 2),
@@ -113,30 +103,24 @@ namespace SobeeYou.Controllers {
 
 
 
-        public ActionResult Login(string email, string password)
-        {
-            using (var context = new TableModels())
-            {
+        public ActionResult Login(string email, string password) {
+            using (var context = new TableModels()) {
                 var TUser = context.TUsers.FirstOrDefault(u => u.strEmail == email && u.strPassword == password);
 
-                if (TUser != null)
-                {
+                if (TUser != null) {
                     // Store TUser details in Session to keep them available across the user's session
                     Session["UserID"] = TUser.intUserID;
                     Session["UserRoleID"] = TUser.intUserRoleID;
 
                     // Redirect to the appropriate view based on role
-                    if (TUser.intUserRoleID == 1)
-                    {
+                    if (TUser.intUserRoleID == 1) {
                         return RedirectToAction("CustomerAccount", "Account");
                     }
-                    else if (TUser.intUserRoleID == 2)
-                    {
+                    else if (TUser.intUserRoleID == 2) {
                         return RedirectToAction("AdminDashBoard", "Account");
                     }
                 }
-                else
-                {
+                else {
                     ModelState.AddModelError("", "Can't find an account with those credentials.");
                     ViewBag.ErrorMessage = "Can't find an account with those credentials.";
                 }
@@ -147,22 +131,17 @@ namespace SobeeYou.Controllers {
         }
 
 
-        public ActionResult CustomerAccount()
-        {
-            if (Session["UserID"] != null && Session["UserRoleID"] != null)
-            {
+        public ActionResult CustomerAccount() {
+            if (Session["UserID"] != null && Session["UserRoleID"] != null) {
                 int userId = (int)Session["UserID"];
                 int userRoleId = (int)Session["UserRoleID"];
 
-                if (userRoleId == 1)
-                {
-                    using (var context = new TableModels())
-                    {
+                if (userRoleId == 1) {
+                    using (var context = new TableModels()) {
                         // Retrieve the user from the database, including their orders
                         var user = context.TUsers.Include("TOrders").FirstOrDefault(u => u.intUserID == userId);
 
-                        if (user != null)
-                        {
+                        if (user != null) {
                             // Pass the user model to the view
                             return View(user);
                         }
@@ -300,17 +279,14 @@ namespace SobeeYou.Controllers {
             }
         }
 
-        private bool RegisterUser(string firstName, string lastName, string email, string password)
-        {
-            using (var context = new TableModels())
-            {
+        private bool RegisterUser(string firstName, string lastName, string email, string password) {
+            using (var context = new TableModels()) {
                 var maxUserID = context.TUsers.Max(u => u.intUserID);
                 var newUserID = maxUserID + 1;
 
                 var currentDateTime = DateTime.Now;
 
-                var newUser = new TUser
-                {
+                var newUser = new TUser {
                     intUserID = newUserID,
                     intUserRoleID = 1,
                     strFirstName = firstName,
@@ -363,16 +339,13 @@ namespace SobeeYou.Controllers {
                 }
             }
         }
-        public ActionResult Logout()
-        {
+        public ActionResult Logout() {
             Session.Clear();  // Clears all session data
             return RedirectToAction("Index", "Home");  // Redirect to home or login page
         }
         [HttpPost]
-        public ActionResult SendDiscountEmail()
-        {
-            using (var context = new TableModels())
-            {
+        public ActionResult SendDiscountEmail() {
+            using (var context = new TableModels()) {
                 DateTime thirtyDaysAgo = DateTime.Now.AddDays(-30);
                 var inactiveUsers = context.TUsers
                     .Where(u => u.strLastLoginDate < thirtyDaysAgo)
@@ -387,8 +360,7 @@ namespace SobeeYou.Controllers {
                 smtpClient.UseDefaultCredentials = false;
                 smtpClient.Credentials = new NetworkCredential(workEmail, fromPassword);
 
-                foreach (var user in inactiveUsers)
-                {
+                foreach (var user in inactiveUsers) {
                     // Create the discount email
                     MailMessage mailMessage = new MailMessage();
                     mailMessage.From = new MailAddress(workEmail);
@@ -400,13 +372,11 @@ namespace SobeeYou.Controllers {
                                       "Best regards,<br>The SoBee You Team";
                     mailMessage.IsBodyHtml = true;
 
-                    try
-                    {
+                    try {
                         // Send the email
                         smtpClient.Send(mailMessage);
                     }
-                    catch (Exception ex)
-                    {
+                    catch (Exception ex) {
                         // Handle any exceptions that occur during email sending
                         // You can log the error or take appropriate action
                         // For example:
