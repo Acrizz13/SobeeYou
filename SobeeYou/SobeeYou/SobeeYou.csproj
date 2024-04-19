@@ -132,6 +132,7 @@
     <Compile Include="Classes\ProductSalesData.cs" />
     <Compile Include="Classes\WebsiteTrafficData.cs" />
     <Compile Include="Controllers\AboutController.cs" />
+    <Compile Include="Controllers\BottomNavBarController.cs" />
     <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -279,6 +280,11 @@
     <Content Include="Views\Checkout\OrderConfirmed.cshtml" />
     <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.1.min.map" />
+    <Content Include="Views\BottomNavBar\FAQ.cshtml" />
+    <Content Include="Views\BottomNavBar\ShippingReturns.cshtml" />
+    <Content Include="Views\BottomNavBar\RefundPolicy.cshtml" />
+    <Content Include="Views\BottomNavBar\TermsOfService.cshtml" />
+    <Content Include="Views\BottomNavBar\Contact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
