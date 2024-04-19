@@ -1,0 +1,188 @@
+﻿@{
+    ViewBag.Title = "FAQ";
+}
+
+<style>
+    .faq-section {
+        margin-bottom: 40px;
+    }
+
+    .faq-question {
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+    }
+
+    .faq-answer {
+        display: none;
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="container">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-section">
+        <h4>Security</h4>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">Is it safe to use my credit card on your website?</div>
+            <div class="faq-answer">
+                Yes, our website uses secure encryption technology to protect your credit card information during transactions. We prioritize the safety and security of our customers' data.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">Is it safe to buy from an online store?</div>
+            <div class="faq-answer">
+                Yes, buying from reputable online stores like ours is generally safe. We follow industry best practices to ensure the security of your personal and financial information.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">How do I know if a website selling your products is legitimate?</div>
+            <div class="faq-answer">
+                To determine if a website selling our products is legitimate, look for our official branding, secure checkout process, and contact information. If you have any doubts, please contact us directly for verification.
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h4>Order Status</h4>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">How can I track my order?</div>
+            <div class="faq-answer">
+                Once your order has been shipped, you will receive a tracking number via email. You can use this tracking number to monitor the progress of your delivery on our website or the carrier's website.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">What do I do if my order is delayed?</div>
+            <div class="faq-answer">
+                If your order is delayed, please contact our customer support team. We will investigate the issue and provide you with an updated estimated delivery date. In some cases, we may offer compensation for the inconvenience.
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h4>Payment</h4>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">What payment methods do you accept?</div>
+            <div class="faq-answer">
+                We accept various payment methods, including credit cards (Visa, Mastercard, American Express), PayPal, and Apple Pay. You can select your preferred payment method during checkout.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">Do you offer any payment plans or installments?</div>
+            <div class="faq-answer">
+                Currently, we do not offer payment plans or installments. All purchases must be paid in full at the time of checkout. However, we occasionally provide discounts and promotions to make our products more affordable.
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h4>Privacy</h4>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">How do you handle customer data privacy?</div>
+            <div class="faq-answer">
+                We take customer data privacy seriously. We collect only the necessary information to process and deliver your orders. We do not sell or share your personal information with third parties, except for trusted service providers who assist us in operating our website and conducting our business.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">Can I opt out of marketing emails?</div>
+            <div class="faq-answer">
+                Yes, you can easily opt out of marketing emails by clicking the "Unsubscribe" link at the bottom of any promotional email you receive from us. Alternatively, you can update your email preferences in your account settings on our website.
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h4>Returns</h4>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">What is your return policy?</div>
+            <div class="faq-answer">
+                We accept returns within 30 days of delivery for unopened and unused products. If you are not satisfied with your purchase, please contact our customer support team to initiate a return. Once we receive the returned item, we will process a refund to your original payment method.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">Do I have to pay for return shipping?</div>
+            <div class="faq-answer">
+                In most cases, customers are responsible for return shipping costs. However, if the return is due to an error on our part (e.g., damaged or incorrect item), we will cover the return shipping costs.
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h4>Refunds</h4>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">How long does it take to receive a refund?</div>
+            <div class="faq-answer">
+                Once we receive your returned item and process the refund, it typically takes 3-5 business days for the funds to appear in your account. The exact time may vary depending on your bank or payment provider.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">Can I get a refund for a partially used product?</div>
+            <div class="faq-answer">
+                We do not offer refunds for partially used products. Refunds are only available for unopened and unused items returned within 30 days of delivery.
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h4>Shipping</h4>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">What shipping options do you offer?</div>
+            <div class="faq-answer">
+                We offer standard shipping and express shipping options. Standard shipping typically takes 3-5 business days, while express shipping takes 1-2 business days. Shipping costs are calculated based on your location and the size of your order.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">Do you ship internationally?</div>
+            <div class="faq-answer">
+                Yes, we offer international shipping to select countries. During checkout, you can see if we ship to your country. Please note that international orders may be subject to customs duties and taxes, which are the responsibility of the customer.
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h4>Delivery</h4>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">What happens if I am not available to receive my delivery?</div>
+            <div class="faq-answer">
+                If you are not available to receive your delivery, the carrier will typically leave a note and attempt delivery again the next business day. After multiple failed delivery attempts, the package may be returned to us. In this case, please contact our customer support team to arrange for redelivery.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">Can I change my delivery address after placing an order?</div>
+            <div class="faq-answer">
+                If your order has not yet been shipped, you may be able to change the delivery address by contacting our customer support team. However, once the order has been shipped, we are unable to modify the delivery address.
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h4>Exchanges</h4>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">Can I exchange a product for a different flavor or variety?</div>
+            <div class="faq-answer">
+                Yes, we allow exchanges for different flavors or varieties of the same product within 30 days of delivery. Please contact our customer support team to initiate an exchange. You will be responsible for any difference in price and shipping costs.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">How long does an exchange take to process?</div>
+            <div class="faq-answer">
+                Once we receive your exchange request and the returned item, we will process the exchange within 2-3 business days. The new item will be shipped to you as soon as it is available, and you will receive a tracking number via email.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleAnswer(element) {
+        var answer = element.nextElementSibling;
+        answer.style.display = answer.style.display === "none" ? "block" : "none";
+    }
+</script>

@@ -1,26 +1,29 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>@ViewBag.Title - SoBee You!</title>
-	@Styles.Render("~/Content/css")
-	@Scripts.Render("~/bundles/modernizr")
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - SoBee You!</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-	<script src="~/Scripts/ajax files/dynamicShoppingCart.js"></script> <!-- Include the JavaScript file -->
+    <script src="~/Scripts/ajax files/dynamicShoppingCart.js"></script>
 
-	<style>
-		body {
-			margin-top: 56px;
-		background-color: white;
-		}
-		/* Custom Navigation Bar Styles */
-		.navbar-custom {
-			background-color: #ff8c00; /* Orange background */
-			color: #ff69b4; /* Pink text */
-		}
+    <style>
+        body {
+            margin-top: 56px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar-custom {
+            background-color: #ff8c00;
+            color: #ff69b4;
+        }
 
             .navbar-custom .navbar-brand,
             .navbar-custom .nav-link {
@@ -37,142 +40,113 @@
                     border-bottom: 2px solid #ffffff;
                 }
 
+        #cartIcon {
+            padding-right: 10px;
+        }
 
-		#cartIcon {
-			padding-right:10px;
-		}
+        .main-content {
+            flex: 1;
+        }
 
+        .footer {
+            background-color: #000;
+            color: #fff;
+            padding: 40px 0;
+            font-family: Arial, sans-serif;
+            margin-top: auto;
+        }
 
-		.footer {
-			background-color: #000;
-			color: #fff;
-			padding: 40px 0;
-			font-family: Arial, sans-serif;
-		}
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 20px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid #fff;
+        }
 
-		.footer-content {
-			display: flex;
-			justify-content: space-around;
-			max-width: 1200px;
-			margin: 0 auto;
-		}
+        .footer-text p {
+            font-size: 12px;
+            margin: 0;
+        }
 
-		.footer-column {
-			flex: 1;
-			margin-right: 20px;
-		}
-
-			.footer-column h4 {
-				font-size: 18px;
-				font-weight: bold;
-				margin-bottom: 10px;
-			}
-
-			.footer-column ul {
-				list-style: none;
-				padding: 0;
-				margin: 0;
-			}
-
-				.footer-column ul li {
-					margin-bottom: 5px;
-				}
-
-					.footer-column ul li a {
-						color: #fff;
-						text-decoration: none;
-						font-size: 14px;
-					}
-
-		.footer-bottom {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			max-width: 1200px;
-			margin: 20px auto 0;
-			padding-top: 20px;
-			border-top: 1px solid #fff;
-		}
-
-		.footer-text p {
-			font-size: 12px;
-			margin: 0;
-		}
-
-		.footer-links a {
-			color: #fff;
-			text-decoration: none;
-			font-size: 12px;
-			margin-left: 10px;
-		}
-	</style>
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
+    <nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark navbar-custom">
+        <div class="container">
+            <span class="navbar-text position-absolute top-0 end-0" id="cartIcon">
+                <a href="#" class="nav-link text-light">
+                    <i>@Html.ActionLink("Cart", "Index", "ShoppingCart", new { area = "" }, new { @class = "nav-link" })</i>
+                    <span id="cartItemCount">0</span>
+                </a>
+            </span>
 
-	<nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark navbar-custom">
-		<div class="container">
-
-			<!-- bootstrap positioning styles in class-->
-			<span class="navbar-text position-absolute top-0 end-0" id="cartIcon">
-				<!-- Shopping cart icon or text -->
-				<a href="#" class="nav-link text-light">
-					<i>@Html.ActionLink("Cart", "Index", "ShoppingCart", new { area = "" }, new { @class = "nav-link" })</i>
-
-					<!-- If you have dynamic content to display the number of items in the cart, you can include it here -->
-					<span id="cartItemCount">0</span>
-				</a>
-			</span>
-
-			@Html.ActionLink("SoBee You", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-			<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-					aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-				<ul class="navbar-nav flex-grow-1">
-					<li>@Html.ActionLink("Story", "Index", "About", new { area = "" }, new { @class = "nav-link" })</li>
-					<li>@Html.ActionLink("Shop", "Index", "Purchase", new { area = "" }, new { @class = "nav-link" })</li>
-					<li>@Html.ActionLink("Account", "Index", "Account", new { area = "" }, new { @class = "nav-link" })</li>
-				</ul>
-			</div>
-		</div>
-	</nav>
-
-	@RenderSection("HeroSection", required: false)
-	@RenderSection("AboutUs", required: false)
-
-
-	<div class="container body-content">
-		@RenderBody()
-
-	</div>
-
-	<footer class="footer">
-		<div class="footer-content">
-			
-			<div class="footer-column">
-				<h4>GET HELP</h4>
-                <ul>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Shipping &amp; Returns</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">Refund Policy</a></li>
-                    <li><a href="#">Terms Of Service</a></li>
+            @Html.ActionLink("SoBee You", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li>@Html.ActionLink("Story", "Index", "About", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Shop", "Index", "Purchase", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Account", "Index", "Account", new { area = "" }, new { @class = "nav-link" })</li>
                 </ul>
-			</div>		
-		<div class="footer-bottom">
-			<div class="footer-text">
-				<p>&copy;2024 Sobee You, Inc.</p>
-			</div>
-			<div class="footer-links">
-				<a href="#">Privacy Policy</a>
-				<a href="#">Terms Of Use</a>
-			</div>
-		</div>
-	</footer>
+            </div>
+        </div>
+    </nav>
 
-	@Scripts.Render("~/bundles/jquery")
-	@Scripts.Render("~/bundles/bootstrap")
-	@RenderSection("scripts", required: false)
+    @RenderSection("HeroSection", required: false)
+    @RenderSection("AboutUs", required: false)
+
+    <div class="main-content">
+        @RenderBody()
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-auto text-center">
+                    <h4>GET HELP</h4>
+                    <ul class="list-unstyled">
+                        <li>@Html.ActionLink("FAQ", "FAQ", "BottomNavBar")</li>
+                        <li>@Html.ActionLink("Shipping & Returns", "ShippingReturns", "BottomNavBar")</li>
+                        <li>@Html.ActionLink("Contact", "Contact", "BottomNavBar")</li>
+                        <li>@Html.ActionLink("Refund Policy", "RefundPolicy", "BottomNavBar")</li>
+                        <li>@Html.ActionLink("Terms Of Service", "TermsOfService", "BottomNavBar")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-auto">
+                        <div class="footer-text">
+                            <p>&copy;2024 Sobee You, Inc.</p>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="footer-links">
+                            <a href="#">Privacy Policy</a>
+                            <a href="#">Terms Of Use</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -258,7 +258,7 @@
 
         arrowLeft.addEventListener('click', () => {
             stopTimer();
-            currentPosition = (currentPosition - 1 + 3) % 3;
+            currentPosition = (currentPosition - 1 + 3) % 3;@
             heroImages.style.transform = `translateX(-${currentPosition * 33.33}%)`;
             startTimer();
         });
