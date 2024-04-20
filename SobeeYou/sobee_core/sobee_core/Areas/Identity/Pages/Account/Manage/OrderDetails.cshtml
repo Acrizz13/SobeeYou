@@ -1,0 +1,73 @@
+﻿@page "{id:int}"
+@model OrderDetailsModel
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>Order ID: @Model.Order.OrderID</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Order Date</dt>
+        <dd class="col-sm-9">@Model.Order.OrderDate.ToString("MM/dd/yyyy")</dd>
+        <dt class="col-sm-3">Total Amount</dt>
+        <dd class="col-sm-9">@Model.Order.TotalAmount.ToString("C")</dd>
+        <dt class="col-sm-3">Order Status</dt>
+        <dd class="col-sm-9">@Model.Order.OrderStatus</dd>
+
+        <!-- these fields are null in the database right now-->
+        @if (!string.IsNullOrEmpty(Model.Order.ShippingAddress)) {
+            <dt class="col-sm-3">Order Status</dt>
+            <dd class="col-sm-9">@Model.Order.OrderStatus</dd>
+
+        }
+        else {
+            <dt class="col-sm-3">Order Status</dt>
+            <dd class="col-sm-9">No pay status available</dd>
+
+        }
+
+
+
+        @if (!string.IsNullOrEmpty(Model.Order.ShippingAddress)) {
+            <dt class="col-sm-3">Shipping Address</dt>
+            <dd class="col-sm-9">@Model.Order.ShippingAddress</dd>
+        }
+        else {
+            <dt class="col-sm-3">Shipping Address</dt>
+            <dd class="col-sm-9">No shipping address available</dd>
+        }
+        <dt class="col-sm-3">Tracking Number</dt>
+        <dd class="col-sm-9">@Model.Order.TrackingNumber</dd>
+    </dl>
+</div>
+
+<div>
+    <h4>Order Items</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Order.OrderItems) {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Price.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+<div>
+    <a asp-page="OrderHistory" class="btn btn-secondary">Back to Order History</a>
+</div>

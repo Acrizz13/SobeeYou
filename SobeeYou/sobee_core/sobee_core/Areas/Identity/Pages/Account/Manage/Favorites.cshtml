@@ -1,0 +1,35 @@
+﻿@page
+@model FavoritesModel
+@{
+    ViewData["Title"] = "Favorites";
+}
+
+<h1>Favorites</h1>
+
+@if (Model.Favorites.Any()) {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Date Added</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var favorite in Model.Favorites) {
+                <tr>
+                    <td>@favorite.ProductName</td>
+                    <td>@favorite.Price.ToString("C")</td>
+                    <td>@favorite.DateAdded.ToString("MM/dd/yyyy")</td>
+                    <td>
+                        <a asp-controller="Purchase" asp-action="Details" asp-route-id="@favorite.ProductId" class="btn btn-primary">View Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else {
+    <p>You have no favorite products.</p>
+}
