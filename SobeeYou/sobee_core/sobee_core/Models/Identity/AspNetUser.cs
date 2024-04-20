@@ -5,10 +5,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace sobee_core.Models.Identity;
 
-public partial class AspNetUser
-{
-	[Key]
-	public string Id { get; set; } = null!;
+public partial class AspNetUser {
+    [Key]
+    public string Id { get; set; } = null!;
 
     public string? UserName { get; set; }
 
@@ -65,4 +64,6 @@ public partial class AspNetUser
     public virtual ICollection<TshoppingCart> TshoppingCarts { get; set; } = new List<TshoppingCart>();
 
     public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
+
+    public virtual ICollection<Tfavorite> Tfavorites { get; set; } = new List<Tfavorite>();
 }

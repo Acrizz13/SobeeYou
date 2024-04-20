@@ -176,26 +176,6 @@
 
 
 
-
-	//$(document).ready(function () {
-	//	// Hide the shipping address form by default
-	//	//$("#shipping-address-form").hide();
-
-	//	$(".shipping-address-info").slideUp();
-	//	// Show/hide the shipping address form based on the checkbox state
-	//	$("#same-address").change(function () {
-	//		if (this.checked) {
-	//			$("#shipping-address-form").slideUp();
-	//		} else {
-	//			$("#shipping-address-form").slideDown();
-	//		}
-	//	});
-	//});
-
-
-
-
-
 	$(document).ready(function () {
 		$('#applyPromoCode').click(function () {
 			var promoCode = $('#promoCode').val();

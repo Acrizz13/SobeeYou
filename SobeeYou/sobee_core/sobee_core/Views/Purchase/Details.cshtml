@@ -76,12 +76,20 @@
                         <span class="arrow">&#10132;</span>
                     </button>
 
-                    <div class="heart-container">
+
+@*                     <div class="heart-container">
                         <span class="heart">&#10084;</span>
-                    </div>
+                        
+                    </div> *@
                 </div>
+
+
             </div>
         </form>
+
+        @if (User.Identity.IsAuthenticated) {
+            <button id="addToFavoritesBtn" class="btn btn-primary" data-product-id="@Model.intProductID">Add to Favorites</button>
+        }
 
         <div class="product-reviews">
             <h2>Reviews</h2>
@@ -103,44 +111,7 @@
             </div>
 
 
-            @* <div class="rating-bars">
-            <div class="rating-bar">
-            <div class="stars">5 stars</div>
-            <div class="bar">
-            <div class="fill" style="width: 80%;"></div>
-            </div>
-            <div class="count">45</div>
-            </div>
-            <div class="rating-bar">
-            <div class="stars">4 stars</div>
-            <div class="bar">
-            <div class="fill" style="width: 15%;"></div>
-            </div>
-            <div class="count">8</div>
-            </div>
-            <div class="rating-bar">
-            <div class="stars">3 stars</div>
-            <div class="bar">
-            <div class="fill" style="width: 5%;"></div>
-            </div>
-            <div class="count">3</div>
-            </div>
-            <div class="rating-bar">
-            <div class="stars">2 stars</div>
-            <div class="bar">
-            <div class="fill" style="width: 0%;"></div>
-            </div>
-            <div class="count">0</div>
-            </div>
-            <div class="rating-bar">
-            <div class="stars">1 star</div>
-            <div class="bar">
-            <div class="fill" style="width: 2%;"></div>
-            </div>
-            <div class="count">2</div>
-            </div>
-            </div> *@
-
+  
 
         </div>
 
@@ -235,4 +206,33 @@
             }
         });
     }
+
+
+
+        $(document).ready(function () {
+            $('#addToFavoritesBtn').click(function () {
+                var productId = $(this).data('product-id');
+
+                $.ajax({
+                    url: '/Purchase/AddToFavorites',
+                    type: 'POST',
+                    data: { productId: productId },
+                    success: function (response) {
+                        if (response.success) {
+                            // Display a success message or perform any other desired action
+                            alert('Product added to favorites!');
+                        } else {
+                            // Display an error message or perform any other desired action
+                            alert('Failed to add product to favorites.');
+                        }
+                    },
+                    error: function () {
+                        // Display an error message or perform any other desired action
+                        alert('An error occurred while adding the product to favorites.');
+                    }
+                });
+            });
+        });
+
+
 </script>

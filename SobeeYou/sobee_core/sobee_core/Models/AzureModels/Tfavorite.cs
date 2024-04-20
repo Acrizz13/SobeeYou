@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sobee_core.Models.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,6 +12,10 @@ public partial class Tfavorite {
     public int IntProductId { get; set; }
 
     public DateTime DtmDateAdded { get; set; }
+
+    public string? UserId { get; set; }
+
+    public virtual AspNetUser? User { get; set; }
 
     public virtual Tproduct IntProduct { get; set; } = null!;
 }
