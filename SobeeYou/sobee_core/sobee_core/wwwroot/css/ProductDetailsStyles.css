@@ -281,3 +281,83 @@
 	.tab-content.active {
 		display: block;
 	}
+
+
+
+
+.user-reviews {
+	margin-top: 40px;
+}
+
+.review {
+	margin-bottom: 20px;
+	padding: 10px;
+	background-color: #f5f5f5;
+}
+
+.review-header {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 5px;
+}
+
+.review-user {
+	font-weight: bold;
+}
+
+.review-date {
+	color: #888;
+}
+
+.review-rating {
+	margin-bottom: 5px;
+}
+
+.star {
+	color: #ccc;
+}
+
+	.star.filled {
+		color: #ffc107;
+	}
+
+.review-text {
+	margin-top: 10px;
+}
+
+
+
+
+
+.leave-review {
+	margin-top: 40px;
+}
+
+.rating-input {
+	display: inline-block;
+	font-size: 24px;
+	color: #ccc;
+	cursor: pointer;
+}
+
+	.rating-input .star {
+		display: inline-block;
+		transition: color 0.2s;
+	}
+
+
+		.rating-input .star:hover,
+		.rating-input .star.selected
+		 {
+			color: #ffc107;
+		}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+.form-control {
+	width: 100%;
+	padding: 10px;
+	font-size: 16px;
+}
