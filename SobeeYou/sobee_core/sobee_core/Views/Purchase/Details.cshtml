@@ -37,7 +37,7 @@
     <div class="product-info">
         <h1>@Model.strName</h1>
 
-        @if (User.Identity.IsAuthenticated) {
+      @*   @if (User.Identity.IsAuthenticated) {
             <div class="rating-name">
                 <!-- Display the average rating -->
                 <span class="average-rating">@ViewBag.AverageRating</span>
@@ -49,7 +49,7 @@
                 <span id="rate4" class="star filled" onclick="setRating(4)">&#9733;</span>
                 <span id="rate5" class="star filled" onclick="setRating(5)">&#9733;</span>
             </div>
-        }
+        } *@
 
         <h1 class="price">@Model.decPrice.ToString("C")</h1>
 
@@ -92,7 +92,7 @@
         }
 
         <div class="product-reviews">
-            <h2>Reviews</h2>
+            <h2>Ratings</h2>
             <div class="rating-summary">
                 <div class="average-rating">@ViewBag.AverageRating</div>
                 <div class="total-reviews">(@ViewBag.TotalReviews reviews)</div>
@@ -109,13 +109,7 @@
                     </div>
                 }
             </div>
-
-
-  
-
         </div>
-
-
     </div>
 
 
@@ -179,6 +173,53 @@
     }
 </div>
 
+
+
+@if (User.Identity.IsAuthenticated) {
+    <div class="leave-review">
+        <h2>Leave a Review</h2>
+        <div class="form-group">
+            <label for="rating">Rating:</label>
+            <div class="rating-input">
+                @for (int i = 1; i <= 5; i++) {
+                    <span class="star" data-rating="@i">&#9733;</span>
+                }
+                <input type="hidden" id="selectedRating" name="rating" value="0" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="reviewText">Review:</label>
+            <textarea id="reviewText" name="reviewText" class="form-control" rows="4" required></textarea>
+        </div>
+        <button id="submitReviewBtn" class="btn btn-primary">Submit Review</button>
+    </div>
+}
+
+
+
+<div class="user-reviews">
+    <h2>User Reviews</h2>
+    @foreach (var review in ViewBag.UserReviews) {
+        <div class="review">
+            <div class="review-header">
+                <span class="review-user">@review.UserFirstName</span>
+                <span class="review-date">@review.ReviewDate.ToString("MM/dd/yyyy")</span>
+            </div>
+            <div class="review-rating">
+                @for (int i = 1; i <= review.Rating; i++) {
+                    <span class="star filled">&#9733;</span>
+                }
+                @for (int i = review.Rating + 1; i <= 5; i++) {
+                    <span class="star">&#9733;</span>
+                }
+            </div>
+            <div class="review-text">@review.ReviewText</div>
+        </div>
+    }
+</div>
+
+
+
 <script>
     function setRating(value) {
         // Remove filled class from all stars
@@ -193,46 +234,116 @@
             star.classList.add("filled");
         }
 
-        // Make an AJAX request to submit the rating
-        $.ajax({
-            url: '@Url.Action("SubmitRating", "Purchase")',
-            type: 'POST',
-            data: { productId: @Model.intProductID, rating: value },
-            success: function (data) {
-                console.log('Rating submitted successfully');
-            },
-            error: function () {
-                console.log('Error submitting rating');
-            }
-        });
+        // Update the selected rating in the leave review section
+        $('.rating-input .star').removeClass('selected');
+        $('.rating-input .star[data-rating="' + value + '"]').addClass('selected');
+        $('#selectedRating').val(value);
     }
 
 
 
-        $(document).ready(function () {
-            $('#addToFavoritesBtn').click(function () {
-                var productId = $(this).data('product-id');
 
-                $.ajax({
-                    url: '/Purchase/AddToFavorites',
-                    type: 'POST',
-                    data: { productId: productId },
-                    success: function (response) {
-                        if (response.success) {
-                            // Display a success message or perform any other desired action
-                            alert('Product added to favorites!');
-                        } else {
-                            // Display an error message or perform any other desired action
-                            alert('Failed to add product to favorites.');
-                        }
-                    },
-                    error: function () {
+    $(document).ready(function () {
+        $('#addToFavoritesBtn').click(function () {
+            var productId = $(this).data('product-id');
+
+            $.ajax({
+                url: '/Purchase/AddToFavorites',
+                type: 'POST',
+                data: { productId: productId },
+                success: function (response) {
+                    if (response.success) {
+                        // Display a success message or perform any other desired action
+                        alert('Product added to favorites!');
+                    } else {
                         // Display an error message or perform any other desired action
-                        alert('An error occurred while adding the product to favorites.');
+                        alert('Failed to add product to favorites.');
                     }
-                });
+                },
+                error: function () {
+                    // Display an error message or perform any other desired action
+                    alert('An error occurred while adding the product to favorites.');
+                }
             });
         });
 
+        $('.rating-input .star').on('click', function () {
+            var rating = $(this).data('rating');
+            $('.rating-input .star').removeClass('selected');
+            $(this).addClass('selected');
+            $('#selectedRating').val(rating);
+        });
 
+        $('#submitReviewBtn').on('click', function () {
+            var productId = @Model.intProductID;
+            var rating = $('#selectedRating').val();
+            var reviewText = $('#reviewText').val();
+
+            // Check if the rating is selected (at least one star)
+            if (rating == 0) {
+                alert('Please select a rating (at least one star).');
+                return;
+            }
+
+            // Check if the review text is blank
+            if (reviewText.trim() === '') {
+                alert('Please enter a review text.');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SubmitRating", "Purchase")',
+                type: 'POST',
+                data: { productId: productId, rating: rating, reviewText: reviewText },
+                success: function (response) {
+                    if (response.success) {
+                        // Clear the form after successful submission
+                        $('.rating-input .star').removeClass('selected');
+                        $('#selectedRating').val(0);
+                        $('#reviewText').val('');
+
+                        // Reload the reviews section
+                        $.ajax({
+                            url: '@Url.Action("GetReviews", "Purchase")',
+                            type: 'GET',
+                            data: { productId: productId },
+                            success: function (result) {
+                                $('.user-reviews').html(result);
+                            }
+                        });
+                    } else {
+                        // Display the error message
+                        alert(response.message);
+                    }
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("SubmitRating", "Purchase")',
+                type: 'POST',
+                data: { productId: productId, rating: rating, reviewText: reviewText },
+                success: function (response) {
+                    if (response.success) {
+                        // Clear the form after successful submission
+                        $('.rating-input .star').removeClass('selected');
+                        $('#selectedRating').val(0);
+                        $('#reviewText').val('');
+
+                        // Fetch the updated reviews and update the reviews section
+                        $.ajax({
+                            url: '@Url.Action("GetReviews", "Purchase")',
+                            type: 'GET',
+                            data: { productId: productId },
+                            success: function (result) {
+                                $('.user-reviews').html(result);
+                            }
+                        });
+                    } else {
+                        // Display the error message
+                        alert(response.message);
+                    }
+                }
+            });
+        });
+    });
 </script>

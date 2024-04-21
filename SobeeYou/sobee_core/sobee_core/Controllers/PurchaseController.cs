@@ -76,6 +76,7 @@ namespace sobee_core.Controllers {
                 .FirstOrDefault();
 
             var reviews = _context.Treviews.Where(r => r.IntProductId == id).ToList();
+
             if (reviews.Any()) {
                 var averageRating = reviews.Average(r => r.IntRating);
                 ViewBag.AverageRating = Math.Round(averageRating, 1);
@@ -98,7 +99,92 @@ namespace sobee_core.Controllers {
             var totalReviews = _context.Treviews.Count(r => r.IntProductId == id);
             ViewBag.TotalReviews = totalReviews;
 
+            // Retrieve the user reviews using the GetReviews function
+            var userReviews = GetReviews(id);
+
+            // Pass the user reviews to the view
+            ViewBag.UserReviews = userReviews;
+
             return View(product);
+        }
+
+
+        [HttpGet]
+        public List<ReviewDTO> GetReviews(int productId) {
+            // Retrieve the reviews for the current product
+            var reviews = _context.Treviews
+                .Where(r => r.IntProductId == productId)
+                .Select(r => new ReviewDTO {
+                    ReviewId = r.IntReviewId,
+                    ReviewText = r.StrReviewText,
+                    Rating = r.IntRating,
+                    ReviewDate = r.DtmReviewDate,
+                    UserFirstName = r.User != null ? r.User.StrFirstName : "Anonymous"
+                })
+                .ToList();
+
+            return reviews;
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult SubmitRating(int productId, int rating, string reviewText) {
+            // Check if the rating is valid (at least one star)
+            if (rating < 1 || rating > 5) {
+                return Json(new { success = false, message = "Please select a rating (at least one star)." });
+            }
+
+            // Check if the review text is blank
+            if (string.IsNullOrWhiteSpace(reviewText)) {
+                return Json(new { success = false, message = "Please enter a review text." });
+            }
+
+            // Get the current user's ID
+            var userId = _userManager.GetUserId(User);
+
+            // Check if the user has already rated this product
+            var existingReview = _context.Treviews.FirstOrDefault(r => r.IntProductId == productId && r.UserId == userId);
+
+            if (existingReview != null) {
+                // Update the existing review
+                existingReview.IntRating = rating;
+                existingReview.StrReviewText = reviewText;
+                _context.SaveChanges();
+            }
+            else {
+                // Create a new review
+                var review = new Treview {
+                    IntProductId = productId,
+                    UserId = userId,
+                    IntRating = rating,
+                    StrReviewText = reviewText,
+                    DtmReviewDate = DateTime.Now
+                };
+
+                _context.Treviews.Add(review);
+                _context.SaveChanges();
+            }
+
+            return Json(new { success = true });
+        }
+
+        [HttpGet]
+        public ActionResult GetReviews() {
+            int productId = (int)ViewData["productId"];
+
+            // Retrieve the reviews for the current product
+            var reviews = _context.Treviews
+                .Where(r => r.IntProductId == productId)
+                .Select(r => new ReviewDTO {
+                    ReviewId = r.IntReviewId,
+                    ReviewText = r.StrReviewText,
+                    Rating = r.IntRating,
+                    ReviewDate = r.DtmReviewDate,
+                    UserFirstName = r.User != null ? r.User.StrFirstName : "Anonymous"
+                })
+                .ToList();
+
+            return PartialView("_Reviews", reviews);
         }
 
 
@@ -128,41 +214,6 @@ namespace sobee_core.Controllers {
             // Return a JSON response indicating success
             return Json(new { success = true });
         }
-
-
-
-        [HttpPost]
-        [Authorize]
-        public ActionResult SubmitRating(int productId, int rating) {
-            // Get the current user's ID
-            var userId = _userManager.GetUserId(User);
-
-            // Check if the user has already rated this product
-            var existingReview = _context.Treviews.FirstOrDefault(r => r.IntProductId == productId && r.UserId == userId);
-
-            if (existingReview != null) {
-                // Update the existing review
-                existingReview.IntRating = rating;
-                _context.SaveChanges();
-            }
-            else {
-                // Create a new review
-                var review = new Treview {
-                    IntProductId = productId,
-                    UserId = userId,
-                    IntRating = rating,
-                    StrReviewText = "Please provide a review text",
-                    DtmReviewDate = DateTime.Now
-                };
-
-                _context.Treviews.Add(review);
-                _context.SaveChanges();
-            }
-
-            return Json(new { success = true });
-        }
-
-
 
     }
 }
