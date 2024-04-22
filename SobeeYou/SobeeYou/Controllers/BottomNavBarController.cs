@@ -21,8 +21,8 @@ namespace SobeeYou.Controllers
         {
             // TODO: Implement email sending functionality
             // Send email using the provided email and message
-            string workEmail = "eyassu.million@gmail.com"; // replace with sobee email
-            string fromPassword = "nkum abbn kcyz cvxs"; // replace with sobee app password
+            string workEmail = "sobeeyoubusiness@gmail.com"; // replace with sobee email
+            string fromPassword = "yplu kfwq wufa jpjp"; // replace with sobee app password
 
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
             smtpClient.EnableSsl = true;

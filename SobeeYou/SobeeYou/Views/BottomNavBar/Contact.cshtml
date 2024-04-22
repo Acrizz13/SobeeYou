@@ -1,23 +1,36 @@
 ﻿@{
     ViewBag.Title = "Contact Us";
 }
+<style>
+    .form-control {
+        width: 400px;
+        margin: 0 auto;
+    }
+</style>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center">Contact Us</h2>
 
-<h2>Contact Us</h2>
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success text-center">@TempData["SuccessMessage"]</div>
+            }
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-}
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "text-center" }))
+            {
+                <div class="form-group text-center">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control text-center" id="email" name="email" required>
+                </div>
 
-@using (Html.BeginForm())
-{
-    <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" class="form-control" id="email" name="email" required>
+                <div class="form-group text-center">
+                    <label for="message">Message</label>
+                    <textarea class="form-control text-center" id="message" name="message" rows="5" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Send email to SoBee You!</button>
+            }
+        </div>
     </div>
-    <div class="form-group">
-        <label for="message">Message</label>
-        <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Send email to SoBee You!</button>
-}
+</div>
