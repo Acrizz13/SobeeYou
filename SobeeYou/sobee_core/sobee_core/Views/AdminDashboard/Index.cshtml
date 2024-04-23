@@ -100,7 +100,7 @@
     </div>
 </div>
 
-<div class="row mt-4">
+@* <div class="row mt-4">
     <div class="col-12">
         <div class="card">
             <div class="card-header">Store Traffic Heat Map</div>
@@ -110,13 +110,13 @@
         </div>
     </div>
 </div>
-
+ *@
 
 
 @section scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbRq_3QzdaHjD4SzYSvhNY382iXAQuUP0&libraries=visualization"></script>
+@*     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbRq_3QzdaHjD4SzYSvhNY382iXAQuUP0&libraries=visualization"></script> *@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -219,29 +219,29 @@
                 plugins: [ChartDataLabels]
             });
 
-            // Google Maps Heat Map Initialization
-            function initMap() {
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 7,
-                    center: { lat: 40.4173, lng: -82.9071 } // Centered on Ohio
-                });
+            // // Google Maps Heat Map Initialization
+            // function initMap() {
+            //     var map = new google.maps.Map(document.getElementById('map'), {
+            //         zoom: 7,
+            //         center: { lat: 40.4173, lng: -82.9071 } Centered on Ohio
+            //     });
 
-                var heatMapData = [
-                    { location: new google.maps.LatLng(39.9612, -82.9988), weight: 5 }, // Kroger, Columbus
-                    { location: new google.maps.LatLng(39.1031, -84.5120), weight: 3 }, // Walmart, Cincinnati
-                    { location: new google.maps.LatLng(41.4993, -81.6944), weight: 4 }, // Target, Cleveland
-                    { location: new google.maps.LatLng(41.0814, -81.5190), weight: 2 }, // Whole Foods, Akron
-                    { location: new google.maps.LatLng(39.7589, -84.1916), weight: 6 }  // Costco, Dayton
-                ];
+            //     var heatMapData = [
+            //         { location: new google.maps.LatLng(39.9612, -82.9988), weight: 5 }, Kroger, Columbus
+            //         { location: new google.maps.LatLng(39.1031, -84.5120), weight: 3 }, Walmart, Cincinnati
+            //         { location: new google.maps.LatLng(41.4993, -81.6944), weight: 4 }, Target, Cleveland
+            //         { location: new google.maps.LatLng(41.0814, -81.5190), weight: 2 }, Whole Foods, Akron
+            //         { location: new google.maps.LatLng(39.7589, -84.1916), weight: 6 }  Costco, Dayton
+            //     ];
 
-                var heatmap = new google.maps.visualization.HeatmapLayer({
-                    data: heatMapData,
-                    map: map
-                });
-            }
+            //     var heatmap = new google.maps.visualization.HeatmapLayer({
+            //         data: heatMapData,
+            //         map: map
+            //     });
+            // }
 
             // Execute the map initialization
-            initMap();
+            // initMap();
         });
     </script>
 }
