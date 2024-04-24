@@ -53,12 +53,12 @@
 
         <h1 class="price">@Model.decPrice.ToString("C")</h1>
 
-        <div class="size-options">
+@*         <div class="size-options">
             <span>Cans</span>
             <span>6-Pack</span>
             <span>Bottle</span>
             <span>Bulk Order</span>
-        </div>
+        </div> *@
 
         <form class="cs-item-form" data-product-id="@Model.intProductID" data-product-name="@Model.strName" data-product-price="@Model.decPrice" data-product-stock="@Model.strStockAmount">
             @Html.AntiForgeryToken()
