@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -58,26 +60,38 @@ namespace SobeeYou.Controllers {
         public ActionResult ProcessCheckout(FormCollection form) {
             try {
                 // Get the cart items and total price from the session
-                List<CartItemDTO> cartItems = (List<CartItemDTO>)Session["CartItems"];
-                decimal totalPrice = (decimal)Session["TotalPrice"];
+                //List<CartItemDTO> cartItems = (List<CartItemDTO>)Session["CartItems"];
+                //decimal totalPrice = (decimal)Session["TotalPrice"];
 
-                // Get the selected payment method
-                int paymentMethod = int.Parse(form["paymentMethod"]);
+                //// Get the selected payment method
+                //int paymentMethod = int.Parse(form["paymentMethod"]);
 
-                // Generate a random tracking number
-                string trackingNumber = GenerateRandomTrackingNumber();
+                //// Generate a random tracking number
+                //string trackingNumber = GenerateRandomTrackingNumber();
 
-                // Insert a new order into the TOrders table
-                int orderId = InsertOrder(totalPrice, trackingNumber, paymentMethod);
+                //// Insert a new order into the TOrders table
+                //int orderId = InsertOrder(totalPrice, trackingNumber, paymentMethod);
 
-                // Insert order items into the TOrderItems table
-                InsertOrderItems(orderId, cartItems);
+                //// Insert order items into the TOrderItems table
+                //InsertOrderItems(orderId, cartItems);
 
-                // Remove cart items from the TCartItems table
-                RemoveCartItems();
+                //// Remove cart items from the TCartItems table
+                //RemoveCartItems();
 
                 // Remove shopping cart from the TShoppingCarts table
                 // RemoveShoppingCart();
+
+
+                // Get the customer's email address from the form
+                string customerEmail = form["email"];
+
+
+                //When you move this to the core solution, remove these lines and uncomment the above code to make it work with the database
+                var orderId = 394839;
+                var totalPrice = 100.00m;
+                var trackingNumber = GenerateRandomTrackingNumber();
+                // Send the order confirmation email to the customer
+                SendOrderConfirmationEmail(customerEmail, orderId, totalPrice, trackingNumber);
 
                 // Redirect to the OrderConfirmed view
                 return RedirectToAction("OrderConfirmed");
@@ -87,6 +101,29 @@ namespace SobeeYou.Controllers {
                 ViewBag.ErrorMessage = "An error occurred while processing the checkout: " + ex.Message;
                 return View("Error");
             }
+        }
+        private void SendOrderConfirmationEmail(string customerEmail, int orderId, decimal totalPrice, string trackingNumber)
+        {
+            string workEmail = "sobeeyoubusiness@gmail.com";
+            string fromPassword = "yplu kfwq wufa jpjp";
+
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.EnableSsl = true;
+            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(workEmail, fromPassword);
+
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress(workEmail);
+            mailMessage.To.Add(customerEmail);
+            mailMessage.Subject = "Order Confirmation - Order #" + orderId;
+            mailMessage.Body = "Thank you for your order!\n\n" +
+                               "Order ID: " + orderId + "\n" +
+                               "Total Amount: $" + totalPrice + "\n" +
+                               "Tracking Number: " + trackingNumber + "\n\n" +
+                               "We appreciate your business and will process your order shortly.";
+
+            smtpClient.Send(mailMessage);
         }
 
         private int InsertOrder(decimal totalPrice, string trackingNumber, int paymentMethod) {
