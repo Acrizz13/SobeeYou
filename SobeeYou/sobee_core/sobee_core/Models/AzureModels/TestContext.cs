@@ -380,7 +380,7 @@ public partial class TestContext : DbContext {
             entity.Property(e => e.DecPrice)
                 .HasColumnType("decimal(18, 0)")
                 .HasColumnName("decPrice");
-            entity.Property(e => e.StrDescription)
+            entity.Property(e => e.strDescription)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("strDescription");

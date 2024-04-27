@@ -5,5 +5,7 @@
         public decimal decPrice { get; set; }
         public string strStockAmount { get; set; }
         public double AverageRating { get; set; }
+
+        public string strDescription { get; set; }
     }
 }

@@ -505,7 +505,7 @@ public partial class SobeecoredbContext : DbContext {
             entity.Property(e => e.DecPrice)
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("decPrice");
-            entity.Property(e => e.StrDescription)
+            entity.Property(e => e.strDescription)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("strDescription");

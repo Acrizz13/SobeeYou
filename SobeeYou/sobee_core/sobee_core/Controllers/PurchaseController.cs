@@ -21,6 +21,8 @@ namespace sobee_core.Controllers {
         }
 
 
+
+
         public IActionResult Index(decimal? minPrice, decimal? maxPrice, string sortBy) {
             var products = _context.Tproducts.AsQueryable();
 
@@ -56,7 +58,8 @@ namespace sobee_core.Controllers {
                 strName = p.StrName,
                 decPrice = (decimal)p.DecPrice,
                 strStockAmount = p.StrStockAmount,
-                AverageRating = p.Treviews.Any() ? Math.Round(p.Treviews.Average(r => (double)r.IntRating), 1) : 0
+                AverageRating = p.Treviews.Any() ? Math.Round(p.Treviews.Average(r => (double)r.IntRating), 1) : 0,
+                strDescription = p.strDescription
             }).ToList();
 
 
@@ -71,7 +74,8 @@ namespace sobee_core.Controllers {
                     intProductID = p.IntProductId,
                     strName = p.StrName,
                     decPrice = (decimal)p.DecPrice,
-                    strStockAmount = p.StrStockAmount
+                    strStockAmount = p.StrStockAmount,
+                    strDescription = p.strDescription
                 })
                 .FirstOrDefault();
 
@@ -85,7 +89,6 @@ namespace sobee_core.Controllers {
                 ViewBag.AverageRating = 0;
             }
 
-            // Retrieve the count of reviews for each rating value (1 to 5)
             var ratingCounts = Enumerable.Range(1, 5)
                 .Select(rating => new {
                     Rating = rating,
@@ -95,17 +98,31 @@ namespace sobee_core.Controllers {
 
             ViewBag.RatingCounts = ratingCounts;
 
-            // Calculate the total number of reviews
             var totalReviews = _context.Treviews.Count(r => r.IntProductId == id);
             ViewBag.TotalReviews = totalReviews;
 
-            // Retrieve the user reviews using the GetReviews function
             var userReviews = GetReviews(id);
-
-            // Pass the user reviews to the view
             ViewBag.UserReviews = userReviews;
 
-            return View(product);
+            // Retrieve the related products (example query)
+            var relatedProducts = _context.Tproducts
+                .Where(p => p.IntProductId != id) // Exclude the current product
+                .Take(4) // Take the first 4 related products
+                .Select(p => new ProductDTO {
+                    intProductID = p.IntProductId,
+                    strName = p.StrName,
+                    decPrice = (decimal)p.DecPrice,
+                    strStockAmount = p.StrStockAmount,
+                    strDescription = p.strDescription
+                })
+                .ToList();
+
+            var viewModel = new ProductDetailsViewModel {
+                Product = product,
+                RelatedProducts = relatedProducts
+            };
+
+            return View(viewModel);
         }
 
 

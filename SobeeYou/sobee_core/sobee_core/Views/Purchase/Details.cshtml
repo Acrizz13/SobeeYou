@@ -1,4 +1,4 @@
-﻿@model sobee_core.Models.ProductDTO
+﻿@model sobee_core.Models.ProductDetailsViewModel
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -15,43 +15,23 @@
 
 <div class="container product-detail">
     <div class="product-images">
-        <img src="@Url.Content($"~/Images/Products/{Model.strName.Replace(" ", "")}.jpg")" alt="@Model.strName">
+        <img src="@Url.Content($"~/Images/Products/{Model.Product.strName.Replace(" ", "")}.jpg")" alt="@Model.Product.strName">
 
         <div class="product-description">
             <h2>Details</h2>
             <p>
-                Introducing "Zestful Oasis" - a refreshing blend of tropical fruits and invigorating herbs,
-                meticulously crafted to transport you to a vibrant paradise with every sip. Immerse yourself
-                in the tantalizing fusion of ripe mangoes, succulent pineapple, and zesty citrus, perfectly
-                balanced with a hint of tangy passionfruit and the subtle warmth of ginger. Each bottle is a
-                symphony of flavors, carefully curated to awaken your senses and revitalize your spirit.
-                Whether you're lounging by the pool, enjoying a picnic in the park, or simply seeking a moment
-                of pure refreshment, "Zestful Oasis" is your passport to a blissful escape. Indulge in this
-                exotic elixir and let its tropical allure whisk you away to a sun-drenched paradise, sip by sip.
-                Experience the essence of paradise in every bottle - experience "Zestful Oasis" today.
+            @Model.Product.strDescription
             </p>
 
         </div>
     </div>
 
     <div class="product-info">
-        <h1>@Model.strName</h1>
+        <h1>@Model.Product.strName</h1>
 
-      @*   @if (User.Identity.IsAuthenticated) {
-            <div class="rating-name">
-                <!-- Display the average rating -->
-                <span class="average-rating">@ViewBag.AverageRating</span>
+ 
 
-                <!-- Add rating stars based on the model -->
-                <span id="rate1" class="star filled" onclick="setRating(1)">&#9733;</span>
-                <span id="rate2" class="star filled" onclick="setRating(2)">&#9733;</span>
-                <span id="rate3" class="star filled" onclick="setRating(3)">&#9733;</span>
-                <span id="rate4" class="star filled" onclick="setRating(4)">&#9733;</span>
-                <span id="rate5" class="star filled" onclick="setRating(5)">&#9733;</span>
-            </div>
-        } *@
-
-        <h1 class="price">@Model.decPrice.ToString("C")</h1>
+        <h1 class="price">@Model.Product.decPrice.ToString("C")</h1>
 
 @*         <div class="size-options">
             <span>Cans</span>
@@ -60,9 +40,9 @@
             <span>Bulk Order</span>
         </div> *@
 
-        <form class="cs-item-form" data-product-id="@Model.intProductID" data-product-name="@Model.strName" data-product-price="@Model.decPrice" data-product-stock="@Model.strStockAmount">
+        <form class="cs-item-form" data-product-id="@Model.Product.intProductID" data-product-name="@Model.Product.strName" data-product-price="@Model.Product.decPrice" data-product-stock="@Model.Product.strStockAmount">
             @Html.AntiForgeryToken()
-            <input type="hidden" name="Model.intProductID" value="@Model.intProductID" />
+            <input type="hidden" name="Model.intProductID" value="@Model.Product.intProductID" />
             <label for="quantity">Quantity:</label>
             <div class="cs-actions">
                 <select class="quantity-dropdown" name="quantity">
@@ -76,40 +56,16 @@
                         <span class="arrow">&#10132;</span>
                     </button>
 
-
-@*                     <div class="heart-container">
-                        <span class="heart">&#10084;</span>
-                        
-                    </div> *@
                 </div>
-
 
             </div>
         </form>
 
         @if (User.Identity.IsAuthenticated) {
-            <button id="addToFavoritesBtn" class="btn btn-primary" data-product-id="@Model.intProductID">Add to Favorites</button>
+            <button id="addToFavoritesBtn" class="btn btn-primary" data-product-id="@Model.Product.intProductID">Add to Favorites</button>
         }
 
-        <div class="product-reviews">
-            <h2>Ratings</h2>
-            <div class="rating-summary">
-                <div class="average-rating">@ViewBag.AverageRating</div>
-                <div class="total-reviews">(@ViewBag.TotalReviews reviews)</div>
-            </div>
-            <div class="rating-bars">
-                @foreach (var ratingCount in ViewBag.RatingCounts) {
-                    var ratingPercentage = ViewBag.TotalReviews > 0 ? (int)Math.Round((double)ratingCount.Count / ViewBag.TotalReviews * 100) : 0;
-                    <div class="rating-bar">
-                        <div class="stars">@ratingCount.Rating stars</div>
-                        <div class="bar">
-                            <div class="fill" style="width: @ratingPercentage%;"></div>
-                        </div>
-                        <div class="count">@ratingCount.Count</div>
-                    </div>
-                }
-            </div>
-        </div>
+
     </div>
 
 
@@ -118,46 +74,17 @@
 <div class="related-products">
     <h2>You Might Also Like</h2>
     <div class="product-cards">
-
-        <div class="product-card">
-            <img src="@Url.Content("~/Images/Products/BananaBlitz.jpg")" alt="Drinks">
-            <h3>Related Product 1</h3>
-            <p>Short description of related product 1</p>
-        </div>
-        <!-- Add more related product cards -->
-
-        <div class="product-card">
-            <img src="@Url.Content("~/Images/Products/CherryChill.jpg")" alt="Drinks">
-            <h3>Related Product 1</h3>
-            <p>Short description of related product 1</p>
-        </div>
-
-        <div class="product-card">
-            <img src="@Url.Content("~/Images/Products/LimeLight.jpg")" alt="Drinks">
-            <h3>Related Product 1</h3>
-            <p>Short description of related product 1</p>
-        </div>
-
-        <div class="product-card">
-            <img src="@Url.Content("~/Images/Products/BananaBlitz.jpg")" alt="Drinks">
-            <h3>Related Product 1</h3>
-            <p>Short description of related product 1</p>
-        </div>
-        <!-- Add more related product cards -->
-
-        <div class="product-card">
-            <img src="@Url.Content("~/Images/Products/CherryChill.jpg")" alt="Drinks">
-            <h3>Related Product 1</h3>
-            <p>Short description of related product 1</p>
-        </div>
-
-        <div class="product-card">
-            <img src="@Url.Content("~/Images/Products/LimeLight.jpg")" alt="Drinks">
-            <h3>Related Product 1</h3>
-            <p>Short description of related product 1</p>
-        </div>
-
+        @foreach (var relatedProduct in Model.RelatedProducts) {
+            <div class="product-card">
+                <a asp-controller="Purchase" asp-action="Details" asp-route-id="@relatedProduct.intProductID">
+                    <img src="@Url.Content("~/Images/Products/" + relatedProduct.strName.Replace(" ", "") + ".jpg")" alt="@relatedProduct.strName" style="width:100%; height:auto;">
+                    <h3>@relatedProduct.strName</h3>
+                </a>
+                <p>@relatedProduct.strDescription</p>
+            </div>
+        }
     </div>
+</div>
 
     <!-- Display success or error message -->
     @if (TempData["SuccessMessage"] != null) {
@@ -275,7 +202,7 @@
         });
 
         $('#submitReviewBtn').on('click', function () {
-            var productId = @Model.intProductID;
+            var productId = @Model.Product.intProductID;
             var rating = $('#selectedRating').val();
             var reviewText = $('#reviewText').val();
 

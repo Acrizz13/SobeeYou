@@ -10,7 +10,7 @@ public partial class Tproduct {
 
     public string StrName { get; set; } = null!;
 
-    public string StrDescription { get; set; } = null!;
+    public string strDescription { get; set; } = null!;
 
     public decimal DecPrice { get; set; }
 
