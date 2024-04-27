@@ -32,7 +32,7 @@ namespace SobeeYou.Models {
         [StringLength(50)]
         public string strOrderStatus { get; set; }
 
-        public int intPaymentMethod { get; set; }
+        public int intPaymentMethodID { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TOrderItem> TOrderItems { get; set; }

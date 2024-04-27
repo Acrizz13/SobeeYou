@@ -285,6 +285,8 @@
     <Content Include="Views\BottomNavBar\RefundPolicy.cshtml" />
     <Content Include="Views\BottomNavBar\TermsOfService.cshtml" />
     <Content Include="Views\BottomNavBar\Contact.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

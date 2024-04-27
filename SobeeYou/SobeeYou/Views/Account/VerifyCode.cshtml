@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Verify Code";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="login-container">
+    <h1>Verify Code</h1>
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="error-message">@ViewBag.ErrorMessage</div>
+    }
+    <form action="@Url.Action("VerifyCode", "Account")" method="post">
+        <div class="form-group">
+            <label for="code">Verification Code*</label>
+            <input type="text" id="code" name="code" required>
+            <input type="hidden" name="email" value="@ViewBag.Email">
+        </div>
+        <button type="submit" class="login-button">Verify Code</button>
+    </form>
+</div>
