@@ -22,6 +22,12 @@ namespace SobeeYou.Models
         public int TotalUsers { get; set; }
         public int AdminUsers { get; set; }
         public int RecentSupportRequests { get; set; }
-       
+
+     
+            public List<ProductSalesData> TotalSales { get; set; }
+            public List<ProductSalesData> LastWeekSales { get; set; }
+            public List<ProductSalesData> LastMonthSales { get; set; }
+        
+
     }
 }

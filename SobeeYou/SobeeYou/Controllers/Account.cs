@@ -37,51 +37,71 @@ namespace SobeeYou.Controllers {
             var adminDashBoard = GetAdminDashBoardInfo();
             return View(adminDashBoard);
         }
-        public AdminDashboardViewModel GetAdminDashBoardInfo() {
+        public AdminDashboardViewModel GetAdminDashBoardInfo()
+        {
             var websiteTraffic = new List<WebsiteTrafficData>
-                {
-                    new WebsiteTrafficData { Month = "January", Visitors = 5000 },
-                    new WebsiteTrafficData { Month = "February", Visitors = 6200 },
-                    new WebsiteTrafficData { Month = "March", Visitors = 7500 },
-                    new WebsiteTrafficData { Month = "April", Visitors = 8100 },
-                    new WebsiteTrafficData { Month = "May", Visitors = 9300 },
-                    new WebsiteTrafficData { Month = "June", Visitors = 10500 },
-                    new WebsiteTrafficData { Month = "July", Visitors = 11200 },
-                    new WebsiteTrafficData { Month = "August", Visitors = 10800 },
-                    new WebsiteTrafficData { Month = "September", Visitors = 9800 },
-                    new WebsiteTrafficData { Month = "October", Visitors = 8900 },
-                    new WebsiteTrafficData { Month = "November", Visitors = 7800 },
-                    new WebsiteTrafficData { Month = "December", Visitors = 9200 }
-                };
+    {
+        new WebsiteTrafficData { Month = "January", Visitors = 5000 },
+        new WebsiteTrafficData { Month = "February", Visitors = 6200 },
+        new WebsiteTrafficData { Month = "March", Visitors = 7500 },
+        new WebsiteTrafficData { Month = "April", Visitors = 8100 },
+        new WebsiteTrafficData { Month = "May", Visitors = 9300 },
+        new WebsiteTrafficData { Month = "June", Visitors = 10500 },
+        new WebsiteTrafficData { Month = "July", Visitors = 11200 },
+        new WebsiteTrafficData { Month = "August", Visitors = 10800 },
+        new WebsiteTrafficData { Month = "September", Visitors = 9800 },
+        new WebsiteTrafficData { Month = "October", Visitors = 8900 },
+        new WebsiteTrafficData { Month = "November", Visitors = 7800 },
+        new WebsiteTrafficData { Month = "December", Visitors = 9200 }
+    };
 
-            var adminDashboard = new AdminDashboardViewModel {
-                // ...
-                WebsiteTraffic = websiteTraffic
-            };
-            using (var context = new TableModels()) {
-
-
-                //I should probably just make these columns integers rather than strings in the database
-                // Load the product stock amounts into memory (consider efficiency here!)
+            using (var context = new TableModels())
+            {
                 var lowInventoryProductsCount = context.TProducts
-                    .AsEnumerable() // This will execute the query and bring the results into memory
+                    .AsEnumerable()
                     .Count(p => Convert.ToInt64(p.strStockAmount) < 10);
-                // Calculate average product rating in-memory
+
                 var reviews = context.TReviews.AsEnumerable();
                 var avgProductRating = reviews.Any() ? reviews.Average(r => Convert.ToDecimal(r.strRating)) : 0;
 
-                var thirtyDaysAgo = DateTime.Now.AddDays(-30);
-                var productSales = context.TOrderItems
-    .GroupBy(oi => oi.TProduct.strName)
-    .Select(g => new ProductSalesData {
-        ProductName = g.Key,
-        TotalSales = g.Sum(oi => oi.intQuantity * oi.monPricePerUnit)
-    })
-    .ToList();
 
-                var adminDashBoard = new AdminDashboardViewModel {
-                    //need to make total customers coincide with orders where there is a unique customer id
-                    //need to make totalusers coincide with total customer accounts
+
+                var thirtyDaysAgo = DateTime.Now.AddDays(-30);
+                var lastWeek = DateTime.Today.AddDays(-7);
+                var lastMonth = DateTime.Today.AddMonths(-1);
+
+                var totalSales = context.TOrderItems
+                    .GroupBy(oi => oi.TProduct.strName)
+                    .Select(g => new ProductSalesData
+                    {
+                        ProductName = g.Key,
+                        TotalSales = g.Sum(oi => oi.intQuantity * oi.monPricePerUnit)
+                    })
+                    .ToList();
+
+                var lastWeekSales = context.TOrderItems
+                    .Where(oi => oi.TOrder.dtmOrderDate >= lastWeek)
+                    .GroupBy(oi => oi.TProduct.strName)
+                    .Select(g => new ProductSalesData
+                    {
+                        ProductName = g.Key,
+                        TotalSales = g.Sum(oi => oi.intQuantity * oi.monPricePerUnit)
+                    })
+                    .ToList();
+
+                var lastMonthSales = context.TOrderItems
+                    .Where(oi => oi.TOrder.dtmOrderDate >= lastMonth)
+                    .GroupBy(oi => oi.TProduct.strName)
+                    .Select(g => new ProductSalesData
+                    {
+                        ProductName = g.Key,
+                        TotalSales = g.Sum(oi => oi.intQuantity * oi.monPricePerUnit)
+                    })
+                    .ToList();
+
+
+                var adminDashBoard = new AdminDashboardViewModel
+                {
                     TotalCustomers = context.TUsers.Count(u => u.intUserRoleID != 2),
                     NewCustomers = context.TUsers.Count(u => u.strDateCreated >= thirtyDaysAgo && u.intUserRoleID != 2),
                     ActiveCustomers = context.TUsers.Count(u => u.strLastLoginDate >= thirtyDaysAgo && u.intUserRoleID != 2),
@@ -92,14 +112,17 @@ namespace SobeeYou.Controllers {
                     LowInventoryProducts = lowInventoryProductsCount,
                     AvgProductRating = avgProductRating,
                     AdminUsers = context.TUsers.Count(u => u.intUserRoleID == 2),
-                    RecentSupportRequests = context.TCustomerServiceTickets.Count(t => t.dtmTimeOfSubmission >= thirtyDaysAgo),
-                    ProductSales = productSales,
-                    WebsiteTraffic = websiteTraffic
+                    RecentSupportRequests = context.TCustomerServiceTickets.Count(t => t.dtmTimeOfSubmission >= thirtyDaysAgo),                 
+                    WebsiteTraffic = websiteTraffic,
+                    TotalSales = totalSales,
+                    LastWeekSales = lastWeekSales,
+                    LastMonthSales = lastMonthSales
                 };
 
                 return adminDashBoard;
             }
         }
+    
 
 
 
@@ -154,23 +177,23 @@ namespace SobeeYou.Controllers {
         }
 
 
-        // GET: ResetPassword
-        public ActionResult ResetPassword(int userId) {
-            // Retrieve the user model based on the userId
-            TUser userModel = GetUserById(userId);
+        //// GET: ResetPassword
+        //public ActionResult ResetPassword(int userId) {
+        //    // Retrieve the user model based on the userId
+        //    TUser userModel = GetUserById(userId);
 
-            if (userModel != null) {
-                // Store the user model in TempData
-                TempData["TUser"] = userModel;
+        //    if (userModel != null) {
+        //        // Store the user model in TempData
+        //        TempData["TUser"] = userModel;
 
-                // Redirect to the CustomerAccount view
-                return RedirectToAction("CustomerAccount", "Account");
-            }
-            else {
-                // Handle the case when the user is not found
-                return RedirectToAction("Index", "Home");
-            }
-        }
+        //        // Redirect to the CustomerAccount view
+        //        return RedirectToAction("CustomerAccount", "Account");
+        //    }
+        //    else {
+        //        // Handle the case when the user is not found
+        //        return RedirectToAction("Index", "Home");
+        //    }
+        //}
 
         // GET: ForgotPassword
         public ActionResult ForgotPassword() {
@@ -184,35 +207,14 @@ namespace SobeeYou.Controllers {
             }
         }
 
-        // POST: ForgotPassword
-        [HttpPost]
-        public ActionResult ForgotPassword(string email) {
-            // Check if the email exists in the TUsers table
-            TUser userModel = GetUserByEmail(email);
-
-            if (userModel != null) {
-                // Generate a password reset link with the user ID
-                string resetLink = Url.Action("ResetPassword", "Account", new { userId = userModel.intUserID }, Request.Url.Scheme);
-
-                // Send the password reset email
-                // SendPasswordResetEmail(userModel.strEmail, resetLink);
-                newEmailThing(userModel.strEmail, resetLink);
-
-                // Display a success message to the user
-                ViewBag.SuccessMessage = "An email with password reset instructions has been sent to your email address.";
-            }
-            else {
-                // Display an error message if the email doesn't exist
-                ViewBag.ErrorMessage = "The provided email address does not exist in our records.";
-            }
-
-            return View();
-        }
+    
 
         // Forgot password link sender 
-        private void newEmailThing(string userEmail, string resetLink) {
-            string workEmail = "eyassu.million@gmail.com"; // replace with sobee email
-            string fromPassword = "nkum abbn kcyz cvxs"; // replace with sobee app password
+        private void newEmailThing(string userEmail, string verificationcode) {
+            string workEmail = "sobeeyoubusiness@gmail.com";
+            string fromPassword = "yplu kfwq wufa jpjp";
+
+
 
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
             smtpClient.EnableSsl = true;
@@ -225,7 +227,7 @@ namespace SobeeYou.Controllers {
             mailMessage.From = new MailAddress(workEmail);
             mailMessage.To.Add(userEmail);
             mailMessage.Subject = "Forgot Password - SoBee You!";
-            mailMessage.Body = "Here is the link you requested to reset your password and any other of your profile information:<br><br>";
+            mailMessage.Body = "Here is the code requested to reset your password: " + verificationcode;
 
             // Send the email
             smtpClient.Send(mailMessage);
@@ -272,10 +274,20 @@ namespace SobeeYou.Controllers {
             return View(model);
         }
 
-        private TUser GetUserByEmail(string email) {
-            using (var context = new TableModels()) {
-                return context.TUsers
-                    .FirstOrDefault(u => u.strEmail == email);
+        private TUser GetUserByEmail(string email)
+        {
+            try
+            {
+                using (var context = new TableModels())
+                {
+                    return context.TUsers.FirstOrDefault(u => u.strEmail == email);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately
+                // Example: Log.Error("Error retrieving user by email", ex);
+                return null;
             }
         }
 
@@ -387,11 +399,140 @@ namespace SobeeYou.Controllers {
 
             return RedirectToAction("AdminDashboard");
         }
+        // ...
+
+       
+
+        private string GenerateVerificationCode()
+        {
+            // Generate a random verification code
+            return new Random().Next(100000, 999999).ToString();
+        }
+
+     
+
+   
+
+        //public ActionResult ResetPassword(string email)
+        //{
+        //    // Pass the email to the view
+        //    ViewBag.Email = email;
+        //    return View();
+        //}
+
+   
+        private void UpdateUser(TUser user)
+        {
+            using (var context = new TableModels())
+            {
+                context.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+
+        // ...
 
 
 
+        // POST: ForgotPassword
+        [HttpPost]
+        public ActionResult ForgotPassword(string email)
+        {
+            // Check if the email exists in the TUsers table
+            TUser userModel = GetUserByEmail(email);
 
+            if (userModel != null)
+            {
+                // Generate a verification code
+                string verificationCode = GenerateVerificationCode();
 
+                // Store the verification code in the session
+                Session["VerificationCode"] = verificationCode;
+                Session["UserEmail"] = userModel.strEmail;
+
+                // Send the verification code email
+                newEmailThing(userModel.strEmail, verificationCode);
+
+                // Redirect to the code verification view
+                return RedirectToAction("VerifyCode");
+            }
+            else
+            {
+                // Display an error message if the email doesn't exist
+                ViewBag.ErrorMessage = "The provided email address does not exist in our records.";
+            }
+
+            return View();
+        }
+
+        public ActionResult VerifyCode()
+        {
+            // Pass the email to the view
+            ViewBag.Email = Session["UserEmail"] as string;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult VerifyCode(string code)
+        {
+            string storedCode = Session["VerificationCode"] as string;
+            string userEmail = Session["UserEmail"] as string;
+
+            if (code == storedCode)
+            {
+                // Redirect to the reset password view
+                return RedirectToAction("ResetPassword");
+            }
+            else
+            {
+                // Display an error message if the code doesn't match
+                ViewBag.ErrorMessage = "Invalid verification code.";
+            }
+
+            ViewBag.Email = userEmail;
+            return View();
+        }
+
+        public ActionResult ResetPassword()
+        {
+            // Pass the email to the view
+            ViewBag.Email = Session["UserEmail"] as string;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ResetPassword(string password, string confirmPassword)
+        {
+            string userEmail = Session["UserEmail"] as string;
+
+            if (password == confirmPassword)
+            {
+                // Retrieve the user model based on the email
+                TUser userModel = GetUserByEmail(userEmail);
+
+                if (userModel != null)
+                {
+                    // Update the user's password
+                    userModel.strPassword = password;
+                    UpdateUser(userModel);
+
+                    // Clear the session variables
+                    Session.Remove("VerificationCode");
+                    Session.Remove("UserEmail");
+
+                    // Redirect to the account page
+                    return RedirectToAction("Index", "Account");
+                }
+            }
+            else
+            {
+                // Display an error message if the passwords don't match
+                ViewBag.ErrorMessage = "Passwords do not match.";
+            }
+
+            ViewBag.Email = userEmail;
+            return View();
+        }
 
 
     }

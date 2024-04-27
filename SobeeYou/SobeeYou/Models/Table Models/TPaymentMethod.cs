@@ -17,7 +17,7 @@ namespace SobeeYou.Models
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int intPaymentMethod { get; set; }
+        public int intPaymentMethodID { get; set; }
 
         [StringLength(50)]
         public string strPaymentMethodName { get; set; }

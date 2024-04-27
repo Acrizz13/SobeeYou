@@ -61,6 +61,11 @@
         <div class="card">
             <div class="card-header">Product Sales</div>
             <div class="card-body">
+                <div>
+                    <button class="btn btn-primary" onclick="updateChart('total')">Total</button>
+                    <button class="btn btn-primary" onclick="updateChart('month')">Last Month</button>
+                    <button class="btn btn-primary" onclick="updateChart('week')">Last Week</button>
+                </div>
                 <canvas id="productSalesChart"></canvas>
             </div>
         </div>
@@ -92,14 +97,33 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbRq_3QzdaHjD4SzYSvhNY382iXAQuUP0&libraries=visualization"></script>
 
     <script>
+        var totalSales = @Html.Raw(Json.Encode(Model.TotalSales));
+        var monthSales = @Html.Raw(Json.Encode(Model.LastMonthSales));
+        var weekSales = @Html.Raw(Json.Encode(Model.LastWeekSales));
+        var chart;
+
+        function updateChart(period) {
+            var data;
+            if (period === 'total') {
+                data = totalSales;
+            } else if (period === 'month') {
+                data = monthSales;
+            } else if (period === 'week') {
+                data = weekSales;
+            }
+
+            chart.data.labels = data.map(function (item) { return item.ProductName; });
+            chart.data.datasets[0].data = data.map(function (item) { return item.TotalSales; });
+            chart.update();
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             // Product Sales Chart
             var ctx = document.getElementById('productSalesChart').getContext('2d');
-            var productSales = @Html.Raw(Json.Encode(Model.ProductSales));
             var data = {
-                labels: productSales.map(function (item) { return item.ProductName; }),
+                labels: totalSales.map(function (item) { return item.ProductName; }),
                 datasets: [{
-                    data: productSales.map(function (item) { return item.TotalSales; }),
+                    data: totalSales.map(function (item) { return item.TotalSales; }),
                     backgroundColor: [
                         '#FF6384',
                         '#36A2EB',
@@ -133,7 +157,7 @@
                     }
                 }
             };
-            new Chart(ctx, {
+            chart = new Chart(ctx, {
                 type: 'pie',
                 data: data,
                 options: options,
