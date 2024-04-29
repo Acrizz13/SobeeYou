@@ -6,6 +6,7 @@ using sobee_core.Models;
 using System.Net.Mail;
 using System.Net;
 using sobee_core.Classes;
+using sobee_core.Models.AnalyticsModels;
 
 namespace sobee_core.Controllers {
     [Authorize(Roles = "Admin")]
@@ -20,9 +21,142 @@ namespace sobee_core.Controllers {
 
         // Action method to display the admin dashboard
         public IActionResult Index() {
-            var adminDashBoard = GetAdminDashBoardInfo();
-            return View(adminDashBoard);
+            //   var adminDashBoard = GetAdminDashBoardInfo();
+            return View();
         }
+
+
+        public IActionResult Sales() {
+            // Top Selling Products
+            var topSellingProducts = _context.TorderItems
+                .GroupBy(oi => oi.IntProductId)
+                .Select(g => new {
+                    ProductID = g.Key,
+                    TotalQuantity = g.Sum(oi => oi.IntQuantity)
+                })
+                .OrderByDescending(tp => tp.TotalQuantity)
+                .Take(10)
+                .Join(_context.Tproducts, tp => tp.ProductID, p => p.IntProductId, (tp, p) => new {
+                    ProductName = p.StrName,
+                    TotalQuantity = tp.TotalQuantity
+                })
+                .ToList();
+
+            // Sales Trends Over Time
+            var salesTrends = _context.Torders
+                .GroupBy(o => new { o.DtmOrderDate.Value.Year, o.DtmOrderDate.Value.Month })
+                .Select(g => new {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    TotalSales = g.Sum(o => o.DecTotalAmount)
+                })
+                .OrderBy(st => st.Year)
+                .ThenBy(st => st.Month)
+                .ToList();
+
+            //// Promotion Performance
+            //var promotionPerformance = _context.Torders
+            //    .Where(o => o.IntPromotionId != null)
+            //    .GroupBy(o => o.intPromotionID)
+            //    .Select(g => new {
+            //        PromotionID = g.Key,
+            //        TotalSales = g.Sum(o => o.decTotalAmount)
+            //    })
+            //    .Join(_context.Tpromotions, pp => pp.PromotionID, p => p.IntPromotionId, (pp, p) => new {
+            //        PromotionCode = p.strPromoCode,
+            //        TotalSales = pp.TotalSales
+            //    })
+            //    .ToList();
+
+            // Payment Method Breakdown
+            var paymentMethodBreakdown = _context.Torders
+                .GroupBy(o => o.IntPaymentMethodId)
+                .Select(g => new {
+                    PaymentMethodID = g.Key,
+                    TotalOrders = g.Count()
+                })
+                .Join(_context.TpaymentMethods, pm => pm.PaymentMethodID, p => p.IntPaymentMethodId, (pm, p) => new {
+                    PaymentMethod = p.StrDescription,
+                    TotalOrders = pm.TotalOrders
+                })
+                .ToList();
+
+
+            // Explicitly cast topSellingProducts to List<dynamic>
+            var topSellingProductsDynamic = topSellingProducts
+                .Select(p => new { ProductName = p.ProductName, TotalQuantity = p.TotalQuantity })
+                .Cast<dynamic>()
+                .ToList();
+
+            // Explicitly cast paymentMethodBreakdown to List<dynamic>
+            var paymentMethodBreakdownDynamic = paymentMethodBreakdown
+                .Select(p => new { PaymentMethod = p.PaymentMethod, TotalOrders = p.TotalOrders })
+                .Cast<dynamic>()
+                .ToList();
+
+            // Explicitly cast salesTrends to List<dynamic>
+            var salesTrendsDynamic = salesTrends
+                .Select(st => new { Year = st.Year, Month = st.Month, TotalSales = st.TotalSales })
+                .Cast<dynamic>()
+                .ToList();
+
+
+            // Create a view model to hold all the data
+            var viewModel = new SalesViewModel {
+                TopSellingProducts = topSellingProductsDynamic,
+                SalesTrends = salesTrendsDynamic,
+                //    PromotionPerformance = promotionPerformance,
+                PaymentMethodBreakdown = paymentMethodBreakdownDynamic // Assign the dynamically typed list
+            };
+
+            return View(viewModel);
+        }
+
+        // Action method for the Customers page
+        public IActionResult Customers() {
+            return View();
+        }
+
+        // Action method for the Inventory Management page
+        public IActionResult InventoryManager() {
+            return View();
+        }
+
+        // Action method for the Orders page
+        public IActionResult Orders() {
+            return View();
+        }
+
+        // Action method for the Product Catalog page
+        public IActionResult ProductCatalog() {
+            return View();
+        }
+
+        // Action method for the Product Reviews page
+        public IActionResult ProductReviews() {
+            return View();
+        }
+
+        // Action method for the Promotions page
+        public IActionResult Promotions() {
+            return View();
+        }
+
+        // Action method for the User Manager page
+        public IActionResult UserManager() {
+            return View();
+        }
+
+        // Action method for the Settings page
+        public IActionResult Settings() {
+            return View();
+        }
+
+
+
+
+
+
 
         // Private method to retrieve admin dashboard information
         private AdminDashboardViewModel GetAdminDashBoardInfo() {

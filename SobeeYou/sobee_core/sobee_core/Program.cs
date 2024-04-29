@@ -70,6 +70,7 @@ app.UseSession();
 // Seed the admin role so that admin roles can be used
 AdminRoleSeeder.SeedAdminRoleAsync(app.Services).Wait();
 
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

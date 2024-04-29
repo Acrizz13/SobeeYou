@@ -1,0 +1,87 @@
+﻿@model sobee_core.Models.AnalyticsModels.SalesViewModel
+
+<h2>Sales Analytics</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Top Selling Products</h4>
+        <canvas id="topSellingProductsChart"></canvas>
+    </div>
+    <div class="col-md-6">
+        <h4>Sales Trends Over Time</h4>
+        <canvas id="salesTrendsChart"></canvas>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Promotion Performance</h4>
+        <canvas id="promotionPerformanceChart"></canvas>
+    </div>
+    <div class="col-md-6">
+        <h4>Payment Method Breakdown</h4>
+        <canvas id="paymentMethodBreakdownChart"></canvas>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Top Selling Products Chart
+        var topSellingProductsCtx = document.getElementById('topSellingProductsChart').getContext('2d');
+        var topSellingProductsChart = new Chart(topSellingProductsCtx, {
+            type: 'bar',
+            data: {
+                labels: [@Html.Raw(Json.Serialize(Model.TopSellingProducts.Select(p => p.ProductName)))],
+                datasets: [{
+                    label: 'Total Quantity Sold',
+                    data: [@Html.Raw(Json.Serialize(Model.TopSellingProducts.Select(p => p.TotalQuantity)))],
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        stepSize: 1
+                    }
+                }
+            }
+        });
+
+        // Sales Trends Chart
+        var salesTrendsCtx = document.getElementById('salesTrendsChart').getContext('2d');
+        var salesTrendsChart = new Chart(salesTrendsCtx, {
+            type: 'line',
+            data: {
+                labels: [@Html.Raw(Json.Serialize(Model.SalesTrends.Select(st => $"{st.Year}-{st.Month}")))],
+                datasets: [{
+                    label: 'Total Sales',
+                    data: [@Html.Raw(Json.Serialize(Model.SalesTrends.Select(st => st.TotalSales)))],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Payment Method Breakdown Chart
+        var paymentMethodBreakdownCtx = document.getElementById('paymentMethodBreakdownChart').getContext('2d');
+        var paymentMethodBreakdownChart = new Chart(paymentMethodBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: [@Html.Raw(Json.Serialize(Model.PaymentMethodBreakdown.Select(pm => pm.PaymentMethod)))],
+                datasets: [{
+                    data: [@Html.Raw(Json.Serialize(Model.PaymentMethodBreakdown.Select(pm => pm.TotalOrders)))],
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
+                }]
+            }
+        });
+    </script>
+}
