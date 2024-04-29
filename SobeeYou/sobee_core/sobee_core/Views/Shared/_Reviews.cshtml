@@ -1,0 +1,23 @@
+﻿@model List<ReviewDTO>
+
+@foreach (var review in Model) {
+    <div class="review">
+        <div class="review-header">
+            <span class="review-user">@review.UserFirstName</span>
+            <span class="review-date">@review.ReviewDate.ToString("MM/dd/yyyy")</span>
+        </div>
+        <div class="review-rating">
+            @for (int i = 1; i <= review.Rating; i++) {
+                <span class="star filled">&#9733;</span>
+            }
+            @for (int i = review.Rating + 1; i <= 5; i++) {
+                <span class="star">&#9733;</span>
+            }
+        </div>
+        <div class="review-text">@review.ReviewText</div>
+        @if (User.Identity.IsAuthenticated && review.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value) {
+            <button class="edit-button btn-secondary" data-review-id="@review.ReviewId">Edit</button>
+            <button class="delete-button btn-danger" data-review-id="@review.ReviewId">Delete</button>
+        }
+    </div>
+}

@@ -66,10 +66,44 @@ namespace sobee_core.Controllers {
             return View(productsDto);
         }
 
+        public void GetReviewsRatings(int intProductId) {
+            // get all ratings for this product
+            var productRatings = _context.Treviews.Where(r => r.IntProductId == intProductId).ToList();
+
+            // if the product has any ratings  then calc the average
+            if (productRatings.Any()) {
+                var averageRating = productRatings.Average(r => r.IntRating);
+                ViewBag.AverageRating = Math.Round(averageRating, 1);
+            }
+            else {
+                ViewBag.AverageRating = 0;
+            }
+
+            // gets total count for each star 1-5
+            var ratingCounts = Enumerable.Range(1, 5)
+                .Select(rating => new {
+                    Rating = rating,
+                    Count = _context.Treviews.Count(r => r.IntProductId == intProductId && r.IntRating == rating)
+                })
+                .ToList();
+
+            ViewBag.RatingCounts = ratingCounts;
+
+            //gets total count of reviews
+            var totalReviews = _context.Treviews.Count(r => r.IntProductId == intProductId);
+            ViewBag.TotalReviews = totalReviews;
+
+            // gets all user reviews for this product
+            var userReviews = GetReviews(intProductId);
+            ViewBag.UserReviews = userReviews;
+
+        }
+
         // shows detailed view of products
-        public ActionResult Details(int id) {
+        public ActionResult Details(int productID) {
+            // get product gfrom table that matches the one the user clicked on
             var product = _context.Tproducts
-                .Where(p => p.IntProductId == id)
+                .Where(p => p.IntProductId == productID)
                 .Select(p => new ProductDTO {
                     intProductID = p.IntProductId,
                     strName = p.StrName,
@@ -79,34 +113,9 @@ namespace sobee_core.Controllers {
                 })
                 .FirstOrDefault();
 
-            var reviews = _context.Treviews.Where(r => r.IntProductId == id).ToList();
-
-            if (reviews.Any()) {
-                var averageRating = reviews.Average(r => r.IntRating);
-                ViewBag.AverageRating = Math.Round(averageRating, 1);
-            }
-            else {
-                ViewBag.AverageRating = 0;
-            }
-
-            var ratingCounts = Enumerable.Range(1, 5)
-                .Select(rating => new {
-                    Rating = rating,
-                    Count = _context.Treviews.Count(r => r.IntProductId == id && r.IntRating == rating)
-                })
-                .ToList();
-
-            ViewBag.RatingCounts = ratingCounts;
-
-            var totalReviews = _context.Treviews.Count(r => r.IntProductId == id);
-            ViewBag.TotalReviews = totalReviews;
-
-            var userReviews = GetReviews(id);
-            ViewBag.UserReviews = userReviews;
-
             // Retrieve the related products (example query)
             var relatedProducts = _context.Tproducts
-                .Where(p => p.IntProductId != id) // Exclude the current product
+                .Where(p => p.IntProductId != productID) // Exclude the current product
                 .Take(4) // Take the first 4 related products
                 .Select(p => new ProductDTO {
                     intProductID = p.IntProductId,
@@ -117,6 +126,10 @@ namespace sobee_core.Controllers {
                 })
                 .ToList();
 
+            // gets reviews and ratings and stores them in Viewbag
+            GetReviewsRatings(productID);
+
+
             var viewModel = new ProductDetailsViewModel {
                 Product = product,
                 RelatedProducts = relatedProducts
@@ -125,9 +138,9 @@ namespace sobee_core.Controllers {
             return View(viewModel);
         }
 
-
+        // loads partial view of review list 
         [HttpGet]
-        public List<ReviewDTO> GetReviews(int productId) {
+        public IActionResult GetReviews(int productId) {
             // Retrieve the reviews for the current product
             var reviews = _context.Treviews
                 .Where(r => r.IntProductId == productId)
@@ -136,12 +149,58 @@ namespace sobee_core.Controllers {
                     ReviewText = r.StrReviewText,
                     Rating = r.IntRating,
                     ReviewDate = r.DtmReviewDate,
-                    UserFirstName = r.User != null ? r.User.StrFirstName : "Anonymous"
+                    UserFirstName = r.User != null ? r.User.StrFirstName : "Anonymous",
+                    UserId = r.UserId
                 })
                 .ToList();
 
-            return reviews;
+            return PartialView("_Reviews", reviews);
         }
+
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult DeleteReview(int reviewId) {
+            // Get the current user's ID
+            var userId = _userManager.GetUserId(User);
+
+            // Find the review by ID and user ID
+            var review = _context.Treviews.FirstOrDefault(r => r.IntReviewId == reviewId && r.UserId == userId);
+
+            if (review != null) {
+                // Remove the review from the database
+                _context.Treviews.Remove(review);
+                _context.SaveChanges();
+
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false });
+        }
+
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult EditReview(int reviewId, int rating, string reviewText) {
+            // Get the current user's ID
+            var userId = _userManager.GetUserId(User);
+
+            // Find the review by ID and user ID
+            var review = _context.Treviews.FirstOrDefault(r => r.IntReviewId == reviewId && r.UserId == userId);
+
+            if (review != null) {
+                // Update the review properties
+                review.IntRating = rating;
+                review.StrReviewText = reviewText;
+
+                _context.SaveChanges();
+
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false });
+        }
+
 
         [HttpPost]
         [Authorize]
@@ -185,24 +244,7 @@ namespace sobee_core.Controllers {
             return Json(new { success = true });
         }
 
-        [HttpGet]
-        public ActionResult GetReviews() {
-            int productId = (int)ViewData["productId"];
 
-            // Retrieve the reviews for the current product
-            var reviews = _context.Treviews
-                .Where(r => r.IntProductId == productId)
-                .Select(r => new ReviewDTO {
-                    ReviewId = r.IntReviewId,
-                    ReviewText = r.StrReviewText,
-                    Rating = r.IntRating,
-                    ReviewDate = r.DtmReviewDate,
-                    UserFirstName = r.User != null ? r.User.StrFirstName : "Anonymous"
-                })
-                .ToList();
-
-            return PartialView("_Reviews", reviews);
-        }
 
 
         [HttpPost]
