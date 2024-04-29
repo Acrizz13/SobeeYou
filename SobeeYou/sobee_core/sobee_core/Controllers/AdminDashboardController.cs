@@ -26,9 +26,116 @@ namespace sobee_core.Controllers {
         }
 
 
-        public IActionResult Sales() {
-            // Top Selling Products
-            var topSellingProducts = _context.TorderItems
+        public IActionResult Sales(int? year, int? month, int? day) {
+            var orders = _context.Torders.AsQueryable();
+            orders = FilterOrdersByDate(orders, year, month, day);
+
+            var filteredOrders = orders.Where(o => o.DtmOrderDate.HasValue).ToList();
+
+            var salesTrends = GetSalesTrends(filteredOrders, year, month);
+            var topSellingProducts = GetTopSellingProducts(orders);
+            var paymentMethodBreakdown = GetPaymentMethodBreakdown(filteredOrders);
+
+            var topSellingProductsDynamic = topSellingProducts
+                .Select(p => new { ProductName = p.ProductName, TotalQuantity = p.TotalQuantity })
+                .Cast<dynamic>()
+                .ToList();
+
+            var paymentMethodBreakdownDynamic = paymentMethodBreakdown
+                .Select(p => new { PaymentMethod = p.PaymentMethod, TotalOrders = p.TotalOrders })
+                .Cast<dynamic>()
+                .ToList();
+
+            var salesTrendsDynamic = salesTrends
+                .Select(st => new { Date = st.Date, TotalSales = st.TotalSales })
+                .Cast<dynamic>()
+                .ToList();
+
+            var viewModel = new SalesViewModel {
+                TopSellingProducts = topSellingProductsDynamic,
+                SalesTrends = salesTrendsDynamic,
+                PaymentMethodBreakdown = paymentMethodBreakdownDynamic,
+                SelectedYear = year,
+                SelectedMonth = month,
+                IsMonthSelected = month.HasValue,
+                SelectedDay = day
+            };
+
+            return View(viewModel);
+        }
+
+        private IQueryable<Torder> FilterOrdersByDate(IQueryable<Torder> orders, int? year, int? month, int? day) {
+            if (year.HasValue) {
+                orders = orders.Where(o => o.DtmOrderDate.Value.Year == year.Value);
+            }
+
+            if (month.HasValue) {
+                orders = orders.Where(o => o.DtmOrderDate.Value.Month == month.Value);
+            }
+
+            if (day.HasValue) {
+                orders = orders.Where(o => o.DtmOrderDate.Value.Day == day.Value);
+            }
+
+            return orders;
+        }
+
+        private List<dynamic> GetSalesTrends(List<Torder> filteredOrders, int? year, int? month) {
+            var salesTrends = new List<SalesTrendData>();
+
+            if (year.HasValue && month.HasValue) {
+                // Generate all days in the selected month
+                int daysInMonth = DateTime.DaysInMonth(year.Value, month.Value);
+                var datesInMonth = Enumerable.Range(1, daysInMonth)
+                    .Select(day => new DateTime(year.Value, month.Value, day))
+                    .ToList();
+
+                // Join the generated date range with the filtered orders
+                salesTrends = datesInMonth
+                    .GroupJoin(
+                        filteredOrders.Where(o => o.DtmOrderDate.HasValue),
+                        date => date,
+                        order => order.DtmOrderDate.Value.Date,
+                        (date, orders) => new SalesTrendData {
+                            Date = date,
+                            TotalSales = orders.Sum(o => o.DecTotalAmount)
+                        }
+                    )
+                    .OrderBy(st => st.Date)
+                    .ToList();
+            }
+            else {
+                // If no month is selected, use the existing code
+                salesTrends = filteredOrders
+                    .Where(o => o.DtmOrderDate.HasValue)
+                    .GroupBy(o => o.DtmOrderDate.Value.Date)
+                    .Select(g => new SalesTrendData {
+                        Date = g.Key,
+                        TotalSales = g.Sum(o => o.DecTotalAmount)
+                    })
+                    .OrderBy(st => st.Date)
+                    .ToList();
+
+                if (year.HasValue) {
+                    salesTrends = salesTrends
+                        .Where(st => st.Date.Year == year.Value)
+                        .GroupBy(st => new { st.Date.Year, st.Date.Month })
+                        .Select(g => new SalesTrendData {
+                            Date = new DateTime(g.Key.Year, g.Key.Month, 1),
+                            TotalSales = g.Sum(st => st.TotalSales)
+                        })
+                        .Distinct()
+                        .OrderBy(st => st.Date)
+                        .ToList();
+                }
+            }
+
+            return salesTrends.Cast<dynamic>().ToList();
+        }
+
+        private List<dynamic> GetTopSellingProducts(IQueryable<Torder> orders) {
+            var topSellingProducts = orders
+                .SelectMany(o => o.TorderItems)
                 .GroupBy(oi => oi.IntProductId)
                 .Select(g => new {
                     ProductID = g.Key,
@@ -42,34 +149,11 @@ namespace sobee_core.Controllers {
                 })
                 .ToList();
 
-            // Sales Trends Over Time
-            var salesTrends = _context.Torders
-                .GroupBy(o => new { o.DtmOrderDate.Value.Year, o.DtmOrderDate.Value.Month })
-                .Select(g => new {
-                    Year = g.Key.Year,
-                    Month = g.Key.Month,
-                    TotalSales = g.Sum(o => o.DecTotalAmount)
-                })
-                .OrderBy(st => st.Year)
-                .ThenBy(st => st.Month)
-                .ToList();
+            return topSellingProducts.Cast<dynamic>().ToList();
+        }
 
-            //// Promotion Performance
-            //var promotionPerformance = _context.Torders
-            //    .Where(o => o.IntPromotionId != null)
-            //    .GroupBy(o => o.intPromotionID)
-            //    .Select(g => new {
-            //        PromotionID = g.Key,
-            //        TotalSales = g.Sum(o => o.decTotalAmount)
-            //    })
-            //    .Join(_context.Tpromotions, pp => pp.PromotionID, p => p.IntPromotionId, (pp, p) => new {
-            //        PromotionCode = p.strPromoCode,
-            //        TotalSales = pp.TotalSales
-            //    })
-            //    .ToList();
-
-            // Payment Method Breakdown
-            var paymentMethodBreakdown = _context.Torders
+        private List<dynamic> GetPaymentMethodBreakdown(List<Torder> filteredOrders) {
+            var paymentMethodBreakdown = filteredOrders
                 .GroupBy(o => o.IntPaymentMethodId)
                 .Select(g => new {
                     PaymentMethodID = g.Key,
@@ -81,35 +165,7 @@ namespace sobee_core.Controllers {
                 })
                 .ToList();
 
-
-            // Explicitly cast topSellingProducts to List<dynamic>
-            var topSellingProductsDynamic = topSellingProducts
-                .Select(p => new { ProductName = p.ProductName, TotalQuantity = p.TotalQuantity })
-                .Cast<dynamic>()
-                .ToList();
-
-            // Explicitly cast paymentMethodBreakdown to List<dynamic>
-            var paymentMethodBreakdownDynamic = paymentMethodBreakdown
-                .Select(p => new { PaymentMethod = p.PaymentMethod, TotalOrders = p.TotalOrders })
-                .Cast<dynamic>()
-                .ToList();
-
-            // Explicitly cast salesTrends to List<dynamic>
-            var salesTrendsDynamic = salesTrends
-                .Select(st => new { Year = st.Year, Month = st.Month, TotalSales = st.TotalSales })
-                .Cast<dynamic>()
-                .ToList();
-
-
-            // Create a view model to hold all the data
-            var viewModel = new SalesViewModel {
-                TopSellingProducts = topSellingProductsDynamic,
-                SalesTrends = salesTrendsDynamic,
-                //    PromotionPerformance = promotionPerformance,
-                PaymentMethodBreakdown = paymentMethodBreakdownDynamic // Assign the dynamically typed list
-            };
-
-            return View(viewModel);
+            return paymentMethodBreakdown.Cast<dynamic>().ToList();
         }
 
         // Action method for the Customers page
