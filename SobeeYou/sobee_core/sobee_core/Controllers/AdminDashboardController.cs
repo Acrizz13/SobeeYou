@@ -31,6 +31,9 @@ namespace sobee_core.Controllers {
 
 
         public IActionResult Sales(int? year, int? month, int? day) {
+            // Set default value of year to 2024 if all parameters are empty
+            year ??= 2024;
+
             var orders = _context.Torders.AsQueryable();
             orders = _salesAnalyticsContext.FilterOrdersByDate(orders, year, month, day);
 

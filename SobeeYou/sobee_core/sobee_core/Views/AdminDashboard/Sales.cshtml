@@ -241,14 +241,33 @@
                 title: {
                     display: true,
                     text: 'Payment Method Breakdown'
+                },
+                plugins: {
+                    datalabels: {
+                        formatter: function (value, context) {
+                            var dataset = context.dataset;
+                            var total = dataset.data.reduce(function (previousValue, currentValue) {
+                                return previousValue + currentValue;
+                            });
+                            var percentage = Math.floor((value / total) * 100 + 0.5);
+                            return percentage + '%';
+                        },
+                        color: 'white',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
                 }
             };
 
             new Chart(paymentMethodCtx, {
                 type: 'pie',
                 data: paymentMethodData,
-                options: paymentMethodOptions
+                options: paymentMethodOptions,
+                plugins: [ChartDataLabels]
             });
         });
+
+
     </script>
 }
