@@ -1,5 +1,321 @@
-﻿@page
+﻿@model sobee_core.Models.ViewModels.PromotionsViewModel
 @{
     Layout = "~/Views/AdminDashboard/Shared/_Layout.cshtml";
     ViewBag.Title = "Promotions";
+}
+
+<h2>Promotions</h2>
+
+<p>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPromotionModal">Create New Promotion</button>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Promotion Name</th>
+            <th>Description</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+
+    <tbody>
+        @if (Model.Promotions.Any()) {
+            @foreach (var promotion in Model.Promotions) {
+                <tr>
+                    <td>@(promotion.PromotionId == 0 ? "N/A" : promotion.PromotionId.ToString())</td>
+                    <td class="promo-code">@(promotion.PromoCode ?? "N/A")</td>
+                    <td class="promo-discount-percentage">@(promotion.StrDiscountPercentage ?? "N/A")</td>
+                    <td class="promo-decimal-percentage">@promotion.DecimalPercent</td>
+                    <td class="promo-expiration-date">@promotion.ExpirationDate.ToShortDateString()</td>
+                    <td>
+                        <button type="button" class="btn btn-primary edit-button" data-toggle="modal" data-target="#editPromotionModal" data-promotion-id="@promotion.PromotionId">Edit</button>
+                        <button type="button" class="btn btn-danger delete-button" data-toggle="modal" data-target="#deletePromotionModal" data-promotion-id="@promotion.PromotionId">Delete</button>
+                    </td>
+                </tr>
+            }
+        }
+        else {
+            <tr>
+                <td colspan="5">No promotions found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<!-- Delete Promotion Modal -->
+<div class="modal fade" id="deletePromotionModal" tabindex="-1" role="dialog" aria-labelledby="deletePromotionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deletePromotionModalLabel">Delete Promotion</h5>
+                <button type="button" class="close modal-cancel-button" onclick="closeDeletePromotionModal()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this promotion?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary modal-cancel-button" onclick="closeDeletePromotionModal()" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeletePromotionBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Edit Promotion Modal -->
+<div class="modal fade" id="editPromotionModal" tabindex="-1" role="dialog" aria-labelledby="editPromotionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPromotionModalLabel">Edit Promotion</h5>
+                <button type="button" class="close modal-cancel-button" onclick="closeEditPromotionModal()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="EditPromotion" method="post">
+                <div class="modal-body">
+                    <input type="hidden" id="editPromotionId" name="IntPromotionId" value="" />
+                    <div class="form-group">
+                        <label for="editPromoCode">Promo Code:</label>
+                        <input type="text" id="editPromoCode" name="StrPromoCode" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editStrDiscountPercentage">Discount Percentage:</label>
+                        <input type="text" id="editStrDiscountPercentage" name="StrDiscountPercentage" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editDecDiscountPercentage">Decimal Discount Percentage:</label>
+                        <input type="number" id="editDecDiscountPercentage" name="DecDiscountPercentage" class="form-control" step="0.01" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editExpirationDate">Expiration Date:</label>
+                        <input type="date" id="editExpirationDate" name="DtmExpirationDate" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-cancel-button" onclick="closeEditPromotionModal()" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="updatePromotionBtn">Update Promotion</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Create Promotion Modal -->
+<div class="modal fade" id="createPromotionModal" tabindex="-1" role="dialog" aria-labelledby="createPromotionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createPromotionModalLabel">Create New Promotion</h5>
+                <button type="button" class="close modal-cancel-button" onclick="closeCreatePromotionModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="CreatePromotion" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="newPromoCode">Promo Code:</label>
+                        <input type="text" id="newPromoCode" name="StrPromoCode" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="newStrDiscountPercentage">Discount Percentage:</label>
+                        <input type="text" id="newStrDiscountPercentage" name="StrDiscountPercentage" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="newDecDiscountPercentage">Decimal Discount Percentage:</label>
+                        <input type="number" id="newDecDiscountPercentage" name="DecDiscountPercentage" class="form-control" step="0.01" />
+                    </div>
+                    <div class="form-group">
+                        <label for="newExpirationDate">Expiration Date:</label>
+                        <input type="date" id="newExpirationDate" name="DtmExpirationDate" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-cancel-button" onclick="closeCreatePromotionModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function closeCreatePromotionModal() {
+            $('#createPromotionModal').modal('hide');
+        }
+
+        function closeEditPromotionModal() {
+            $('#editPromotionModal').modal('hide');
+        }
+
+        function closeDeletePromotionModal() {
+            $('#deletePromotionModal').modal('hide');
+        }
+
+
+        $(document).on('submit', '#createPromotionModal form', function (e) {
+            e.preventDefault();
+
+            var form = $(this);
+            var url = form.attr('action');
+            var data = form.serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                success: function (response) {
+                    if (response.success) {
+                        // Promotion created successfully
+                        // Optionally, you can add the new promotion to the table
+                        closeCreatePromotionModal()     // Reload the promotions table or perform any other necessary actions
+
+                        // Render the updated promotions table
+                        renderPromotionsTable(response.promotions);
+                    } else {
+                        // Form submission failed
+                        // Display validation errors or handle the error as needed
+                        if (response.errors && response.errors.length > 0) {
+                            alert('Errors: ' + response.errors.join(', '));
+                        } else {
+                            alert('Form submission failed. Please try again.');
+                        }
+                    }
+                },
+                error: function () {
+                    // Handle AJAX error
+                    alert('An error occurred while creating the promotion.');
+                }
+            });
+        });
+
+        $(document).on('click', '.delete-button', function () {
+            var promotionId = $(this).data('promotion-id');
+            $('#deletePromotionModal').data('promotion-id', promotionId);
+            $('#deletePromotionModal').modal('show');
+        });
+
+        $(document).on('click', '#confirmDeletePromotionBtn', function () {
+            var promotionId = $('#deletePromotionModal').data('promotion-id');
+
+            $.ajax({
+                url: '@Url.Action("DeletePromotion", "AdminDashboard")',
+                type: 'POST',
+                data: { id: promotionId },
+                success: function (response) {
+                    if (response.success) {
+                        // Promotion deleted successfully
+                        // Optionally, you can remove the deleted promotion from the table
+                        $('#deletePromotionModal').modal('hide');
+                        // Reload the promotions table or perform any other necessary actions
+
+                        // Render the updated promotions table
+                        renderPromotionsTable(response.promotions);
+                            
+                    } else {
+                        alert('Failed to delete the promotion.');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while deleting the promotion.');
+                }
+            });
+        });
+
+
+        $(document).on('click', '.edit-button', function () {
+            var promotionId = $(this).data('promotion-id');
+            var promoRow = $(this).closest('tr');
+
+            var promoCode = promoRow.find('.promo-code').text().trim();
+            var promoDiscountPercentage = promoRow.find('.promo-discount-percentage').text().trim();
+            var promoDecimalPercentage = promoRow.find('.promo-decimal-percentage').text().trim();
+            var promoExpirationDate = promoRow.find('.promo-expiration-date').text().trim();
+
+            $('#editPromotionId').val(promotionId || null);
+            $('#editPromoCode').val(promoCode);
+            $('#editStrDiscountPercentage').val(promoDiscountPercentage);
+            $('#editDecDiscountPercentage').val(promoDecimalPercentage);
+            $('#editExpirationDate').val(new Date(promoExpirationDate).toISOString().substr(0, 10));
+
+            $('#editPromotionModal').modal('show');
+        });
+
+
+        $('#editPromotionModal').on('hidden.bs.modal', function () {
+            // Reset the form fields or perform any necessary cleanup
+            $(this).find('form')[0].reset();
+        });
+
+
+        $(document).on('click', '#updatePromotionBtn', function () {
+            var form = $('#editPromotionModal form');
+            var url = form.attr('action');
+            var data = form.serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                success: function (response) {
+                    if (response.success) {
+                        // Form submission was successful
+                        // Optionally, you can update the table row with the new promotion data
+                        $('#editPromotionModal').modal('hide');
+                        // Reload the promotions table or perform any other necessary actions
+
+                        // Render the updated promotions table
+                        renderPromotionsTable(response.promotions);
+                    } else {
+                        // Form submission failed
+                        // Display validation errors or handle the error as needed
+                        alert('Errors: ' + response.errors.join(', '));
+                    }
+                },
+                error: function () {
+                    // Handle AJAX error
+                    alert('An error occurred while submitting the form.');
+                }
+            });
+        });
+
+        function renderPromotionsTable(promotions) {
+            var tableBody = $('.table tbody');
+            tableBody.empty();
+
+            if (promotions.length > 0) {
+                promotions.forEach(function (promotion) {
+                    var row = '<tr>' +
+                        '<td>' + (promotion.promotionId || 'N/A') + '</td>' +
+                        '<td class="promo-code">' + (promotion.promoCode || 'N/A') + '</td>' +
+                        '<td class="promo-discount-percentage">' + (promotion.strDiscountPercentage || 'N/A') + '</td>' +
+                        '<td class="promo-decimal-percentage">' + promotion.decimalPercent + '</td>' +
+                        '<td class="promo-expiration-date">' + new Date(promotion.expirationDate).toLocaleDateString() + '</td>' +
+                        '<td>' +
+                        '<button type="button" class="btn btn-primary edit-button" data-promotion-id="' + promotion.promotionId + '">Edit</button> ' +
+                        '<button type="button" class="btn btn-danger delete-button" data-promotion-id="' + promotion.promotionId + '">Delete</button>' +
+                        '</td>' +
+                        '</tr>';
+                    tableBody.append(row);
+                });
+            } else {
+                tableBody.append('<tr><td colspan="6">No promotions found.</td></tr>');
+            }
+        }
+
+
+
+      
+    </script>
 }

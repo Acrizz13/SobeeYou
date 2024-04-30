@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using sobee_core.Models;
 using sobee_core.Models.AzureModels;
+using sobee_core.Models.ViewModels;
 using System.Security.Claims;
 
-namespace sobee_core.Areas.Identity.Pages.Account.Manage {
+namespace sobee_core.Areas.Identity.Pages.Account.Manage
+{
     public class OrderHistoryModel : PageModel {
         private readonly SobeecoredbContext _context;
 

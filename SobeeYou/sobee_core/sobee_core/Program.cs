@@ -5,6 +5,7 @@ using sobee_core.Data;
 using sobee_core.Models.AzureModels;
 using sobee_core.Models;
 using sobee_core.Services;
+using sobee_core.Services.AnalyticsServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,10 @@ builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 
 //Adds Orders Service
 builder.Services.AddScoped<IOrderService, OrderService>();
+
+//Adds Sales Analytics Service
+builder.Services.AddScoped<ISalesAnalyticsService, SalesAnalyticsService>();
+
 
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)

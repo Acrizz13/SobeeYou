@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using sobee_core.Models.AzureModels;
 using sobee_core.Models;
 using Microsoft.EntityFrameworkCore;
+using sobee_core.Models.ViewModels;
 
 namespace sobee_core.Controllers {
     public class PurchaseController : Controller {

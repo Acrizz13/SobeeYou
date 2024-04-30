@@ -15,7 +15,6 @@
     <div class="form-group">
         <label for="year">Year:</label>
         <select name="year" id="year" class="form-control">
-            <option value="">All</option>
             @for (int year = DateTime.Now.Year; year >= 2000; year--) {
                 <option value="@year" selected="@(Model.SelectedYear == year)">@year</option>
             }

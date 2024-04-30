@@ -2,21 +2,25 @@
 using Microsoft.AspNetCore.Mvc;
 using sobee_core.Data;
 using sobee_core.Models.AzureModels;
-using sobee_core.Models;
 using System.Net.Mail;
 using System.Net;
 using sobee_core.Classes;
 using sobee_core.Models.AnalyticsModels;
+using sobee_core.Services.AnalyticsServices;
+using sobee_core.Models.ViewModels;
+using sobee_core.Models;
 
 namespace sobee_core.Controllers {
     [Authorize(Roles = "Admin")]
     public class AdminDashboardController : Controller {
         private readonly SobeecoredbContext _context;
         private readonly ApplicationDbContext _identityContext;
+        private readonly ISalesAnalyticsService _salesAnalyticsContext;
 
-        public AdminDashboardController(SobeecoredbContext context, ApplicationDbContext identityContext) {
+        public AdminDashboardController(SobeecoredbContext context, ApplicationDbContext identityContext, ISalesAnalyticsService salesAnalyticsContext) {
             _context = context;
             _identityContext = identityContext;
+            _salesAnalyticsContext = salesAnalyticsContext;
         }
 
         // Action method to display the admin dashboard
@@ -28,13 +32,13 @@ namespace sobee_core.Controllers {
 
         public IActionResult Sales(int? year, int? month, int? day) {
             var orders = _context.Torders.AsQueryable();
-            orders = FilterOrdersByDate(orders, year, month, day);
+            orders = _salesAnalyticsContext.FilterOrdersByDate(orders, year, month, day);
 
             var filteredOrders = orders.Where(o => o.DtmOrderDate.HasValue).ToList();
 
-            var salesTrends = GetSalesTrends(filteredOrders, year, month);
-            var topSellingProducts = GetTopSellingProducts(orders);
-            var paymentMethodBreakdown = GetPaymentMethodBreakdown(filteredOrders);
+            var salesTrends = _salesAnalyticsContext.GetSalesTrends(filteredOrders, year, month);
+            var topSellingProducts = _salesAnalyticsContext.GetTopSellingProducts(orders);
+            var paymentMethodBreakdown = _salesAnalyticsContext.GetPaymentMethodBreakdown(filteredOrders);
 
             var topSellingProductsDynamic = topSellingProducts
                 .Select(p => new { ProductName = p.ProductName, TotalQuantity = p.TotalQuantity })
@@ -64,109 +68,6 @@ namespace sobee_core.Controllers {
             return View(viewModel);
         }
 
-        private IQueryable<Torder> FilterOrdersByDate(IQueryable<Torder> orders, int? year, int? month, int? day) {
-            if (year.HasValue) {
-                orders = orders.Where(o => o.DtmOrderDate.Value.Year == year.Value);
-            }
-
-            if (month.HasValue) {
-                orders = orders.Where(o => o.DtmOrderDate.Value.Month == month.Value);
-            }
-
-            if (day.HasValue) {
-                orders = orders.Where(o => o.DtmOrderDate.Value.Day == day.Value);
-            }
-
-            return orders;
-        }
-
-        private List<dynamic> GetSalesTrends(List<Torder> filteredOrders, int? year, int? month) {
-            var salesTrends = new List<SalesTrendData>();
-
-            if (year.HasValue && month.HasValue) {
-                // Generate all days in the selected month
-                int daysInMonth = DateTime.DaysInMonth(year.Value, month.Value);
-                var datesInMonth = Enumerable.Range(1, daysInMonth)
-                    .Select(day => new DateTime(year.Value, month.Value, day))
-                    .ToList();
-
-                // Join the generated date range with the filtered orders
-                salesTrends = datesInMonth
-                    .GroupJoin(
-                        filteredOrders.Where(o => o.DtmOrderDate.HasValue),
-                        date => date,
-                        order => order.DtmOrderDate.Value.Date,
-                        (date, orders) => new SalesTrendData {
-                            Date = date,
-                            TotalSales = orders.Sum(o => o.DecTotalAmount)
-                        }
-                    )
-                    .OrderBy(st => st.Date)
-                    .ToList();
-            }
-            else {
-                // If no month is selected, use the existing code
-                salesTrends = filteredOrders
-                    .Where(o => o.DtmOrderDate.HasValue)
-                    .GroupBy(o => o.DtmOrderDate.Value.Date)
-                    .Select(g => new SalesTrendData {
-                        Date = g.Key,
-                        TotalSales = g.Sum(o => o.DecTotalAmount)
-                    })
-                    .OrderBy(st => st.Date)
-                    .ToList();
-
-                if (year.HasValue) {
-                    salesTrends = salesTrends
-                        .Where(st => st.Date.Year == year.Value)
-                        .GroupBy(st => new { st.Date.Year, st.Date.Month })
-                        .Select(g => new SalesTrendData {
-                            Date = new DateTime(g.Key.Year, g.Key.Month, 1),
-                            TotalSales = g.Sum(st => st.TotalSales)
-                        })
-                        .Distinct()
-                        .OrderBy(st => st.Date)
-                        .ToList();
-                }
-            }
-
-            return salesTrends.Cast<dynamic>().ToList();
-        }
-
-        private List<dynamic> GetTopSellingProducts(IQueryable<Torder> orders) {
-            var topSellingProducts = orders
-                .SelectMany(o => o.TorderItems)
-                .GroupBy(oi => oi.IntProductId)
-                .Select(g => new {
-                    ProductID = g.Key,
-                    TotalQuantity = g.Sum(oi => oi.IntQuantity)
-                })
-                .OrderByDescending(tp => tp.TotalQuantity)
-                .Take(10)
-                .Join(_context.Tproducts, tp => tp.ProductID, p => p.IntProductId, (tp, p) => new {
-                    ProductName = p.StrName,
-                    TotalQuantity = tp.TotalQuantity
-                })
-                .ToList();
-
-            return topSellingProducts.Cast<dynamic>().ToList();
-        }
-
-        private List<dynamic> GetPaymentMethodBreakdown(List<Torder> filteredOrders) {
-            var paymentMethodBreakdown = filteredOrders
-                .GroupBy(o => o.IntPaymentMethodId)
-                .Select(g => new {
-                    PaymentMethodID = g.Key,
-                    TotalOrders = g.Count()
-                })
-                .Join(_context.TpaymentMethods, pm => pm.PaymentMethodID, p => p.IntPaymentMethodId, (pm, p) => new {
-                    PaymentMethod = p.StrDescription,
-                    TotalOrders = pm.TotalOrders
-                })
-                .ToList();
-
-            return paymentMethodBreakdown.Cast<dynamic>().ToList();
-        }
 
         // Action method for the Customers page
         public IActionResult Customers() {
@@ -195,7 +96,89 @@ namespace sobee_core.Controllers {
 
         // Action method for the Promotions page
         public IActionResult Promotions() {
-            return View();
+            var promotions = _context.Tpromotions.ToList();
+            var promotionDTOs = promotions.Select(p => new PromotionDTO {
+                PromotionId = (int)p.IntPromotionId,
+                PromoCode = p.StrPromoCode,
+                StrDiscountPercentage = p.StrDiscountPercentage,
+                DecimalPercent = p.DecDiscountPercentage,
+                ExpirationDate = p.DtmExpirationDate
+            }).ToList();
+
+            var viewModel = new PromotionsViewModel {
+                Promotions = promotionDTOs
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditPromotion(Tpromotion promotion) {
+            if (ModelState.IsValid) {
+                _context.Tpromotions.Update(promotion);
+                _context.SaveChanges();
+
+                // Retrieve the updated list of promotions
+                var updatedPromotions = _context.Tpromotions.ToList();
+                var updatedPromotionDTOs = updatedPromotions.Select(p => new PromotionDTO {
+                    PromotionId = (int)p.IntPromotionId,
+                    PromoCode = p.StrPromoCode,
+                    StrDiscountPercentage = p.StrDiscountPercentage,
+                    DecimalPercent = p.DecDiscountPercentage,
+                    ExpirationDate = p.DtmExpirationDate
+                }).ToList();
+
+                return Json(new { success = true, promotions = updatedPromotionDTOs });
+            }
+
+            return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
+        }
+
+        [HttpPost]
+        public IActionResult DeletePromotion(int id) {
+            var promotion = _context.Tpromotions.FirstOrDefault(p => p.IntPromotionId == id);
+            if (promotion != null) {
+                _context.Tpromotions.Remove(promotion);
+                _context.SaveChanges();
+
+                // Retrieve the updated list of promotions
+                var updatedPromotions = _context.Tpromotions.ToList();
+                var updatedPromotionDTOs = updatedPromotions.Select(p => new PromotionDTO {
+                    PromotionId = (int)p.IntPromotionId,
+                    PromoCode = p.StrPromoCode,
+                    StrDiscountPercentage = p.StrDiscountPercentage,
+                    DecimalPercent = p.DecDiscountPercentage,
+                    ExpirationDate = p.DtmExpirationDate
+                }).ToList();
+
+                return Json(new { success = true, promotions = updatedPromotionDTOs });
+            }
+
+            return Json(new { success = false });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreatePromotion(Tpromotion promotion) {
+            if (ModelState.IsValid) {
+                _context.Tpromotions.Add(promotion);
+                _context.SaveChanges();
+
+                // Retrieve the updated list of promotions
+                var updatedPromotions = _context.Tpromotions.ToList();
+                var updatedPromotionDTOs = updatedPromotions.Select(p => new PromotionDTO {
+                    PromotionId = (int)p.IntPromotionId,
+                    PromoCode = p.StrPromoCode,
+                    StrDiscountPercentage = p.StrDiscountPercentage,
+                    DecimalPercent = p.DecDiscountPercentage,
+                    ExpirationDate = p.DtmExpirationDate
+                }).ToList();
+
+                return Json(new { success = true, promotions = updatedPromotionDTOs });
+            }
+
+            return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
         }
 
         // Action method for the User Manager page

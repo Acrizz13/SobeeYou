@@ -1,4 +1,4 @@
-namespace sobee_core.Models {
+namespace sobee_core.Models.ViewModels {
     public class ErrorViewModel {
         public string? RequestId { get; set; }
 

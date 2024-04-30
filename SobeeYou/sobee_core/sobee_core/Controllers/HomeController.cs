@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using sobee_core.Models;
+using sobee_core.Models.ViewModels;
 using System.Diagnostics;
 
 namespace sobee_core.Controllers {
