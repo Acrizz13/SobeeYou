@@ -1,4 +1,5 @@
-﻿using sobee_core.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using sobee_core.Data;
 using sobee_core.Models.AnalyticsModels;
 using sobee_core.Models.AzureModels;
 
@@ -100,8 +101,48 @@ namespace sobee_core.Services.AnalyticsServices {
         }
 
 
+        public List<dynamic> GetProductSalesData(List<Torder> filteredOrders) {
+            var productSalesData = filteredOrders
+                .SelectMany(o => o.TorderItems)
+                .Where(oi => oi.IntProduct != null) // Filter out TorderItems with null IntProduct
+                .GroupBy(oi => oi.IntProduct.StrName)
+                .Select(g => new ProductSalesData {
+                    ProductName = g.Key,
+                    TotalSales = (decimal)g.Sum(oi => oi.IntQuantity * oi.MonPricePerUnit)
+                })
+                .ToList();
+
+            var productSalesDataDynamic = productSalesData
+                .Select(p => new { ProductName = p.ProductName, TotalSales = p.TotalSales })
+                .Cast<dynamic>()
+                .ToList();
+
+            return productSalesDataDynamic;
+        }
+        //public List<dynamic> GetProductSalesData(List<Torder> filteredOrders) {
+
+
+        //    var productSalesData = _context.TorderItems
+        //           .GroupBy(oi => oi.IntProduct.StrName)
+        //           .Select(g => new ProductSalesData {
+        //               ProductName = g.Key,
+        //               TotalSales = (decimal)g.Sum(oi => oi.IntQuantity * oi.MonPricePerUnit)
+        //           })
+        //           .ToList();
+
+        //    var productSalesDataDynamic = productSalesData
+        //        .Select(p => new { ProductName = p.ProductName, TotalSales = p.TotalSales })
+        //        .Cast<dynamic>()
+        //        .ToList();
+
+        //    return productSalesDataDynamic;
+        //}
+
 
         public IQueryable<Torder> FilterOrdersByDate(IQueryable<Torder> orders, int? year, int? month, int? day) {
+            orders = orders.Include(o => o.TorderItems)
+                           .ThenInclude(oi => oi.IntProduct);
+
             if (year.HasValue) {
                 orders = orders.Where(o => o.DtmOrderDate.Value.Year == year.Value);
             }

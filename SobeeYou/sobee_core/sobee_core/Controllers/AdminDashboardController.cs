@@ -39,30 +39,17 @@ namespace sobee_core.Controllers {
             var salesTrends = _salesAnalyticsContext.GetSalesTrends(filteredOrders, year, month);
             var topSellingProducts = _salesAnalyticsContext.GetTopSellingProducts(orders);
             var paymentMethodBreakdown = _salesAnalyticsContext.GetPaymentMethodBreakdown(filteredOrders);
-
-            var topSellingProductsDynamic = topSellingProducts
-                .Select(p => new { ProductName = p.ProductName, TotalQuantity = p.TotalQuantity })
-                .Cast<dynamic>()
-                .ToList();
-
-            var paymentMethodBreakdownDynamic = paymentMethodBreakdown
-                .Select(p => new { PaymentMethod = p.PaymentMethod, TotalOrders = p.TotalOrders })
-                .Cast<dynamic>()
-                .ToList();
-
-            var salesTrendsDynamic = salesTrends
-                .Select(st => new { Date = st.Date, TotalSales = st.TotalSales })
-                .Cast<dynamic>()
-                .ToList();
+            var productSalesData = _salesAnalyticsContext.GetProductSalesData(filteredOrders);
 
             var viewModel = new SalesViewModel {
-                TopSellingProducts = topSellingProductsDynamic,
-                SalesTrends = salesTrendsDynamic,
-                PaymentMethodBreakdown = paymentMethodBreakdownDynamic,
+                TopSellingProducts = topSellingProducts,
+                SalesTrends = salesTrends,
+                PaymentMethodBreakdown = paymentMethodBreakdown,
                 SelectedYear = year,
                 SelectedMonth = month,
                 IsMonthSelected = month.HasValue,
-                SelectedDay = day
+                SelectedDay = day,
+                ProductSalesData = productSalesData
             };
 
             return View(viewModel);
@@ -197,58 +184,58 @@ namespace sobee_core.Controllers {
 
 
 
-        // Private method to retrieve admin dashboard information
-        private AdminDashboardViewModel GetAdminDashBoardInfo() {
-            var websiteTraffic = new List<WebsiteTrafficData>
-            {
-        new WebsiteTrafficData { Month = "January", Visitors = 5000 },
-        new WebsiteTrafficData { Month = "February", Visitors = 6200 },
-        new WebsiteTrafficData { Month = "March", Visitors = 7500 },
-        new WebsiteTrafficData { Month = "April", Visitors = 8100 },
-        new WebsiteTrafficData { Month = "May", Visitors = 9300 },
-        new WebsiteTrafficData { Month = "June", Visitors = 10500 },
-        new WebsiteTrafficData { Month = "July", Visitors = 11200 },
-        new WebsiteTrafficData { Month = "August", Visitors = 10800 },
-        new WebsiteTrafficData { Month = "September", Visitors = 9800 },
-        new WebsiteTrafficData { Month = "October", Visitors = 8900 },
-        new WebsiteTrafficData { Month = "November", Visitors = 7800 },
-        new WebsiteTrafficData { Month = "December", Visitors = 9200 }
-    };
+        //    // Private method to retrieve admin dashboard information
+        //    private AdminDashboardViewModel GetAdminDashBoardInfo() {
+        //        var websiteTraffic = new List<WebsiteTrafficData>
+        //        {
+        //    new WebsiteTrafficData { Month = "January", Visitors = 5000 },
+        //    new WebsiteTrafficData { Month = "February", Visitors = 6200 },
+        //    new WebsiteTrafficData { Month = "March", Visitors = 7500 },
+        //    new WebsiteTrafficData { Month = "April", Visitors = 8100 },
+        //    new WebsiteTrafficData { Month = "May", Visitors = 9300 },
+        //    new WebsiteTrafficData { Month = "June", Visitors = 10500 },
+        //    new WebsiteTrafficData { Month = "July", Visitors = 11200 },
+        //    new WebsiteTrafficData { Month = "August", Visitors = 10800 },
+        //    new WebsiteTrafficData { Month = "September", Visitors = 9800 },
+        //    new WebsiteTrafficData { Month = "October", Visitors = 8900 },
+        //    new WebsiteTrafficData { Month = "November", Visitors = 7800 },
+        //    new WebsiteTrafficData { Month = "December", Visitors = 9200 }
+        //};
 
-            // Calculate the date 30 days ago
-            var thirtyDaysAgo = DateTime.Now.AddDays(-30);
+        //        // Calculate the date 30 days ago
+        //        var thirtyDaysAgo = DateTime.Now.AddDays(-30);
 
-            // Get the user IDs of admin users
-            var adminUserIds = _identityContext.UserRoles
-                .Where(ur => ur.RoleId == _identityContext.Roles.FirstOrDefault(r => r.Name == "Admin").Id)
-                .Select(ur => ur.UserId)
-                .ToList();
+        //        // Get the user IDs of admin users
+        //        var adminUserIds = _identityContext.UserRoles
+        //            .Where(ur => ur.RoleId == _identityContext.Roles.FirstOrDefault(r => r.Name == "Admin").Id)
+        //            .Select(ur => ur.UserId)
+        //            .ToList();
 
-            // Count the totals of all fields
-            var adminDashBoard = new AdminDashboardViewModel {
-                TotalCustomers = _identityContext.Users.Count(u => !adminUserIds.Contains(u.Id)),
-                // NewCustomers = _identityContext.Users.Count(u => u.CreatedDate >= thirtyDaysAgo && !adminUserIds.Contains(u.Id)),
-                // ActiveCustomers = _identityContext.Users.Count(u => u.LastLoginDate >= thirtyDaysAgo && !adminUserIds.Contains(u.Id)),
-                TotalUsers = _identityContext.Users.Count(u => adminUserIds.Contains(u.Id)),
-                TotalOrders = _context.Torders.Count(o => o.IntShippingStatusId == 1), // Assuming 1 represents "Pending"
-                RecentRevenue = (decimal)_context.Torders.Where(o => o.DtmOrderDate >= thirtyDaysAgo).Sum(o => o.DecTotalAmount),
-                TotalProducts = _context.Tproducts.Count(),
-                LowInventoryProducts = _context.Tproducts.Count(p => Convert.ToInt32(p.StrStockAmount) < 10), // Using SQL Cast function
-                AvgProductRating = _context.Treviews.Any() ? _context.Treviews.Average(r => (decimal)r.IntRating) : 0,
-                AdminUsers = adminUserIds.Count,
-                RecentSupportRequests = _context.TcustomerServiceTickets.Count(t => t.DtmTimeOfSubmission >= thirtyDaysAgo),
-                ProductSales = _context.TorderItems
-                    .GroupBy(oi => oi.IntProduct.StrName)
-                    .Select(g => new ProductSalesData {
-                        ProductName = g.Key,
-                        TotalSales = (decimal)g.Sum(oi => oi.IntQuantity * oi.MonPricePerUnit)
-                    })
-                    .ToList(),
-                WebsiteTraffic = websiteTraffic
-            };
+        //        // Count the totals of all fields
+        //        var adminDashBoard = new AdminDashboardViewModel {
+        //            TotalCustomers = _identityContext.Users.Count(u => !adminUserIds.Contains(u.Id)),
+        //            // NewCustomers = _identityContext.Users.Count(u => u.CreatedDate >= thirtyDaysAgo && !adminUserIds.Contains(u.Id)),
+        //            // ActiveCustomers = _identityContext.Users.Count(u => u.LastLoginDate >= thirtyDaysAgo && !adminUserIds.Contains(u.Id)),
+        //            TotalUsers = _identityContext.Users.Count(u => adminUserIds.Contains(u.Id)),
+        //            TotalOrders = _context.Torders.Count(o => o.IntShippingStatusId == 1), // Assuming 1 represents "Pending"
+        //            RecentRevenue = (decimal)_context.Torders.Where(o => o.DtmOrderDate >= thirtyDaysAgo).Sum(o => o.DecTotalAmount),
+        //            TotalProducts = _context.Tproducts.Count(),
+        //            LowInventoryProducts = _context.Tproducts.Count(p => Convert.ToInt32(p.StrStockAmount) < 10), // Using SQL Cast function
+        //            AvgProductRating = _context.Treviews.Any() ? _context.Treviews.Average(r => (decimal)r.IntRating) : 0,
+        //            AdminUsers = adminUserIds.Count,
+        //            RecentSupportRequests = _context.TcustomerServiceTickets.Count(t => t.DtmTimeOfSubmission >= thirtyDaysAgo),
+        //            ProductSales = _context.TorderItems
+        //                .GroupBy(oi => oi.IntProduct.StrName)
+        //                .Select(g => new ProductSalesData {
+        //                    ProductName = g.Key,
+        //                    TotalSales = (decimal)g.Sum(oi => oi.IntQuantity * oi.MonPricePerUnit)
+        //                })
+        //                .ToList(),
+        //            WebsiteTraffic = websiteTraffic
+        //        };
 
-            return adminDashBoard;
-        }
+        //        return adminDashBoard;
+        //    }
 
         [HttpGet]
         public void SendDiscountEmail() {
