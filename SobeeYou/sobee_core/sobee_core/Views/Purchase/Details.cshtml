@@ -67,6 +67,27 @@
             <button id="addToFavoritesBtn" class="btn btn-primary" data-product-id="@Model.Product.intProductID">Add to Favorites</button>
         }
 
+        <!--average review bars-->
+        <div class="product-reviews">
+            <h2>Ratings</h2>
+            <div class="rating-summary">
+                <div class="average-rating">@ViewBag.AverageRating</div>
+                <div class="total-reviews">(@ViewBag.TotalReviews reviews)</div>
+            </div>
+            <div class="rating-bars">
+                @foreach (var ratingCount in ViewBag.RatingCounts) {
+                    var ratingPercentage = ViewBag.TotalReviews > 0 ? (int)Math.Round((double)ratingCount.Count / ViewBag.TotalReviews * 100) : 0;
+                    <div class="rating-bar">
+                        <div class="stars">@ratingCount.Rating stars</div>
+                        <div class="bar">
+                            <div class="fill" style="width: @ratingPercentage%;"></div>
+                        </div>
+                        <div class="count">@ratingCount.Count</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 
     </div>
 
@@ -117,11 +138,7 @@
     }
 
 
-    <!-- Add a container for dynamically loaded reviews -->
-    <div id="reviewsContainer">
 
-
-    </div>
 
     <!-- Edit Review Modal -->
     <div class="modal fade" id="editReviewModal" tabindex="-1" role="dialog" aria-labelledby="editReviewModalLabel" aria-hidden="true">
