@@ -21,13 +21,13 @@ body {
 }
 /* Custom Navigation Bar Styles */
 .navbar-custom {
-	background-color: #ff8c00; /* Orange background */
-	color: #ff69b4; /* Pink text */
+	background-color: #18264D; /* Orange background */
+	color: #EE642D; /* Pink text */
 }
 
 	.navbar-custom .navbar-brand,
 	.navbar-custom .nav-link {
-		color: #ff69b4; /* Pink text for links */
+		color: #EE642D; /* Pink text for links */
 	}
 
 		.navbar-custom .nav-link:hover {
