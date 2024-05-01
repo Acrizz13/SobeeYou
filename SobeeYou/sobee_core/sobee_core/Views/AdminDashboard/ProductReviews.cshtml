@@ -1,6 +1,13 @@
 ﻿@using sobee_core.Models.AnalyticsModels
 @model ReviewsViewModel
 
+
+@{
+    Layout = "~/Views/AdminDashboard/Shared/_Layout.cshtml";
+    ViewBag.Title = "Product Catalog";
+}
+
+
 <form method="get" action="@Url.Action("ProductReviews")">
     <div class="form-group">
         <label for="year">Year:</label>
@@ -30,6 +37,18 @@
     </div>
     <button type="submit" class="btn btn-primary">Filter</button>
 </form>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Highest Average Rated Products</h4>
+        <canvas id="topRatedProductsChart"></canvas>
+    </div>
+    <div class="col-md-6">
+        <h4>Most Reviewed Product </h4>
+        <canvas id="mostReviewedProductsChart"></canvas>
+
+    </div>
+</div>
 
 <canvas id="topRatedProductsChart"></canvas>
 <canvas id="mostReviewedProductsChart"></canvas>
