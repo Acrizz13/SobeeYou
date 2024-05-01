@@ -101,7 +101,7 @@ namespace sobee_core.Controllers {
         }
 
         // shows detailed view of products
-        public ActionResult Details(int productID) {
+        public IActionResult Details(int productID) {
             // get product gfrom table that matches the one the user clicked on
             var product = _context.Tproducts
                 .Where(p => p.IntProductId == productID)

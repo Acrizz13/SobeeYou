@@ -1,4 +1,5 @@
-﻿@namespace sobee_core.Models.ViewModels
+﻿@using sobee_core.Models.ViewModels
+
 @model ProductDetailsViewModel
 
 @{
@@ -79,7 +80,7 @@
         <div class="product-cards">
             @foreach (var relatedProduct in Model.RelatedProducts) {
                 <div class="product-card">
-                    <a asp-controller="Purchase" asp-action="Details" asp-route-id="@relatedProduct.intProductID">
+                    <a asp-controller="Purchase" asp-action="Details" asp-route-productID="@relatedProduct.intProductID">
                         <img src="@Url.Content("~/Images/Products/" + relatedProduct.strName.Replace(" ", "") + ".jpg")" alt="@relatedProduct.strName" style="width:100%; height:auto;">
                         <h3>@relatedProduct.strName</h3>
                     </a>

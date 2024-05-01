@@ -31,7 +31,8 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 //Adds Sales Analytics Service
 builder.Services.AddScoped<ISalesAnalyticsService, SalesAnalyticsService>();
 
-
+//Adds Customer Analytics Service
+builder.Services.AddScoped<ICustomerAnalyticsService, CustomerAnalyticsService>();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
         .AddRoles<IdentityRole>() // Add this line to enable admin role support

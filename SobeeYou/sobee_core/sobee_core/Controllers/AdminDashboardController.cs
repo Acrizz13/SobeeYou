@@ -16,11 +16,13 @@ namespace sobee_core.Controllers {
         private readonly SobeecoredbContext _context;
         private readonly ApplicationDbContext _identityContext;
         private readonly ISalesAnalyticsService _salesAnalyticsContext;
+        private readonly ICustomerAnalyticsService _customerAnalyticsContext;
 
-        public AdminDashboardController(SobeecoredbContext context, ApplicationDbContext identityContext, ISalesAnalyticsService salesAnalyticsContext) {
+        public AdminDashboardController(SobeecoredbContext context, ApplicationDbContext identityContext, ISalesAnalyticsService salesAnalyticsService, ICustomerAnalyticsService customerAnalyticsService) {
             _context = context;
             _identityContext = identityContext;
-            _salesAnalyticsContext = salesAnalyticsContext;
+            _salesAnalyticsContext = salesAnalyticsService;
+            _customerAnalyticsContext = customerAnalyticsService;
         }
 
         // Action method to display the admin dashboard
@@ -60,8 +62,23 @@ namespace sobee_core.Controllers {
 
 
         // Action method for the Customers page
-        public IActionResult Customers() {
-            return View();
+        public IActionResult Customers(int? year, int? month) {
+            var orders = _context.Torders.AsQueryable();
+            orders = _salesAnalyticsContext.FilterOrdersByDate(orders, year, month, null);
+
+            var filteredOrders = orders.Where(o => o.DtmOrderDate.HasValue).ToList();
+
+            var topRegisteredCustomers = _customerAnalyticsContext.GetTopCustomers(filteredOrders, year, month);
+            var registeredVsGuestSpending = _customerAnalyticsContext.GetRegisteredVsGuestCustomerSpending(filteredOrders);
+
+            var viewModel = new CustomersViewModel {
+                TopRegisteredCustomers = topRegisteredCustomers,
+                RegisteredVsGuestSpending = registeredVsGuestSpending,
+                SelectedYear = year,
+                SelectedMonth = month
+            };
+
+            return View(viewModel);
         }
 
         // Action method for the Inventory Management page
@@ -173,7 +190,82 @@ namespace sobee_core.Controllers {
 
         // Action method for the User Manager page
         public IActionResult UserManager() {
-            return View();
+            var users = _context.AspNetUsers.ToList();
+            var userViewModels = users.Select(u => new UserViewModel {
+                Id = u.Id,
+                Email = u.Email,
+                FirstName = u.StrFirstName,
+                LastName = u.StrLastName,
+                IsAdmin = _identityContext.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == _identityContext.Roles.FirstOrDefault(r => r.Name == "Admin").Id)
+            }).ToList();
+
+            return View(userViewModels);
+        }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult CreateUser(UserViewModel userViewModel) {
+        //    // Code to create a new user
+        //    // ...
+
+        //    return Json(new { success = true, users = updatedUserViewModels });
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult EditUser(UserViewModel userViewModel) {
+        //    // Code to update an existing user
+        //    // ...
+
+        //    return Json(new { success = true, users = updatedUserViewModels });
+        //}
+
+        [HttpPost]
+        public IActionResult DeleteUser(string Id) {
+            // Find the user by Id
+            var user = _context.AspNetUsers.FirstOrDefault(u => u.Id == Id);
+
+            if (user != null) {
+                try {
+                    // Remove the user from AspNetUserRoles
+                    var userRoles = _context.AspNetRoles.Where(ur => ur.Id == Id);
+                    _context.AspNetRoles.RemoveRange(userRoles);
+
+                    // Delete related data
+                    _context.TReviewReplies.RemoveRange(user.TReviewReplies);
+                    _context.Tfavorites.RemoveRange(user.Tfavorites);
+
+                    var userOrders = _context.Torders.Where(o => o.UserId == Id);
+                    var shoppingCartIds = userOrders
+                        .Join(_context.TpromoCodeUsageHistories, o => o.IntOrderId, h => h.IntShoppingCartId, (o, h) => h.IntShoppingCartId)
+                        .ToList();
+
+                    _context.TpromoCodeUsageHistories.RemoveRange(_context.TpromoCodeUsageHistories.Where(h => shoppingCartIds.Contains(h.IntShoppingCartId)));
+                    _context.TorderItems.RemoveRange(userOrders.SelectMany(o => o.TorderItems));
+                    _context.Torders.RemoveRange(userOrders);
+
+                    var userShoppingCarts = _context.TshoppingCarts.Where(c => c.UserId == Id);
+                    _context.TcartItems.RemoveRange(userShoppingCarts.SelectMany(c => c.TcartItems));
+                    _context.TshoppingCarts.RemoveRange(userShoppingCarts);
+
+                    _context.Treviews.RemoveRange(user.Treviews);
+                    _context.AspNetUserClaims.RemoveRange(user.AspNetUserClaims);
+                    _context.AspNetUserLogins.RemoveRange(user.AspNetUserLogins);
+                    _context.AspNetUserTokens.RemoveRange(user.AspNetUserTokens);
+
+                    // Delete the user from AspNetUsers
+                    _context.AspNetUsers.Remove(user);
+                    _context.SaveChanges();
+
+                    return Json(new { success = true });
+                }
+                catch (Exception ex) {
+                    // Handle any exceptions that occur during the deletion process
+                    return Json(new { success = false, error = ex.Message });
+                }
+            }
+
+            return Json(new { success = false, error = "User not found" });
         }
 
         // Action method for the Settings page

@@ -1,5 +1,157 @@
-﻿@page
+﻿@model sobee_core.Models.AnalyticsModels.CustomersViewModel
+
+
 @{
     Layout = "~/Views/AdminDashboard/Shared/_Layout.cshtml";
     ViewBag.Title = "Customers";
+}
+
+<h2>Customers</h2>
+
+<form method="get" action="@Url.Action("Customers")">
+    <div class="form-group">
+        <label for="year">Year:</label>
+        <select name="year" id="year" class="form-control">
+            @for (int year = DateTime.Now.Year; year >= 2000; year--)
+            {
+                <option value="@year" selected="@(Model.SelectedYear == year)">@year</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="month">Month:</label>
+        <select name="month" id="month" class="form-control">
+            <option value="">All</option>
+            @for (int month = 1; month <= 12; month++)
+            {
+                <option value="@month" selected="@(Model.SelectedMonth == month)">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month)</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Top Registered Customers</h4>
+        <canvas id="topRegisteredCustomersChart"></canvas>
+    </div>
+    <div class="col-md-6">
+        <h4>Registered vs. Guest Customers Spending</h4>
+        <canvas id="registeredVsGuestSpendingChart"></canvas>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var topRegisteredCustomersCtx = document.getElementById('topRegisteredCustomersChart').getContext('2d');
+            var topRegisteredCustomers = @Html.Raw(Json.Serialize(Model.TopRegisteredCustomers));
+
+            var colors = [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(153, 102, 255, 0.6)',
+                'rgba(255, 159, 64, 0.6)',
+                'rgba(201, 203, 207, 0.6)',
+                'rgba(255, 105, 180, 0.6)',
+                'rgba(54, 162, 85, 0.6)',
+                'rgba(255, 206, 36, 0.6)'
+            ];
+
+            var data = {
+                labels: topRegisteredCustomers.map(function (item) { return item.customerName; }),
+                datasets: [{
+                    label: 'Total Spending',
+                    data: topRegisteredCustomers.map(function (item) { return item.totalSpending; }),
+                    backgroundColor: topRegisteredCustomers.map(function (_, index) {
+                        return colors[index % colors.length];
+                    })
+                }]
+            };
+
+            var options = {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Top Spending Registered Customers'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            min: 0,
+                            callback: function (value) {
+                                if (value % 1 === 0) {
+                                    return value;
+                                } else {
+                                    return '';
+                                }
+                            }
+                        }
+                    }]
+                }
+            };
+
+            new Chart(topRegisteredCustomersCtx, {
+                type: 'bar',
+                data: data,
+                options: options
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var registeredVsGuestSpendingCtx = document.getElementById('registeredVsGuestSpendingChart').getContext('2d');
+            var registeredVsGuestSpending = @Html.Raw(Json.Serialize(Model.RegisteredVsGuestSpending));
+
+            var data = {
+                labels: registeredVsGuestSpending.map(function (item) { return item.category; }),
+                datasets: [{
+                    data: registeredVsGuestSpending.map(function (item) { return item.totalSpending; }),
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 99, 132, 0.6)'
+                    ]
+                }]
+            };
+
+            var options = {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Registered vs. Guest Customers Spending'
+                },
+                plugins: {
+                    datalabels: {
+                        formatter: function (value, context) {
+                            var dataset = context.dataset;
+                            var total = dataset.data.reduce(function (previousValue, currentValue) {
+                                return previousValue + currentValue;
+                            });
+                            var percentage = Math.floor((value / total) * 100 + 0.5);
+                            return percentage + '%';
+                        },
+                        color: 'white',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            };
+
+            new Chart(registeredVsGuestSpendingCtx, {
+                type: 'pie',
+                data: data,
+                options: options,
+                plugins: [ChartDataLabels]
+            });
+        });
+    </script>
 }
