@@ -190,35 +190,55 @@ namespace sobee_core.Controllers {
 
         // Action method for the User Manager page
         public IActionResult UserManager() {
-            var users = _context.AspNetUsers.ToList();
-            var userViewModels = users.Select(u => new UserViewModel {
-                Id = u.Id,
-                Email = u.Email,
-                FirstName = u.StrFirstName,
-                LastName = u.StrLastName,
-                IsAdmin = _identityContext.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == _identityContext.Roles.FirstOrDefault(r => r.Name == "Admin").Id)
-            }).ToList();
-
+            var userViewModels = GetUserViewModels();
             return View(userViewModels);
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult CreateUser(UserViewModel userViewModel) {
-        //    // Code to create a new user
-        //    // ...
+        public IActionResult GetUsers() {
+            var userViewModels = GetUserViewModels();
+            return PartialView("_UserManagerList", userViewModels);
+        }
 
-        //    return Json(new { success = true, users = updatedUserViewModels });
-        //}
+        private List<UserViewModel> GetUserViewModels() {
+            var users = _context.AspNetUsers.ToList();
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult EditUser(UserViewModel userViewModel) {
-        //    // Code to update an existing user
-        //    // ...
+            var userViewModels = users.Select(u => new UserViewModel {
+                Id = u.Id,
+                Email = u.Email,
+                PhoneNumber = u.PhoneNumber,
+                FirstName = u.StrFirstName,
+                LastName = u.StrLastName,
+                BillingAddress = u.StrBillingAddress,
+                ShippingAddress = u.StrShippingAddress,
+                IsAdmin = _identityContext.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == _identityContext.Roles.FirstOrDefault(r => r.Name == "Admin").Id)
+            }).ToList();
 
-        //    return Json(new { success = true, users = updatedUserViewModels });
-        //}
+            return userViewModels;
+        }
+
+        [HttpPost]
+        public IActionResult EditUser(UserViewModel model) {
+            if (ModelState.IsValid) {
+                var user = _context.AspNetUsers.FirstOrDefault(u => u.Id == model.Id);
+
+                if (user != null) {
+                    user.Email = model.Email;
+                    user.PhoneNumber = model.PhoneNumber;
+                    user.StrFirstName = model.FirstName;
+                    user.StrLastName = model.LastName;
+                    user.StrBillingAddress = model.BillingAddress;
+                    user.StrShippingAddress = model.ShippingAddress;
+
+                    _context.SaveChanges();
+
+                    return Json(new { success = true });
+                }
+            }
+
+            return Json(new { success = false });
+        }
+
+
 
         [HttpPost]
         public IActionResult DeleteUser(string Id) {
@@ -227,34 +247,14 @@ namespace sobee_core.Controllers {
 
             if (user != null) {
                 try {
-                    // Remove the user from AspNetUserRoles
-                    var userRoles = _context.AspNetRoles.Where(ur => ur.Id == Id);
-                    _context.AspNetRoles.RemoveRange(userRoles);
+                    // Delete all records from TFavorites associated with the user ID
+                    var userFavorites = _context.Tfavorites.Where(f => f.UserId == Id);
+                    _context.Tfavorites.RemoveRange(userFavorites);
 
-                    // Delete related data
-                    _context.TReviewReplies.RemoveRange(user.TReviewReplies);
-                    _context.Tfavorites.RemoveRange(user.Tfavorites);
-
-                    var userOrders = _context.Torders.Where(o => o.UserId == Id);
-                    var shoppingCartIds = userOrders
-                        .Join(_context.TpromoCodeUsageHistories, o => o.IntOrderId, h => h.IntShoppingCartId, (o, h) => h.IntShoppingCartId)
-                        .ToList();
-
-                    _context.TpromoCodeUsageHistories.RemoveRange(_context.TpromoCodeUsageHistories.Where(h => shoppingCartIds.Contains(h.IntShoppingCartId)));
-                    _context.TorderItems.RemoveRange(userOrders.SelectMany(o => o.TorderItems));
-                    _context.Torders.RemoveRange(userOrders);
-
-                    var userShoppingCarts = _context.TshoppingCarts.Where(c => c.UserId == Id);
-                    _context.TcartItems.RemoveRange(userShoppingCarts.SelectMany(c => c.TcartItems));
-                    _context.TshoppingCarts.RemoveRange(userShoppingCarts);
-
-                    _context.Treviews.RemoveRange(user.Treviews);
-                    _context.AspNetUserClaims.RemoveRange(user.AspNetUserClaims);
-                    _context.AspNetUserLogins.RemoveRange(user.AspNetUserLogins);
-                    _context.AspNetUserTokens.RemoveRange(user.AspNetUserTokens);
 
                     // Delete the user from AspNetUsers
                     _context.AspNetUsers.Remove(user);
+
                     _context.SaveChanges();
 
                     return Json(new { success = true });

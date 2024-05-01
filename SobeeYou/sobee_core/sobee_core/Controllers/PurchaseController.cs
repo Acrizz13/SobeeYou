@@ -142,9 +142,9 @@ namespace sobee_core.Controllers {
         // loads partial view of review list 
         [HttpGet]
         public IActionResult GetReviews(int productId) {
-            // Retrieve the reviews for the current product
             var reviews = _context.Treviews
                 .Where(r => r.IntProductId == productId)
+                .OrderByDescending(r => r.DtmReviewDate)
                 .Select(r => new ReviewDTO {
                     ReviewId = r.IntReviewId,
                     ReviewText = r.StrReviewText,
@@ -157,7 +157,6 @@ namespace sobee_core.Controllers {
 
             return PartialView("_Reviews", reviews);
         }
-
 
         [HttpPost]
         [Authorize]
@@ -219,16 +218,7 @@ namespace sobee_core.Controllers {
             // Get the current user's ID
             var userId = _userManager.GetUserId(User);
 
-            // Check if the user has already rated this product
-            var existingReview = _context.Treviews.FirstOrDefault(r => r.IntProductId == productId && r.UserId == userId);
 
-            if (existingReview != null) {
-                // Update the existing review
-                existingReview.IntRating = rating;
-                existingReview.StrReviewText = reviewText;
-                _context.SaveChanges();
-            }
-            else {
                 // Create a new review
                 var review = new Treview {
                     IntProductId = productId,
@@ -240,7 +230,7 @@ namespace sobee_core.Controllers {
 
                 _context.Treviews.Add(review);
                 _context.SaveChanges();
-            }
+            
 
             return Json(new { success = true });
         }
