@@ -141,5 +141,47 @@ namespace sobee_core.Services.AnalyticsServices {
         }
 
 
+        public List<dynamic> GetTopRatedProducts(int? year, int? month, int? day) {
+            var topRatedProducts = _context.Treviews
+                .Where(r => (!year.HasValue || r.DtmReviewDate.Year == year.Value) &&
+                            (!month.HasValue || r.DtmReviewDate.Month == month.Value) &&
+                            (!day.HasValue || r.DtmReviewDate.Day == day.Value))
+                .GroupBy(r => r.IntProductId)
+                .Select(g => new {
+                    ProductId = g.Key,
+                    AverageRating = g.Average(r => r.IntRating)
+                })
+                .OrderByDescending(p => p.AverageRating)
+                .Take(10)
+                .Join(_context.Tproducts, p => p.ProductId, pr => pr.IntProductId, (p, pr) => new {
+                    ProductName = pr.StrName,
+                    p.AverageRating
+                })
+                .ToList();
+
+            return topRatedProducts.Cast<dynamic>().ToList();
+        }
+
+        public List<dynamic> GetMostReviewedProducts(int? year, int? month, int? day) {
+            var mostReviewedProducts = _context.Treviews
+                .Where(r => (!year.HasValue || r.DtmReviewDate.Year == year.Value) &&
+                            (!month.HasValue || r.DtmReviewDate.Month == month.Value) &&
+                            (!day.HasValue || r.DtmReviewDate.Day == day.Value))
+                .GroupBy(r => r.IntProductId)
+                .Select(g => new {
+                    ProductId = g.Key,
+                    ReviewCount = g.Count()
+                })
+                .OrderByDescending(p => p.ReviewCount)
+                .Take(10)
+                .Join(_context.Tproducts, p => p.ProductId, pr => pr.IntProductId, (p, pr) => new {
+                    ProductName = pr.StrName,
+                    p.ReviewCount
+                })
+                .ToList();
+
+            return mostReviewedProducts.Cast<dynamic>().ToList();
+        }
+
     }
 }

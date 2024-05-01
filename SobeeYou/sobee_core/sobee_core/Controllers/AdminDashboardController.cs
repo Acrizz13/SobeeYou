@@ -97,8 +97,19 @@ namespace sobee_core.Controllers {
         }
 
         // Action method for the Product Reviews page
-        public IActionResult ProductReviews() {
-            return View();
+        public IActionResult ProductReviews(int? year, int? month, int? day) {
+            var topRatedProducts = _salesAnalyticsContext.GetTopRatedProducts(year, month, day);
+            var mostReviewedProducts = _salesAnalyticsContext.GetMostReviewedProducts(year, month, day);
+
+            var viewModel = new ReviewsViewModel {
+                TopRatedProducts = topRatedProducts,
+                MostReviewedProducts = mostReviewedProducts,
+                SelectedYear = year,
+                SelectedMonth = month,
+                SelectedDay = day
+            };
+
+            return View(viewModel);
         }
 
         // Action method for the Promotions page
