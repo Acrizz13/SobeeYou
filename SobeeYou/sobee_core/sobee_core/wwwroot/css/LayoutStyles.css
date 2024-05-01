@@ -17,27 +17,46 @@
 
 body {
 	margin-top: 56px;
-	background-color: white;
-}
-/* Custom Navigation Bar Styles */
-.navbar-custom {
-	background-color: #18264D; /* Orange background */
-	color: #EE642D; /* Pink text */
+	background-color: #F2E4CD;
 }
 
-	.navbar-custom .navbar-brand,
+/* Custom Navigation Bar Styles */
+.navbar-custom {
+	background-color: #18264D; /* Dark blue background */
+	color: #EE642D; /* Orange text */
+	margin: 0px;
+}
+
 	.navbar-custom .nav-link {
-		color: #EE642D; /* Pink text for links */
+		color: #EE642D; /* Orange text for links */
 	}
 
 		.navbar-custom .nav-link:hover {
-			color: #ffffff; /* Lighter shade or different color on hover */
+			color: #ffffff; /* White color on hover */
 		}
+
+.navbar-logo-center {
+	position: absolute;
+	left: 48%; /* Move to 50% from the left of the nearest positioned ancestor */
+	transform: translateX(-50%); /* Shift it back by 50% of its own width */
+	top: 50%;
+	transform: translateY(-50%); /* Aligns vertically center */
+}
+
+/* Ensure no overlap of text and logo on smaller screens */
+@media (max-width: 576px) {
+	.navbar-nav {
+		margin-top: 75px; /* Adjust based on your logo size */
+	}
+}
+
+.navbar-nav.ms-auto {
+	margin-left: auto;
+}
 
 .auth_links {
 	color: white;
 }
-
 .form-inline button, li {
 	margin: 0px;
 	padding: 0px;

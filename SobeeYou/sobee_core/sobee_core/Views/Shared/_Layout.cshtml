@@ -22,25 +22,15 @@
 <body>
 	<div class="wrapper">
 		<header>
-			<nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm navbar-custom" style="padding-top: 0px; padding-bottom: 0px;">
+			<nav class="navbar fixed-top navbar-expand-sm navbar-custom">
 				<div class="container">
-					<!--LOGO -->
-					<!-- Shopping cart -->
-					<span class="navbar-text position-absolute top-0 end-0 cartIconContainer" id="cartIcon">
-						<a href="#" class="nav-link text-light">
-							<i>@Html.ActionLink("Cart", "Index", "ShoppingCart", new { area = "" }, new { @class = "nav-link" })</i>
-							<!-- If you have dynamic content to display the number of items in the cart, you can include it here -->
-							<span id="cartItemCount">0</span>
-						</a>
-					</span>
-
-					<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-							aria-expanded="false" aria-label="Toggle navigation">
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 					</button>
-
-					<div class="collapse navbar-collapse">
-						<ul class="navbar-nav ">
+					<div class="collapse navbar-collapse" id="navbarContent">
+						<!-- Navigation links left -->
+						<ul class="navbar-nav mb-2 mb-lg-0">
+							<li class="nav-item"><a href="@Url.Action("Index", "Home")" class="nav-link">Home</a></li>
 							<li>@Html.ActionLink("Story", "Index", "About", new { area = "" }, new { @class = "nav-link" })</li>
 							<li>@Html.ActionLink("Shop", "Index", "Purchase", new { area = "" }, new { @class = "nav-link" })</li>
 							<li>@Html.ActionLink("FAQ", "FAQ", "About", new { area = "" }, new { @class = "nav-link" })</li>
@@ -48,15 +38,21 @@
 							<li>@Html.ActionLink("Find Us", "FindUs", "About", new { area = "" }, new { @class = "nav-link" })</li>
 						</ul>
 
-						<!-- Center the logo -->
-						<div class="mx-auto">
-							<a href="#">
-								<img src="@Url.Content("~/Images/logo.png")" alt="Sobeeyou Logo" class="img-fluid" style="width: 72px; height: 50px;">
-							</a>
-						</div>
+						<!-- Center logo -->
+						<a href="@Url.Action("Index", "Home")" class="navbar-brand mx-auto navbar-logo-center">
+							<img src="@Url.Content("~/Images/logo.png")" alt="Sobeeyou Logo" style="width: 72px; height: 50px;">
+						</a>
 
-						<!-- Identity UI Page Links for Login/Register/Admin Dashboard -->
-						<partial name="_LoginPartial" class="auth_links" />
+						<!-- Right-side items (e.g., shopping cart, login links) -->
+						<ul class="navbar-nav ms-auto">
+			
+							<partial name="_LoginPartial" class="auth_links" />
+						</ul>
+		
+							<a href="@Url.Action("Index", "ShoppingCart")" class="nav-link">
+								<i class="fas fa-shopping-cart"></i> (<span id="cartItemCount">0</span>)
+							</a>
+
 					</div>
 				</div>
 			</nav>
