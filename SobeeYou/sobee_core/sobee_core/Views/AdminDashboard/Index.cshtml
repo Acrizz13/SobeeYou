@@ -1,247 +1,218 @@
-﻿@model sobee_core.Models.AdminDashboardViewModel
+﻿
+
 
 @{
-    ViewBag.Title = "Admin Dashboard";
+    Layout = "~/Views/AdminDashboard/Shared/_Layout.cshtml";
+    ViewBag.Title = "Home Page";
 }
 
-<head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300..700&family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-
-
-
-</head>
-
-<h2>AdminDashboard</h2>
-
-<!-- Rest of the view code -->
-<!-- Row for Customer and Order Analysis -->
-<div class="row">
-    <!-- Customer Analysis Card -->
-    <div class="col-md-6">
+<div class="container-fluid">
+    
+        <!-- /.row-->
         <div class="card">
-            <div class="card-header">Customer Analysis</div>
             <div class="card-body">
-                <!-- Customer analysis information -->
-                <p>Total Customers: @Model.TotalCustomers</p>
-                <p>New Customers (Last 30 Days): @Model.NewCustomers</p>
-                <p>Active Customers: @Model.ActiveCustomers</p>
-
-                <!-- Add the "Send Discount Email" button -->
-                <button id="sendDiscountEmailBtn" class="btn btn-primary">Send Discount Email</button>
-
-
+                <div class="row">
+                    <div class="col-sm-5">
+                        <h4 class="card-title mb-0">Traffic</h4>
+                        <div class="small text-muted">November 2017</div>
+                    </div>
+                    <!-- /.col-->
+                    <div class="col-sm-7 d-none d-md-block">
+                        <button class="btn btn-primary float-right" type="button">
+                            <i class="icon-cloud-download"></i>
+                        </button>
+                        <div class="btn-group btn-group-toggle float-right mr-3" data-toggle="buttons">
+                            <label class="btn btn-outline-secondary">
+                                <input id="option1" type="radio" name="options" autocomplete="off"> Day
+                            </label>
+                            <label class="btn btn-outline-secondary active">
+                                <input id="option2" type="radio" name="options" autocomplete="off" checked=""> Month
+                            </label>
+                            <label class="btn btn-outline-secondary">
+                                <input id="option3" type="radio" name="options" autocomplete="off"> Year
+                            </label>
+                        </div>
+                    </div>
+                    <!-- /.col-->
+                </div>
+                <!-- /.row-->
+                <div class="chart-wrapper" style="height:300px;margin-top:40px;">
+                    <canvas class="chart" id="main-chart" height="300"></canvas>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row text-center">
+                    <div class="col-sm-12 col-md mb-sm-2 mb-0">
+                        <div class="text-muted">Visits</div>
+                        <strong>29.703 Users (40%)</strong>
+                        <div class="progress progress-xs mt-2">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md mb-sm-2 mb-0">
+                        <div class="text-muted">Unique</div>
+                        <strong>24.093 Users (20%)</strong>
+                        <div class="progress progress-xs mt-2">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md mb-sm-2 mb-0">
+                        <div class="text-muted">Pageviews</div>
+                        <strong>78.706 Views (60%)</strong>
+                        <div class="progress progress-xs mt-2">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md mb-sm-2 mb-0">
+                        <div class="text-muted">New Users</div>
+                        <strong>22.123 Users (80%)</strong>
+                        <div class="progress progress-xs mt-2">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md mb-sm-2 mb-0">
+                        <div class="text-muted">Bounce Rate</div>
+                        <strong>40.15%</strong>
+                        <div class="progress progress-xs mt-2">
+                            <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <!-- Order Analysis Card -->
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">Order Analysis</div>
-            <div class="card-body">
-                <!-- Order analysis information -->
-                <p>Total Orders: @Model.TotalOrders</p>
-                <p>Orders Pending Fulfillment: @Model.PendingOrders</p>
-                <p>Revenue (Last 30 Days): @Model.RecentRevenue</p>
+        <!-- /.card-->
+        <div class="row">
+            <div class="col-sm-6 col-lg-3">
+                <div class="brand-card">
+                    <div class="brand-card-header bg-facebook">
+                        <i class="fa fa-facebook"></i>
+                        <div class="chart-wrapper">
+                            <canvas id="social-box-chart-1" height="90"></canvas>
+                        </div>
+                    </div>
+                    <div class="brand-card-body">
+                        <div>
+                            <div class="text-value">89k</div>
+                            <div class="text-uppercase text-muted small">friends</div>
+                        </div>
+                        <div>
+                            <div class="text-value">459</div>
+                            <div class="text-uppercase text-muted small">feeds</div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <!-- /.col-->
+            <div class="col-sm-6 col-lg-3">
+                <div class="brand-card">
+                    <div class="brand-card-header bg-twitter">
+                        <i class="fa fa-twitter"></i>
+                        <div class="chart-wrapper">
+                            <canvas id="social-box-chart-2" height="90"></canvas>
+                        </div>
+                    </div>
+                    <div class="brand-card-body">
+                        <div>
+                            <div class="text-value">973k</div>
+                            <div class="text-uppercase text-muted small">followers</div>
+                        </div>
+                        <div>
+                            <div class="text-value">1.792</div>
+                            <div class="text-uppercase text-muted small">tweets</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col-->
+            <div class="col-sm-6 col-lg-3">
+                <div class="brand-card">
+                    <div class="brand-card-header bg-linkedin">
+                        <i class="fa fa-linkedin"></i>
+                        <div class="chart-wrapper">
+                            <canvas id="social-box-chart-3" height="90"></canvas>
+                        </div>
+                    </div>
+                    <div class="brand-card-body">
+                        <div>
+                            <div class="text-value">500+</div>
+                            <div class="text-uppercase text-muted small">contacts</div>
+                        </div>
+                        <div>
+                            <div class="text-value">292</div>
+                            <div class="text-uppercase text-muted small">feeds</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col-->
+            <div class="col-sm-6 col-lg-3">
+                <div class="brand-card">
+                    <div class="brand-card-header bg-instagram">
+                        <i class="fa fa-instagram"></i>
+                        <div class="chart-wrapper">
+                            <canvas id="social-box-chart-4" height="90"></canvas>
+                        </div>
+                    </div>
+                    <div class="brand-card-body">
+                        <div>
+                            <div class="text-value">894</div>
+                            <div class="text-uppercase text-muted small">followers</div>
+                        </div>
+                        <div>
+                            <div class="text-value">92</div>
+                            <div class="text-uppercase text-muted small">Likes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col-->
+
+        <div id="inactiveUsersContainer">
         </div>
-    </div>
+
+        </div>
 
 </div>
 
-<!-- Row for Product and User Analysis -->
-<div class="row mt-4">
-
-    <!-- Product Analysis Card -->
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">Product Analysis</div>
-            <div class="card-body">
-                <!-- Product analysis information -->
-                <p>Total Products: @Model.TotalProducts</p>
-                <p>Low Inventory Products: @Model.LowInventoryProducts</p>
-                <p>Average Product Rating: @Model.AvgProductRating</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- User Analysis Card -->
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">User Analysis</div>
-            <div class="card-body">
-                <!-- User analysis information -->
-                <p>Total Users: @Model.TotalUsers</p>
-                <p>Admin Users: @Model.AdminUsers</p>
-                <p>Customer Support Requests (Last 30 Days): @Model.RecentSupportRequests</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row mt-4">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">Product Sales</div>
-            <div class="card-body">
-                <canvas id="productSalesChart"></canvas>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">Website Traffic</div>
-            <div class="card-body">
-                <canvas id="websiteTrafficChart"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-@* <div class="row mt-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">Store Traffic Heat Map</div>
-            <div class="card-body">
-                <div id="map" style="height: 400px;"></div>
-            </div>
-        </div>
-    </div>
-</div>
- *@
-
-
-@section scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-@*     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbRq_3QzdaHjD4SzYSvhNY382iXAQuUP0&libraries=visualization"></script> *@
+@section Scripts {
+    <script src="~/lib/chart.js/dist/Chart.min.js"></script>
+    <script src="~/lib/coreui/js/custom-tooltips.min.js"></script>
+    <script src="~/lib/coreui/js/main.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Product Sales Chart
-            var ctx = document.getElementById('productSalesChart').getContext('2d');
-            var productSales = @Json.Serialize(Model.ProductSales);
-            var data = {
-                labels: productSales.map(function (item) { return item.productName; }),
-                datasets: [{
-                    data: productSales.map(function (item) { return item.totalSales; }),
-                    backgroundColor: [
-                        '#FF6384',
-                        '#36A2EB',
-                        '#FFCE56',
-                        '#4BC0C0',
-                        '#9966FF',
-                        '#FF9F40'
-                    ]
-                }]
-            };
-            var options = {
-                responsive: true,
-                title: {
-                    display: true,
-                    text: 'Product Sales'
-                },
-                plugins: {
-                    datalabels: {
-                        formatter: function (value, context) {
-                            var dataset = context.dataset;
-                            var total = dataset.data.reduce(function (previousValue, currentValue) {
-                                return previousValue + currentValue;
-                            });
-                            var percentage = Math.floor((value / total) * 100 + 0.5);
-                            return percentage + '%';
-                        },
-                        color: 'white',
-                        font: {
-                            weight: 'bold'
-                        }
+        $(document).ready(function () {
+            loadInactiveUsers();
+
+            $(document).on('click', '.send-discount-email', function () {
+                var userId = $(this).data('user-id');
+                $.ajax({
+                    url: '@Url.Action("SendDiscountEmail", "AdminDashboard")',
+                    type: 'GET',
+                    data: { userId: userId },
+                    success: function () {
+                        // Handle success, e.g., show a success message
+                        alert('Discount email sent successfully!');
+                    },
+                    error: function () {
+                        // Handle error, e.g., show an error message
+                        alert('An error occurred while sending the discount email.');
                     }
-                }
-            };
-            new Chart(ctx, {
-                type: 'pie',
-                data: data,
-                options: options,
-                plugins: [ChartDataLabels]
+                });
             });
-
-            // Website Traffic Chart
-            var ctx2 = document.getElementById('websiteTrafficChart').getContext('2d');
-            var websiteTraffic = @Json.Serialize(Model.WebsiteTraffic);
-            var data2 = {
-                labels: websiteTraffic.map(function (item) { return item.month; }),
-                datasets: [{
-                    label: 'Website Traffic',
-                    data: websiteTraffic.map(function (item) { return item.visitors; }),
-                    backgroundColor: [
-                        '#FF6384',
-                        '#36A2EB',
-                        '#FFCE56',
-                        '#4BC0C0',
-                        '#9966FF',
-                        '#FF9F40',
-                        '#FF6384',
-                        '#36A2EB',
-                        '#FFCE56',
-                        '#4BC0C0',
-                        '#9966FF',
-                        '#FF9F40'
-                    ]
-                }]
-            };
-            var options2 = {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1000
-                        }
-                    }
-                },
-                plugins: {
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'top',
-                        color: 'black',
-                        font: {
-                            weight: 'bold'
-                        }
-                    }
-                }
-            };
-            new Chart(ctx2, {
-                type: 'bar',
-                data: data2,
-                options: options2,
-                plugins: [ChartDataLabels]
-            });
-
-            // // Google Maps Heat Map Initialization
-            // function initMap() {
-            //     var map = new google.maps.Map(document.getElementById('map'), {
-            //         zoom: 7,
-            //         center: { lat: 40.4173, lng: -82.9071 } Centered on Ohio
-            //     });
-
-            //     var heatMapData = [
-            //         { location: new google.maps.LatLng(39.9612, -82.9988), weight: 5 }, Kroger, Columbus
-            //         { location: new google.maps.LatLng(39.1031, -84.5120), weight: 3 }, Walmart, Cincinnati
-            //         { location: new google.maps.LatLng(41.4993, -81.6944), weight: 4 }, Target, Cleveland
-            //         { location: new google.maps.LatLng(41.0814, -81.5190), weight: 2 }, Whole Foods, Akron
-            //         { location: new google.maps.LatLng(39.7589, -84.1916), weight: 6 }  Costco, Dayton
-            //     ];
-
-            //     var heatmap = new google.maps.visualization.HeatmapLayer({
-            //         data: heatMapData,
-            //         map: map
-            //     });
-            // }
-
-            // Execute the map initialization
-            // initMap();
         });
+
+        function loadInactiveUsers() {
+            $.ajax({
+                url: '@Url.Action("InactiveUsers", "AdminDashboard")',
+                type: 'GET',
+                success: function (result) {
+                    $('#inactiveUsersContainer').html(result);
+                },
+                error: function () {
+                    // Handle error, e.g., show an error message
+                    alert('An error occurred while loading inactive users.');
+                }
+            });
+        }
     </script>
 }

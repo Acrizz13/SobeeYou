@@ -1,0 +1,273 @@
+﻿
+@model sobee_core.Models.AnalyticsModels.SalesViewModel
+
+
+@{
+    Layout = "~/Views/AdminDashboard/Shared/_Layout.cshtml";
+    ViewBag.Title = "Product Catalog";
+}
+
+
+<h2>Sales Analytics</h2>
+
+
+<form method="get" action="@Url.Action("Sales")">
+    <div class="form-group">
+        <label for="year">Year:</label>
+        <select name="year" id="year" class="form-control">
+            @for (int year = DateTime.Now.Year; year >= 2000; year--) {
+                <option value="@year" selected="@(Model.SelectedYear == year)">@year</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="month">Month:</label>
+        <select name="month" id="month" class="form-control">
+            <option value="">All</option>
+            @for (int month = 1; month <= 12; month++) {
+                <option value="@month" selected="@(Model.SelectedMonth == month)">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month)</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="day">Day:</label>
+        <select name="day" id="day" class="form-control">
+            <option value="">All</option>
+            @for (int day = 1; day <= 31; day++) {
+                <option value="@day" selected="@(Model.SelectedDay == day)">@day</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Top Selling Products</h4>
+        <canvas id="topSellingProductsChart"></canvas>
+    </div>
+    <div class="col-md-6">
+        <h4>Sales Trends Over Time</h4>
+        <canvas id="salesTrendsChart"></canvas>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Product Sales</h4>
+        <canvas id="productSalesChart"></canvas>
+    </div>
+    <div class="col-md-6">
+        <h4>Payment Method Breakdown</h4>
+        <canvas id="paymentMethodBreakdownChart"></canvas>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Top Selling Products Chart
+            var topSellingProductsCtx = document.getElementById('topSellingProductsChart').getContext('2d');
+            var topSellingProducts = @Json.Serialize(Model.TopSellingProducts);
+            var data = {
+                labels: topSellingProducts.map(function (item) { return item.productName; }),
+                datasets: [{
+                    label: 'Total Quantity Sold',
+                    data: topSellingProducts.map(function (item) { return item.totalQuantity; }),
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                }]
+            };
+            var options = {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Top Selling Products'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            };
+            new Chart(topSellingProductsCtx, {
+                type: 'bar',
+                data: data,
+                options: options
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sales Trends Chart
+            var salesTrendsCtx = document.getElementById('salesTrendsChart').getContext('2d');
+            var salesTrendsData = @Html.Raw(Json.Serialize(Model.SalesTrends));
+            var isMonthSelected = @Html.Raw(Json.Serialize(Model.IsMonthSelected));
+
+            var salesTrendsChart = new Chart(salesTrendsCtx, {
+                type: 'line',
+                data: {
+                    labels: salesTrendsData.map(function (item) {
+                        var date = new Date(item.date);
+                        if (isMonthSelected) {
+                            return date.toLocaleString('default', { day: 'numeric' });
+                        } else {
+                            return date.toLocaleString('default', { month: 'short', year: 'numeric' });
+                        }
+                    }),
+                    datasets: [{
+                        label: 'Total $ In Sales',
+                        data: salesTrendsData.map(function (item) { return item.totalSales; }),
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Sales Trends Over Time'
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Month'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Total $ In Sales'
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                min: 0, // Set the minimum value of the y-axis to zero
+                                callback: function (value) {
+                                    if (value % 1 === 0) { // Check if the value is an integer
+                                        return value; // If it is, return the value as is
+                                    } else {
+                                        return ''; // If it's not an integer, return an empty string to hide the tick
+                                    }
+                                }
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Product Sales Chart
+            var ctx = document.getElementById('productSalesChart').getContext('2d');
+            var productSales = @Json.Serialize(Model.ProductSalesData);
+            var data = {
+                labels: productSales.map(function (item) { return item.productName; }),
+                datasets: [{
+                    data: productSales.map(function (item) { return item.totalSales; }),
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#FF9F40'
+                    ]
+                }]
+            };
+            var options = {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Product Sales'
+                },
+                plugins: {
+                    datalabels: {
+                        formatter: function (value, context) {
+                            var dataset = context.dataset;
+                            var total = dataset.data.reduce(function (previousValue, currentValue) {
+                                return previousValue + currentValue;
+                            });
+                            var percentage = Math.floor((value / total) * 100 + 0.5);
+                            return percentage + '%';
+                        },
+                        color: 'white',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            };
+            new Chart(ctx, {
+                type: 'pie',
+                data: data,
+                options: options,
+                plugins: [ChartDataLabels]
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Payment Method Breakdown Chart
+            var paymentMethodCtx = document.getElementById('paymentMethodBreakdownChart').getContext('2d');
+            var paymentMethodBreakdown = @Html.Raw(Json.Serialize(Model.PaymentMethodBreakdown));
+
+            var paymentMethodData = {
+                labels: paymentMethodBreakdown.map(function (item) { return item.paymentMethod; }),
+                datasets: [{
+                    data: paymentMethodBreakdown.map(function (item) { return item.totalOrders; }),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)'
+                        // Add more colors as needed
+                    ]
+                }]
+            };
+
+            var paymentMethodOptions = {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Payment Method Breakdown'
+                },
+                plugins: {
+                    datalabels: {
+                        formatter: function (value, context) {
+                            var dataset = context.dataset;
+                            var total = dataset.data.reduce(function (previousValue, currentValue) {
+                                return previousValue + currentValue;
+                            });
+                            var percentage = Math.floor((value / total) * 100 + 0.5);
+                            return percentage + '%';
+                        },
+                        color: 'white',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            };
+
+            new Chart(paymentMethodCtx, {
+                type: 'pie',
+                data: paymentMethodData,
+                options: paymentMethodOptions,
+                plugins: [ChartDataLabels]
+            });
+        });
+
+
+    </script>
+}

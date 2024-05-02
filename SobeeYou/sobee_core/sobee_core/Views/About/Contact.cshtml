@@ -2,12 +2,50 @@
     ViewBag.Title = "Contact Us";
 }
 <style>
+    <style >
+    .contact-form-container {
+        background-color: #18264D;
+        padding: 40px; /* Padding around the form */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+        margin-top: 20px; /* Some spacing from the top */
+        color: white;
+
+    }
+
     .form-control {
-        width: 400px;
-        margin: 0 auto;
+        width: 100%; /* Full width */
+        margin-bottom: 15px; /* Spacing between form elements */
+    }
+
+    label {
+        margin-bottom: 10px;
+        color: white; /* Dark grey color for text */
+        font-weight: bold; /* Make labels bold */
+    }
+
+    .btn-primary {
+        width: 100%; /* Full-width button */
+        padding: 10px; /* Padding for better touch area */
+        background-color: #0056b3; /* Primary color for the button */
+        border: none; /* Remove default border */
+    }
+
+        .btn-primary:hover {
+            background-color: #004094; /* Darker shade on hover */
+        }
+
+
+    .contact-body {
+        padding-top: 50px;
+        background-color: #18264D;
+        color: white;
+        height: 510px;
     }
 </style>
-<div class="container">
+
+</style>
+<div class="container contact-body">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h2 class="text-center">Contact Us</h2>

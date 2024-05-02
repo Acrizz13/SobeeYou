@@ -1,0 +1,49 @@
+﻿<div class="sidebar">
+    <nav class="sidebar-nav">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/index">
+            <li>@Html.ActionLink("Dashboard", "Index", "AdminDashboard", new { area = "" }, new { @class = "nav-link" })</li>
+                </a>
+            </li>
+ 
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Sales", "AdminDashboard")" ">
+                    <i class="nav-icon icon-pie-chart"></i> Sales
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Customers", "AdminDashboard")" ">
+                    <i class="nav-icon icon-pie-chart"></i> Customers
+                </a>
+            </li>
+ 
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Orders", "AdminDashboard")" ">
+                    <i class="nav-icon icon-pie-chart"></i> Orders
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("ProductReviews", "AdminDashboard")" ">
+                    <i class="nav-icon icon-pie-chart"></i> Product Reviews
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Promotions", "AdminDashboard")" ">
+                    <i class="nav-icon icon-pie-chart"></i> Promotions
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("UserManager", "AdminDashboard")" ">
+                    <i class="nav-icon icon-pie-chart"></i> User Manager
+                </a>
+            </li>
+         
+        </ul>
+    </nav>
+    <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+</div>

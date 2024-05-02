@@ -2,80 +2,305 @@
 using Microsoft.AspNetCore.Mvc;
 using sobee_core.Data;
 using sobee_core.Models.AzureModels;
-using sobee_core.Models;
 using System.Net.Mail;
 using System.Net;
 using sobee_core.Classes;
+using sobee_core.Models.AnalyticsModels;
+using sobee_core.Services.AnalyticsServices;
+using sobee_core.Models.ViewModels;
+using sobee_core.Models;
 
 namespace sobee_core.Controllers {
     [Authorize(Roles = "Admin")]
     public class AdminDashboardController : Controller {
         private readonly SobeecoredbContext _context;
         private readonly ApplicationDbContext _identityContext;
+        private readonly ISalesAnalyticsService _salesAnalyticsContext;
+        private readonly ICustomerAnalyticsService _customerAnalyticsContext;
 
-        public AdminDashboardController(SobeecoredbContext context, ApplicationDbContext identityContext) {
+        public AdminDashboardController(SobeecoredbContext context, ApplicationDbContext identityContext, ISalesAnalyticsService salesAnalyticsService, ICustomerAnalyticsService customerAnalyticsService) {
             _context = context;
             _identityContext = identityContext;
+            _salesAnalyticsContext = salesAnalyticsService;
+            _customerAnalyticsContext = customerAnalyticsService;
         }
 
         // Action method to display the admin dashboard
         public IActionResult Index() {
-            var adminDashBoard = GetAdminDashBoardInfo();
-            return View(adminDashBoard);
+            //   var adminDashBoard = GetAdminDashBoardInfo();
+            return View();
         }
 
-        // Private method to retrieve admin dashboard information
-        private AdminDashboardViewModel GetAdminDashBoardInfo() {
-            var websiteTraffic = new List<WebsiteTrafficData>
-            {
-        new WebsiteTrafficData { Month = "January", Visitors = 5000 },
-        new WebsiteTrafficData { Month = "February", Visitors = 6200 },
-        new WebsiteTrafficData { Month = "March", Visitors = 7500 },
-        new WebsiteTrafficData { Month = "April", Visitors = 8100 },
-        new WebsiteTrafficData { Month = "May", Visitors = 9300 },
-        new WebsiteTrafficData { Month = "June", Visitors = 10500 },
-        new WebsiteTrafficData { Month = "July", Visitors = 11200 },
-        new WebsiteTrafficData { Month = "August", Visitors = 10800 },
-        new WebsiteTrafficData { Month = "September", Visitors = 9800 },
-        new WebsiteTrafficData { Month = "October", Visitors = 8900 },
-        new WebsiteTrafficData { Month = "November", Visitors = 7800 },
-        new WebsiteTrafficData { Month = "December", Visitors = 9200 }
-    };
 
-            // Calculate the date 30 days ago
-            var thirtyDaysAgo = DateTime.Now.AddDays(-30);
+        public IActionResult Sales(int? year, int? month, int? day) {
+            // Set default value of year to 2024 if all parameters are empty
+            year ??= 2024;
 
-            // Get the user IDs of admin users
-            var adminUserIds = _identityContext.UserRoles
-                .Where(ur => ur.RoleId == _identityContext.Roles.FirstOrDefault(r => r.Name == "Admin").Id)
-                .Select(ur => ur.UserId)
-                .ToList();
+            var orders = _context.Torders.AsQueryable();
+            orders = _salesAnalyticsContext.FilterOrdersByDate(orders, year, month, day);
 
-            // Count the totals of all fields
-            var adminDashBoard = new AdminDashboardViewModel {
-                TotalCustomers = _identityContext.Users.Count(u => !adminUserIds.Contains(u.Id)),
-                // NewCustomers = _identityContext.Users.Count(u => u.CreatedDate >= thirtyDaysAgo && !adminUserIds.Contains(u.Id)),
-                // ActiveCustomers = _identityContext.Users.Count(u => u.LastLoginDate >= thirtyDaysAgo && !adminUserIds.Contains(u.Id)),
-                TotalUsers = _identityContext.Users.Count(u => adminUserIds.Contains(u.Id)),
-                TotalOrders = _context.Torders.Count(o => o.IntShippingStatusId == 1), // Assuming 1 represents "Pending"
-                RecentRevenue = (decimal)_context.Torders.Where(o => o.DtmOrderDate >= thirtyDaysAgo).Sum(o => o.DecTotalAmount),
-                TotalProducts = _context.Tproducts.Count(),
-                LowInventoryProducts = _context.Tproducts.Count(p => Convert.ToInt32(p.StrStockAmount) < 10), // Using SQL Cast function
-                AvgProductRating = _context.Treviews.Any() ? _context.Treviews.Average(r => (decimal)r.IntRating) : 0,
-                AdminUsers = adminUserIds.Count,
-                RecentSupportRequests = _context.TcustomerServiceTickets.Count(t => t.DtmTimeOfSubmission >= thirtyDaysAgo),
-                ProductSales = _context.TorderItems
-                    .GroupBy(oi => oi.IntProduct.StrName)
-                    .Select(g => new ProductSalesData {
-                        ProductName = g.Key,
-                        TotalSales = (decimal)g.Sum(oi => oi.IntQuantity * oi.MonPricePerUnit)
-                    })
-                    .ToList(),
-                WebsiteTraffic = websiteTraffic
+            var filteredOrders = orders.Where(o => o.DtmOrderDate.HasValue).ToList();
+
+            var salesTrends = _salesAnalyticsContext.GetSalesTrends(filteredOrders, year, month);
+            var topSellingProducts = _salesAnalyticsContext.GetTopSellingProducts(orders);
+            var paymentMethodBreakdown = _salesAnalyticsContext.GetPaymentMethodBreakdown(filteredOrders);
+            var productSalesData = _salesAnalyticsContext.GetProductSalesData(filteredOrders);
+
+            var viewModel = new SalesViewModel {
+                TopSellingProducts = topSellingProducts,
+                SalesTrends = salesTrends,
+                PaymentMethodBreakdown = paymentMethodBreakdown,
+                SelectedYear = year,
+                SelectedMonth = month,
+                IsMonthSelected = month.HasValue,
+                SelectedDay = day,
+                ProductSalesData = productSalesData
             };
 
-            return adminDashBoard;
+            return View(viewModel);
         }
+
+
+        // Action method for the Customers page
+        public IActionResult Customers(int? year, int? month) {
+            var orders = _context.Torders.AsQueryable();
+            orders = _salesAnalyticsContext.FilterOrdersByDate(orders, year, month, null);
+
+            var filteredOrders = orders.Where(o => o.DtmOrderDate.HasValue).ToList();
+
+            var topRegisteredCustomers = _customerAnalyticsContext.GetTopCustomers(filteredOrders, year, month);
+            var registeredVsGuestSpending = _customerAnalyticsContext.GetRegisteredVsGuestCustomerSpending(filteredOrders);
+
+            var viewModel = new CustomersViewModel {
+                TopRegisteredCustomers = topRegisteredCustomers,
+                RegisteredVsGuestSpending = registeredVsGuestSpending,
+                SelectedYear = year,
+                SelectedMonth = month
+            };
+
+            return View(viewModel);
+        }
+
+        // Action method for the Inventory Management page
+        public IActionResult InventoryManager() {
+            return View();
+        }
+
+        // Action method for the Orders page
+        public IActionResult Orders() {
+            return View();
+        }
+
+        // Action method for the Product Catalog page
+        public IActionResult ProductCatalog() {
+            return View();
+        }
+
+        // Action method for the Product Reviews page
+        public IActionResult ProductReviews(int? year, int? month, int? day) {
+            var topRatedProducts = _salesAnalyticsContext.GetTopRatedProducts(year, month, day);
+            var mostReviewedProducts = _salesAnalyticsContext.GetMostReviewedProducts(year, month, day);
+
+            var viewModel = new ReviewsViewModel {
+                TopRatedProducts = topRatedProducts,
+                MostReviewedProducts = mostReviewedProducts,
+                SelectedYear = year,
+                SelectedMonth = month,
+                SelectedDay = day
+            };
+
+            return View(viewModel);
+        }
+
+        // Action method for the Promotions page
+        public IActionResult Promotions() {
+            var promotions = _context.Tpromotions.ToList();
+            var promotionDTOs = promotions.Select(p => new PromotionDTO {
+                PromotionId = (int)p.IntPromotionId,
+                PromoCode = p.StrPromoCode,
+                StrDiscountPercentage = p.StrDiscountPercentage,
+                DecimalPercent = p.DecDiscountPercentage,
+                ExpirationDate = p.DtmExpirationDate
+            }).ToList();
+
+            var viewModel = new PromotionsViewModel {
+                Promotions = promotionDTOs
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditPromotion(Tpromotion promotion) {
+            if (ModelState.IsValid) {
+                _context.Tpromotions.Update(promotion);
+                _context.SaveChanges();
+
+                // Retrieve the updated list of promotions
+                var updatedPromotions = _context.Tpromotions.ToList();
+                var updatedPromotionDTOs = updatedPromotions.Select(p => new PromotionDTO {
+                    PromotionId = (int)p.IntPromotionId,
+                    PromoCode = p.StrPromoCode,
+                    StrDiscountPercentage = p.StrDiscountPercentage,
+                    DecimalPercent = p.DecDiscountPercentage,
+                    ExpirationDate = p.DtmExpirationDate
+                }).ToList();
+
+                return Json(new { success = true, promotions = updatedPromotionDTOs });
+            }
+
+            return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
+        }
+
+        [HttpPost]
+        public IActionResult DeletePromotion(int id) {
+            var promotion = _context.Tpromotions.FirstOrDefault(p => p.IntPromotionId == id);
+            if (promotion != null) {
+                _context.Tpromotions.Remove(promotion);
+                _context.SaveChanges();
+
+                // Retrieve the updated list of promotions
+                var updatedPromotions = _context.Tpromotions.ToList();
+                var updatedPromotionDTOs = updatedPromotions.Select(p => new PromotionDTO {
+                    PromotionId = (int)p.IntPromotionId,
+                    PromoCode = p.StrPromoCode,
+                    StrDiscountPercentage = p.StrDiscountPercentage,
+                    DecimalPercent = p.DecDiscountPercentage,
+                    ExpirationDate = p.DtmExpirationDate
+                }).ToList();
+
+                return Json(new { success = true, promotions = updatedPromotionDTOs });
+            }
+
+            return Json(new { success = false });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreatePromotion(Tpromotion promotion) {
+            if (ModelState.IsValid) {
+                _context.Tpromotions.Add(promotion);
+                _context.SaveChanges();
+
+                // Retrieve the updated list of promotions
+                var updatedPromotions = _context.Tpromotions.ToList();
+                var updatedPromotionDTOs = updatedPromotions.Select(p => new PromotionDTO {
+                    PromotionId = (int)p.IntPromotionId,
+                    PromoCode = p.StrPromoCode,
+                    StrDiscountPercentage = p.StrDiscountPercentage,
+                    DecimalPercent = p.DecDiscountPercentage,
+                    ExpirationDate = p.DtmExpirationDate
+                }).ToList();
+
+                return Json(new { success = true, promotions = updatedPromotionDTOs });
+            }
+
+            return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
+        }
+
+        // Action method for the User Manager page
+        public IActionResult UserManager() {
+            var userViewModels = GetUserViewModels();
+            return View(userViewModels);
+        }
+
+        public IActionResult GetUsers() {
+            var userViewModels = GetUserViewModels();
+            return PartialView("_UserManagerList", userViewModels);
+        }
+
+        private List<UserViewModel> GetUserViewModels() {
+            var users = _context.AspNetUsers.ToList();
+
+            var userViewModels = users.Select(u => new UserViewModel {
+                Id = u.Id,
+                Email = u.Email,
+                PhoneNumber = u.PhoneNumber,
+                FirstName = u.StrFirstName,
+                LastName = u.StrLastName,
+                BillingAddress = u.StrBillingAddress,
+                ShippingAddress = u.StrShippingAddress,
+                IsAdmin = _identityContext.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == _identityContext.Roles.FirstOrDefault(r => r.Name == "Admin").Id)
+            }).ToList();
+
+            return userViewModels;
+        }
+
+        [HttpPost]
+        public IActionResult EditUser(UserViewModel model) {
+            if (ModelState.IsValid) {
+                var user = _context.AspNetUsers.FirstOrDefault(u => u.Id == model.Id);
+
+                if (user != null) {
+                    user.Email = model.Email;
+                    user.PhoneNumber = model.PhoneNumber;
+                    user.StrFirstName = model.FirstName;
+                    user.StrLastName = model.LastName;
+                    user.StrBillingAddress = model.BillingAddress;
+                    user.StrShippingAddress = model.ShippingAddress;
+
+                    _context.SaveChanges();
+
+                    return Json(new { success = true });
+                }
+            }
+
+            return Json(new { success = false });
+        }
+
+
+
+        [HttpPost]
+        public IActionResult DeleteUser(string Id) {
+            // Find the user by Id
+            var user = _context.AspNetUsers.FirstOrDefault(u => u.Id == Id);
+
+            if (user != null) {
+                try {
+                    // Delete all records from TFavorites associated with the user ID
+                    var userFavorites = _context.Tfavorites.Where(f => f.UserId == Id);
+                    _context.Tfavorites.RemoveRange(userFavorites);
+
+
+                    // Delete the user from AspNetUsers
+                    _context.AspNetUsers.Remove(user);
+
+                    _context.SaveChanges();
+
+                    return Json(new { success = true });
+                }
+                catch (Exception ex) {
+                    // Handle any exceptions that occur during the deletion process
+                    return Json(new { success = false, error = ex.Message });
+                }
+            }
+
+            return Json(new { success = false, error = "User not found" });
+        }
+
+        // Action method for the Settings page
+        public IActionResult Settings() {
+            return View();
+        }
+
+
+        public IActionResult InactiveUsers() {
+            DateTime thirtyDaysAgo = DateTime.Now.AddDays(-30);
+            var inactiveUsers = _context.AspNetUsers
+                .Where(u => u.LastLoginDate < thirtyDaysAgo)
+                .Select(u => new InactiveUserViewModel {
+                    Id = u.Id,
+                    Email = u.Email,
+                    FirstName = u.StrFirstName,
+                    LastName = u.StrLastName,
+                    LastLoginDate = u.LastLoginDate
+                })
+                .ToList();
+
+            return PartialView("_InactiveUsers", inactiveUsers);
+        }
+
 
         [HttpGet]
         public void SendDiscountEmail() {
@@ -85,8 +310,8 @@ namespace sobee_core.Controllers {
                 .Where(u => u.LastLoginDate < thirtyDaysAgo)
                 .ToList();
 
-            string workEmail = "eyassu.million@gmail.com"; // replace with sobee email
-            string fromPassword = "nkum abbn kcyz cvxs"; // replace with sobee app password
+            string workEmail = "sobeeyoubusiness@gmail.com";
+            string fromPassword = "yplu kfwq wufa jpjp";
 
             using (var smtpClient = new SmtpClient("smtp.gmail.com", 587)) {
                 smtpClient.EnableSsl = true;

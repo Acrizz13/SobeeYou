@@ -23,7 +23,7 @@
                     <td>@favorite.Price.ToString("C")</td>
                     <td>@favorite.DateAdded.ToString("MM/dd/yyyy")</td>
                     <td>
-                        <a asp-controller="Purchase" asp-action="Details" asp-route-id="@favorite.ProductId" class="btn btn-primary">View Details</a>
+                        <a asp-controller="Purchase" asp-action="Details" asp-route-productID="@favorite.ProductId" id="favorites-button" class="btn btn-primary">View Details</a>
                     </td>
                 </tr>
             }

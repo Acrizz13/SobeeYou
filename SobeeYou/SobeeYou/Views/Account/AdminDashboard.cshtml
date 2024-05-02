@@ -117,13 +117,18 @@
             chart.update();
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+
+
+
+
+                document.addEventListener('DOMContentLoaded', function () {
             // Product Sales Chart
             var ctx = document.getElementById('productSalesChart').getContext('2d');
+            var productSales = @Json.Serialize(Model.ProductSales);
             var data = {
-                labels: totalSales.map(function (item) { return item.ProductName; }),
+                labels: productSales.map(function (item) { return item.productName; }),
                 datasets: [{
-                    data: totalSales.map(function (item) { return item.TotalSales; }),
+                    data: productSales.map(function (item) { return item.totalSales; }),
                     backgroundColor: [
                         '#FF6384',
                         '#36A2EB',
@@ -157,7 +162,7 @@
                     }
                 }
             };
-            chart = new Chart(ctx, {
+            new Chart(ctx, {
                 type: 'pie',
                 data: data,
                 options: options,

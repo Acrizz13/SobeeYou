@@ -5,6 +5,7 @@ using sobee_core.Data;
 using sobee_core.Models.AzureModels;
 using sobee_core.Models;
 using sobee_core.Services;
+using sobee_core.Services.AnalyticsServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,11 @@ builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 //Adds Orders Service
 builder.Services.AddScoped<IOrderService, OrderService>();
 
+//Adds Sales Analytics Service
+builder.Services.AddScoped<ISalesAnalyticsService, SalesAnalyticsService>();
+
+//Adds Customer Analytics Service
+builder.Services.AddScoped<ICustomerAnalyticsService, CustomerAnalyticsService>();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
         .AddRoles<IdentityRole>() // Add this line to enable admin role support
@@ -69,6 +75,7 @@ app.UseSession();
 
 // Seed the admin role so that admin roles can be used
 AdminRoleSeeder.SeedAdminRoleAsync(app.Services).Wait();
+
 
 app.MapControllerRoute(
     name: "default",

@@ -1,4 +1,6 @@
-﻿@model sobee_core.Models.ProductDetailsViewModel
+﻿@using sobee_core.Models.ViewModels
+
+@model ProductDetailsViewModel
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -11,7 +13,26 @@
     <link href="https://fonts.googleapis.com/css?family=Karla:400,700" rel="stylesheet">
 
     <link rel="stylesheet" href="~/css/ProductDetailsStyles.css" asp-append-version="true" /> <!-- Include the stylesheet for this page-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
+
+<style>
+    #addToFavoritesBtn, #submitReviewBtn {
+        
+        background-color: #18264D;
+    }
+
+    #add-to-cart-details {
+        background-color: #EE642D;
+    }
+
+    #submitReviewBtn {
+        margin-bottom: 25px;
+    }
+    .product-card {
+    text-align: center; 
+    }
+</style>
 
 <div class="container product-detail">
     <div class="product-images">
@@ -51,7 +72,7 @@
                     }
                 </select>
                 <div class="cart-button-container">
-                    <button type="submit" class="add-to-cart">
+                    <button type="submit" id="add-to-cart-details" class="add-to-cart">
                         <span>Add to Cart</span>
                         <span class="arrow">&#10132;</span>
                     </button>
@@ -62,9 +83,30 @@
         </form>
 
         @if (User.Identity.IsAuthenticated) {
-            <button id="addToFavoritesBtn" class="btn btn-primary" data-product-id="@Model.Product.intProductID">Add to Favorites</button>
+            <button id="addToFavoritesBtn"  class="btn btn-primary" data-product-id="@Model.Product.intProductID">Add to Favorites</button>
         }
 
+        <!--average review bars-->
+        <div class="product-reviews">
+            <h2>Ratings</h2>
+            <div class="rating-summary">
+                <div class="average-rating">@ViewBag.AverageRating</div>
+                <div class="total-reviews">(@ViewBag.TotalReviews reviews)</div>
+            </div>
+            <div class="rating-bars">
+                @foreach (var ratingCount in ViewBag.RatingCounts) {
+                    var ratingPercentage = ViewBag.TotalReviews > 0 ? (int)Math.Round((double)ratingCount.Count / ViewBag.TotalReviews * 100) : 0;
+                    <div class="rating-bar">
+                        <div class="stars">@ratingCount.Rating stars</div>
+                        <div class="bar">
+                            <div class="fill" style="width: @ratingPercentage%;"></div>
+                        </div>
+                        <div class="count">@ratingCount.Count</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 
     </div>
 
@@ -78,11 +120,11 @@
         <div class="product-cards">
             @foreach (var relatedProduct in Model.RelatedProducts) {
                 <div class="product-card">
-                    <a asp-controller="Purchase" asp-action="Details" asp-route-id="@relatedProduct.intProductID">
+                    <a asp-controller="Purchase" asp-action="Details" asp-route-productID="@relatedProduct.intProductID">
                         <img src="@Url.Content("~/Images/Products/" + relatedProduct.strName.Replace(" ", "") + ".jpg")" alt="@relatedProduct.strName" style="width:100%; height:auto;">
                         <h3>@relatedProduct.strName</h3>
                     </a>
-                    <p>@relatedProduct.strDescription</p>
+
                 </div>
             }
         </div>
@@ -117,8 +159,6 @@
 
     <!-- Add a container for dynamically loaded reviews -->
     <div id="reviewsContainer">
-
-
     </div>
 
     <!-- Edit Review Modal -->

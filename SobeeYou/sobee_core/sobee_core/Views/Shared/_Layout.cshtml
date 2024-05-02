@@ -22,39 +22,43 @@
 <body>
 	<div class="wrapper">
 		<header>
-			<nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark navbar-custom">
+			<nav class="navbar fixed-top navbar-expand-sm navbar-custom">
 				<div class="container">
-
-					<!-- bootstrap positioning styles in class-->
-					<span class="navbar-text position-absolute top-0 end-0 cartIconContainer" id="cartIcon">
-						<!-- Shopping cart icon or text -->
-						<a href="#" class="nav-link text-light">
-							<i>@Html.ActionLink("Cart", "Index", "ShoppingCart", new { area = "" }, new { @class = "nav-link" })</i>
-							<!-- If you have dynamic content to display the number of items in the cart, you can include it here -->
-							<span id="cartItemCount">0</span>
-						</a>
-					</span>
-
-					@Html.ActionLink("Sobee You", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-					<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-							aria-expanded="false" aria-label="Toggle navigation">
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 					</button>
-					<div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-						<ul class="navbar-nav flex-grow-1">
+					<div class="collapse navbar-collapse" id="navbarContent">
+						<!-- Navigation links left -->
+						<ul class="navbar-nav mb-2 mb-lg-0">
+							<li class="nav-item"><a href="@Url.Action("Index", "Home")" class="nav-link">Home</a></li>
 							<li>@Html.ActionLink("Story", "Index", "About", new { area = "" }, new { @class = "nav-link" })</li>
 							<li>@Html.ActionLink("Shop", "Index", "Purchase", new { area = "" }, new { @class = "nav-link" })</li>
 							<li>@Html.ActionLink("FAQ", "FAQ", "About", new { area = "" }, new { @class = "nav-link" })</li>
 							<li>@Html.ActionLink("Contact", "Contact", "About", new { area = "" }, new { @class = "nav-link" })</li>
 							<li>@Html.ActionLink("Find Us", "FindUs", "About", new { area = "" }, new { @class = "nav-link" })</li>
+						</ul>
 
-							<!-- Identity UI Page Links for Login/Register/Admin Dashboard -->
+						<!-- Center logo -->
+						<a href="@Url.Action("Index", "Home")" class="navbar-brand mx-auto navbar-logo-center">
+							<img src="@Url.Content("~/Images/logo.png")" alt="Sobeeyou Logo" style="width: 72px; height: 50px;">
+						</a>
+
+						<!-- Right-side items (e.g., shopping cart, login links) -->
+						<ul class="navbar-nav ms-auto">
+			
 							<partial name="_LoginPartial" class="auth_links" />
 						</ul>
+		
+							<a href="@Url.Action("Index", "ShoppingCart")" class="nav-link">
+								<i class="fas fa-shopping-cart"></i> (<span id="cartItemCount">0</span>)
+							</a>
+
 					</div>
 				</div>
 			</nav>
 		</header>
+
+
 
 		<!-- render sections for max width hero/background pictures-->
 		@RenderSection("HeroSection", required: false)
@@ -64,39 +68,44 @@
 		<div class="container body-content">
 			<main role="main" class="pb-3">
 				@RenderBody()
+				
 			</main>
 
 
 		</div>
 
 
-		<!-- Footer -->
-		<footer class="footer" id="footer-container">
-			<div class="footer-content">
-				<div class="footer-column">
-					<h4>GET HELP</h4>
-					<ul>
-						<li>@Html.ActionLink("FAQ", "FAQ", "About", new { area = "" }, new { @class = "footer-link" })</li>
-						<li>@Html.ActionLink("Contact", "Contact", "About", new { area = "" }, new { @class = "footer-link" })</li>
-						<li>@Html.ActionLink("Refund Policy", "RefundPolicy", "About", new { area = "" }, new { @class = "footer-link" })</li>
-						<li>@Html.ActionLink("Terms of Service", "TermsOfService", "About", new { area = "" }, new { @class = "footer-link" })</li>
-					</ul>
-				</div>
-				<div class="footer-bottom">
-					<div class="footer-text">
-						<p>&copy;2024 Sobee You, Inc.</p>
-					</div>
-					<div class="footer-links">
-						<a href="#">Privacy Policy</a>
-						<a href="#">Terms Of Use</a>
-					</div>
-				</div>
-		</footer>
+		
+		</div>
 	</div>
+
 
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
+
+<!-- Footer -->
+<footer class="footer" id="footer-container">
+	<div class="footer-content">
+		<div class="footer-column">
+			<h4>GET HELP</h4>
+			<ul>
+				<li>@Html.ActionLink("FAQ", "FAQ", "About", new { area = "" }, new { @class = "footer-link" })</li>
+				<li>@Html.ActionLink("Contact", "Contact", "About", new { area = "" }, new { @class = "footer-link" })</li>
+				<li>@Html.ActionLink("Refund Policy", "RefundPolicy", "About", new { area = "" }, new { @class = "footer-link" })</li>
+				<li>@Html.ActionLink("Terms of Service", "TermsOfService", "About", new { area = "" }, new { @class = "footer-link" })</li>
+			</ul>
+		</div>
+		<div class="footer-bottom">
+			<div class="footer-text">
+				<p>&copy;2024 Sobee You, Inc.</p>
+			</div>
+			<div class="footer-links">
+				<a href="#">Privacy Policy</a>
+				<a href="#">Terms Of Use</a>
+			</div>
+		</div>
+</footer>
 </html>

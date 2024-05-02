@@ -25,7 +25,7 @@
                     <td>@order.TotalAmount.ToString("C")</td>
                     <td>@order.OrderStatus</td>
                     <td>
-                        <a asp-page="OrderDetails" asp-route-id="@order.OrderID" class="btn btn-primary">View Details</a>
+                        <a asp-page="OrderDetails" asp-route-id="@order.OrderID" id="order-history-button" class="btn btn-primary">View Details</a>
                     </td>
                 </tr>
             }

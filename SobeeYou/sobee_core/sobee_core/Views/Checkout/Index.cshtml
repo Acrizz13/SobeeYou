@@ -18,6 +18,13 @@
 	@*<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">*@
 </head>
 
+<style>
+	#checkout-submit{
+		background-color: #18264D;
+	
+	}
+</style>
+
 
 <div class="row">
 	<div class="col-md-4 order-md-2 mb-4">
@@ -37,11 +44,11 @@
 					</li>
 				}
 				<li class="list-group-item d-flex justify-content-between bg-light">
-					<div class="text-success">
+					<div class="text-success" style="display: none;">
 						<h6 class="my-0">Promo code</h6>
-						<small>EXAMPLECODE</small>
+						<small id="text-success-code">EXAMPLECODE</small>
 					</div>
-					<span class="text-success">-$5</span>
+					<span class="text-success"></span>
 				</li>
 				<li class="list-group-item d-flex justify-content-between">
 					<span>Total (USD)</span>
@@ -208,7 +215,7 @@
 				</div>
 			</div>
 			<hr class="mb-4">
-			<button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+			<button id="checkout-submit" class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
 		}
 	</div>
 </div>

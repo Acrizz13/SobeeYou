@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using sobee_core.Models.AzureModels;
 using sobee_core.Models;
 using Microsoft.EntityFrameworkCore;
+using sobee_core.Models.ViewModels;
 
-namespace sobee_core.Areas.Identity.Pages.Account.Manage {
+namespace sobee_core.Areas.Identity.Pages.Account.Manage
+{
     public class FavoritesModel : PageModel {
         private readonly SobeecoredbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;

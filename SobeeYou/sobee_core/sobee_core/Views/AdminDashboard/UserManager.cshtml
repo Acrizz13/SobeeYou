@@ -1,0 +1,206 @@
+﻿@model IEnumerable<sobee_core.Models.AnalyticsModels.UserViewModel>
+
+@{
+    ViewData["Title"] = "User Manager";
+    Layout = "~/Views/AdminDashboard/Shared/_Layout.cshtml";
+    int rowNumber = 0;
+}
+
+<h2>User Manager</h2>
+
+
+<div id="userTable">
+
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                <button type="button" class="close" onclick="closeEditUserModal()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editUserForm">
+                <div class="modal-body">
+                    <input type="hidden" id="editUserId" name="Id" />
+                    <div class="form-group">
+                        <label for="editEmail">Email:</label>
+                        <input type="email" id="editEmail" name="Email" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editPhoneNumber">Phone Number:</label>
+                        <input type="text" id="editPhoneNumber" name="PhoneNumber" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editFirstName">First Name:</label>
+                        <input type="text" id="editFirstName" name="FirstName" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editLastName">Last Name:</label>
+                        <input type="text" id="editLastName" name="LastName" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editBillingAddress">Billing Address:</label>
+                        <input type="text" id="editBillingAddress" name="BillingAddress" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="editShippingAddress">Shipping Address:</label>
+                        <input type="text" id="editShippingAddress" name="ShippingAddress" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditUserModal()" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="updateUserBtn">Update User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Delete User Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteUserModalLabel">Delete User</h5>
+                <button type="button" class="close" onclick="closeDeleteUserModal()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this user?</p>
+                <input type="hidden" id="deleteUserId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteUserModal()" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteUserBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        function closeEditUserModal() {
+            $('#editUserModal').modal('hide');
+        }
+
+        function closeDeleteUserModal() {
+            $('#deleteUserModal').modal('hide');
+        }
+
+
+        $(document).on('click', '.edit-button', function () {
+            var userRow = $(this).closest('tr');
+
+            var userId = userRow.data('user-id');
+            var email = userRow.data('email');
+            var phoneNumber = userRow.data('phone-number');
+            var firstName = userRow.data('first-name');
+            var lastName = userRow.data('last-name');
+            var billingAddress = userRow.data('billing-address');
+            var shippingAddress = userRow.data('shipping-address');
+
+            $('#editUserId').val(userId);
+            $('#editEmail').val(email);
+            $('#editPhoneNumber').val(phoneNumber);
+            $('#editFirstName').val(firstName);
+            $('#editLastName').val(lastName);
+            $('#editBillingAddress').val(billingAddress);
+            $('#editShippingAddress').val(shippingAddress);
+
+            $('#editUserModal').modal('show');
+        });
+
+        $('#editUserModal').on('hidden.bs.modal', function () {
+            $(this).find('form')[0].reset();
+        });
+
+        $('#editUserModal').on('hidden.bs.modal', function () {
+            $(this).find('form')[0].reset();
+        });
+
+
+        $(document).on('click', '#updateUserBtn', function () {
+            var form = $('#editUserForm');
+            var url = '@Url.Action("EditUser", "AdminDashboard")';
+            var data = form.serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                success: function (response) {
+                    if (response.success) {
+                        $('#editUserModal').modal('hide');
+                        reloadUsers(); // Reload the user table after successful update
+                    } else {
+                        alert('Form submission failed. Please try again.');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while submitting the form.');
+                }
+            });
+        });
+
+
+
+        $(document).on('click', '.delete-button', function () {
+            var userId = $(this).data('user-id');
+            $('#deleteUserId').val(userId);
+            $('#deleteUserModal').modal('show');
+        });
+
+        $(document).on('click', '#confirmDeleteUserBtn', function () {
+            var userId = $('#deleteUserId').val();
+            var url = '@Url.Action("DeleteUser", "AdminDashboard")';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: { id: userId },
+                success: function (response) {
+                    console.log(userId);
+                    if (response.success) {
+                        $('#deleteUserModal').modal('hide');
+                        // Reload the users asynchronously
+                        reloadUsers();
+                    } else {
+                        alert('Failed to delete the user.');
+                    }
+                },
+                error: function () {
+                    console.log(userId);
+                    alert('An error occurred while deleting the user.');
+                }
+            });
+        });
+
+
+        function reloadUsers() {
+            var url = '@Url.Action("GetUsers", "AdminDashboard")';
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    $('#userTable').html(response);
+                },
+                error: function () {
+                    alert('An error occurred while reloading the users.');
+                }
+            });
+        }
+
+        reloadUsers();
+
+    </script>
+}
