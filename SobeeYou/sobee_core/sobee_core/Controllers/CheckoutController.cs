@@ -59,10 +59,11 @@ namespace sobee_core.Controllers {
 
                 // Get the user ID and session ID
                 string userId = _userManager.GetUserId(User);
+                string shippingAddress = form["address"];
                 string sessionId = _httpContextAccessor.HttpContext.Session.GetString("SessionId");
 
                 // Create a new order
-                var order = await _orderService.CreateOrderAsync(totalPrice, trackingNumber, paymentMethod, userId, sessionId, cartItems);
+                var order = await _orderService.CreateOrderAsync(totalPrice, trackingNumber, paymentMethod, userId, sessionId, cartItems, shippingAddress);
 
                 // Remove cart items and shopping cart
                 await _shoppingCartService.ClearCartAsync(User);

@@ -14,7 +14,7 @@ namespace sobee_core.Services {
             return "XYAFEOWEJJ2222JFPQPJ1";
         }
 
-        public async Task<Torder> CreateOrderAsync(decimal totalPrice, string trackingNumber, int paymentMethod, string userId, string sessionId, List<CartItemDTO> cartItems) {
+        public async Task<Torder> CreateOrderAsync(decimal totalPrice, string trackingNumber, int paymentMethod, string userId, string sessionId, List<CartItemDTO> cartItems, string shippingAddress) {
             // Create a new order
             var order = new Torder {
                 UserId = userId,
@@ -23,6 +23,8 @@ namespace sobee_core.Services {
                 DecTotalAmount = totalPrice,
                 IntShippingStatusId = 1,
                 StrTrackingNumber = trackingNumber,
+                StrShippingAddress = shippingAddress, 
+                StrOrderStatus = "PENDING",
                 IntPaymentMethodId = paymentMethod
             };
 

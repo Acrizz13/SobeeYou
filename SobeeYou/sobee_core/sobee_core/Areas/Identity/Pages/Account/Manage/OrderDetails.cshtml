@@ -17,7 +17,7 @@
         <dt class="col-sm-3">Order Status</dt>
         <dd class="col-sm-9">@Model.Order.OrderStatus</dd>
 
-        <!-- these fields are null in the database right now-->
+@*         <!-- these fields are null in the database right now-->
         @if (!string.IsNullOrEmpty(Model.Order.ShippingAddress)) {
             <dt class="col-sm-3">Order Status</dt>
             <dd class="col-sm-9">@Model.Order.OrderStatus</dd>
@@ -28,7 +28,7 @@
             <dd class="col-sm-9">No pay status available</dd>
 
         }
-
+ *@
 
 
         @if (!string.IsNullOrEmpty(Model.Order.ShippingAddress)) {
