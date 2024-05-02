@@ -68,40 +68,44 @@
 		<div class="container body-content">
 			<main role="main" class="pb-3">
 				@RenderBody()
+				
 			</main>
 
 
 		</div>
 
 
-		<!-- Footer -->
-		<footer class="footer" id="footer-container">
-			<div class="footer-content">
-				<div class="footer-column">
-					<h4>GET HELP</h4>
-					<ul>
-						<li>@Html.ActionLink("FAQ", "FAQ", "About", new { area = "" }, new { @class = "footer-link" })</li>
-						<li>@Html.ActionLink("Contact", "Contact", "About", new { area = "" }, new { @class = "footer-link" })</li>
-						<li>@Html.ActionLink("Refund Policy", "RefundPolicy", "About", new { area = "" }, new { @class = "footer-link" })</li>
-						<li>@Html.ActionLink("Terms of Service", "TermsOfService", "About", new { area = "" }, new { @class = "footer-link" })</li>
-					</ul>
-				</div>
-				<div class="footer-bottom">
-					<div class="footer-text">
-						<p>&copy;2024 Sobee You, Inc.</p>
-					</div>
-					<div class="footer-links">
-						<a href="#">Privacy Policy</a>
-						<a href="#">Terms Of Use</a>
-					</div>
-				</div>
-		</footer>
+		
 		</div>
 	</div>
+
 
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
+
+<!-- Footer -->
+<footer class="footer" id="footer-container">
+	<div class="footer-content">
+		<div class="footer-column">
+			<h4>GET HELP</h4>
+			<ul>
+				<li>@Html.ActionLink("FAQ", "FAQ", "About", new { area = "" }, new { @class = "footer-link" })</li>
+				<li>@Html.ActionLink("Contact", "Contact", "About", new { area = "" }, new { @class = "footer-link" })</li>
+				<li>@Html.ActionLink("Refund Policy", "RefundPolicy", "About", new { area = "" }, new { @class = "footer-link" })</li>
+				<li>@Html.ActionLink("Terms of Service", "TermsOfService", "About", new { area = "" }, new { @class = "footer-link" })</li>
+			</ul>
+		</div>
+		<div class="footer-bottom">
+			<div class="footer-text">
+				<p>&copy;2024 Sobee You, Inc.</p>
+			</div>
+			<div class="footer-links">
+				<a href="#">Privacy Policy</a>
+				<a href="#">Terms Of Use</a>
+			</div>
+		</div>
+</footer>
 </html>

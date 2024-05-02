@@ -78,15 +78,18 @@ body {
 }
 
 
+
 .footer {
 	background-color: #000;
 	color: #fff;
-	margin-top: 40px;
+	margin-top: 375px;
 	font-family: Arial, sans-serif;
+
+
 }
 
 .footer-content {
-	display: flex;
+
 	justify-content: space-around;
 	max-width: 1200px;
 	margin: 0 auto;
@@ -120,11 +123,11 @@ body {
 			}
 
 .footer-bottom {
-	display: flex;
+
 	justify-content: space-between;
 	align-items: center;
 	max-width: 1200px;
-	margin: 20px auto 0;
+	margin: 25px auto 0;
 	padding-top: 20px;
 	border-top: 1px solid #fff;
 }

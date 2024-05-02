@@ -1,5 +1,11 @@
 ﻿@model List<ProductDTO>
 
+<style>
+
+    #add-to-cart-button {
+        background-color: #EE642D;
+    }
+</style>
 
     <div class="cs-listing">
         <!-- displays all products in catalog and their info -->
@@ -38,7 +44,7 @@
                                 <option value="@i">@i</option>
                             }
                         </select>
-                        <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                        <button id="add-to-cart-button" type="submit" class="add-to-cart-btn">Add to Cart</button>
                     </div>
                 </div>
             </form>

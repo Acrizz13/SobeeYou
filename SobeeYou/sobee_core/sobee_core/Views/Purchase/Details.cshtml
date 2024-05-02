@@ -16,6 +16,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 
+<style>
+    #addToFavoritesBtn, #submitReviewBtn {
+        
+        background-color: #18264D;
+    }
+
+    #add-to-cart-details {
+        background-color: #EE642D;
+    }
+
+    #submitReviewBtn {
+        margin-bottom: 25px;
+    }
+    .product-card {
+    text-align: center; 
+    }
+</style>
+
 <div class="container product-detail">
     <div class="product-images">
         <img src="@Url.Content($"~/Images/Products/{Model.Product.strName.Replace(" ", "")}.jpg")" alt="@Model.Product.strName">
@@ -54,7 +72,7 @@
                     }
                 </select>
                 <div class="cart-button-container">
-                    <button type="submit" class="add-to-cart">
+                    <button type="submit" id="add-to-cart-details" class="add-to-cart">
                         <span>Add to Cart</span>
                         <span class="arrow">&#10132;</span>
                     </button>
@@ -65,7 +83,7 @@
         </form>
 
         @if (User.Identity.IsAuthenticated) {
-            <button id="addToFavoritesBtn" class="btn btn-primary" data-product-id="@Model.Product.intProductID">Add to Favorites</button>
+            <button id="addToFavoritesBtn"  class="btn btn-primary" data-product-id="@Model.Product.intProductID">Add to Favorites</button>
         }
 
         <!--average review bars-->
@@ -106,7 +124,7 @@
                         <img src="@Url.Content("~/Images/Products/" + relatedProduct.strName.Replace(" ", "") + ".jpg")" alt="@relatedProduct.strName" style="width:100%; height:auto;">
                         <h3>@relatedProduct.strName</h3>
                     </a>
-                    <p>@relatedProduct.strDescription</p>
+
                 </div>
             }
         </div>

@@ -187,8 +187,9 @@
 					if (response.success) {
 						// Update the total price and display the discount amount
 						$('strong').text(response.newTotalPrice);
-						$('.text-success').html('<h6 class="my-0">Promo code</h6><small>' + promoCode + '</small>');
+						$('.text-success-code').html('<h6 class="my-0">Promo code</h6><small>' + promoCode + '</small>');
 						$('.text-success').next().text('-$' + response.discountAmount);
+						$('.text-success').show();
 					} else {
 						alert(response.message);
 					}
