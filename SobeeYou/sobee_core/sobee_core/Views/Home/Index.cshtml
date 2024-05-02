@@ -35,7 +35,7 @@
 							<div class="hero-text">
 								<h1>A Toast to Mindful Moments</h1>
 								<p>Discover the perfect blend of natural ingredients and effervescent flavors, crafted to help you unwind and feel your best.</p>
-								<a href="@Url.Action("Index", "Purchase")" class="btn btn-primary">Shop Now</a>
+								<a href="@Url.Action("Index", "Purchase")" class="hero-btn btn ">Shop Now</a>
 							</div>
 						</div>
 					</div>
@@ -45,7 +45,7 @@
 							<div class="hero-text">
 								<h1>Refresh Your Senses</h1>
 								<p>Experience the invigorating taste of our premium mocktails, crafted with the finest ingredients to awaken your senses.</p>
-								<a href="@Url.Action("Index", "Purchase")" class="btn btn-primary">Shop Now</a>
+								<a href="@Url.Action("Index", "Purchase")" class="hero-btn btn ">Shop Now</a>
 							</div>
 						</div>
 					</div>
@@ -55,7 +55,7 @@
 							<div class="hero-text">
 								<h1>Indulge in Guilt-Free Pleasure</h1>
 								<p>Treat yourself to the delightful flavors of our non-alcoholic drinks, designed to satisfy your cravings without compromise.</p>
-								<a href="@Url.Action("Index", "Purchase")" class="btn btn-primary">Shop Now</a>
+								<a href="@Url.Action("Index", "Purchase")" class="hero-btn btn">Shop Now</a>
 							</div>
 						</div>
 					</div>
@@ -94,9 +94,7 @@
 		</div>
 	</section>
 
-	<div class="border-line top"></div>
 
-	</div>
 	<!-- Product information -->
 	<section id="product-section-container">
 		<div class="product-section">
@@ -117,13 +115,20 @@
 		</div>
 	</section>
 
-<div class="border-line top"></div>
+
+<section id="reviewSection">
+	<h2> Customer Reviews</h2>
+    <div class="reviews-section">
+        <div class="background-images">
+        </div>
+        <div id="reviewsCarouselContainer" class="reviews-carousel-container"></div>
+    </div>
+</section>
 
 	<!-- Instagram section -->
 	<section>
 		<div class="instagram-link">
-			<h3>Follos Us On Instagram!</h3>
-			<p>@@sobee_you</p>
+			<h3>Follow Us On Instagram @@sobee_you</h3>
 		</div>
 	</section>
 
@@ -136,9 +141,65 @@
 			s.src = 'https://w.behold.so/widget.js'; d.body.appendChild(s);
 		}
 	</script>
-	<p></p>
-</div>
 
 
 
 
+	@section Scripts {
+		<script>
+			$(document).ready(function () {
+				$.ajax({
+					url: '@Url.Action("Get5StarReviews", "Home")',
+					type: 'GET',
+					success: function (data) {
+						var $carousel = $('#reviewsCarouselContainer');
+						var reviewsHtml = '<div id="reviewsCarousel" class="carousel slide" data-ride="carousel">';
+						reviewsHtml += '<div class="carousel-inner">';
+
+						data.forEach(function (review, index) {
+							var activeClass = index === 0 ? 'active' : '';
+							reviewsHtml += '<div class="carousel-item ' + activeClass + '">' +
+								'<div class="card review-card">' +
+								'<div class="card-body">' +
+								'<div class="review-rating">';
+
+							for (var i = 0; i < 5; i++) {
+								var starClass = i < review.rating ? 'fas fa-star' : 'fas fa-star';
+								reviewsHtml += '<i class="' + starClass + '"></i>';
+							}
+
+							reviewsHtml += '</div>' +
+								'<p class="card-text review-text">' + review.reviewText + '</p>' +
+								'<p class="card-text review-author">' + review.userFirstName + '</p>' +
+								'</div>' +
+								'</div>' +
+								'</div>';
+						});
+
+						reviewsHtml += '</div>';
+						reviewsHtml += '<a class="carousel-control-prev" href="#reviewsCarousel" role="button" data-slide="prev">' +
+							'<span class="carousel-control-prev-icon" aria-hidden="true"></span>' +
+							'<span class="sr-only">Previous</span>' +
+							'</a>' +
+							'<a class="carousel-control-next" href="#reviewsCarousel" role="button" data-slide="next">' +
+							'<span class="carousel-control-next-icon" aria-hidden="true"></span>' +
+							'<span class="sr-only">Next</span>' +
+							'</a>';
+						reviewsHtml += '</div>';
+
+						$carousel.html(reviewsHtml);
+						$('#reviewsCarousel').carousel();
+					},
+					error: function () {
+						console.log('Error fetching reviews');
+					}
+				});
+			});
+
+			function formatDate(dateString) {
+				var date = new Date(dateString);
+				var options = { year: 'numeric', month: 'long', day: 'numeric' };
+				return date.toLocaleDateString(undefined, options);
+			}
+		</script>
+	}

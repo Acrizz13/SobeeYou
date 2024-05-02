@@ -238,8 +238,195 @@
 section {
 	margin-top: 150px;
 
+
 }
 
 .instagram-link {
 	text-align: center;
+}
+
+.review-rating {
+	color: #ffc107;
+	margin-bottom: 10px;
+
+}
+
+	.review-rating .fas {
+		color: #ffc107;
+	}
+
+	.review-rating .far {
+		color: #ffc107;
+	}
+
+#reviewsCarouselContainer {
+
+}
+
+
+.review-card {
+	background-color: #18264D;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	margin: 0 auto;
+	max-width: 400px;
+	padding: 20px;
+	text-align: center;
+}
+
+.review-text {
+	font-size: 18px;
+	color: white;
+	margin-bottom: 10px;
+}
+
+.review-rating {
+	color: #FFD700;
+	margin-bottom: 10px;
+}
+
+.review-author {
+	font-weight: bold;
+	font-size: 16px;
+	margin-bottom: 5px;
+	color: white;
+}
+
+.review-date {
+	color: #888;
+	font-size: 14px;
+	color: white;
+}
+.review-text {
+	font-size: 16px;
+	margin-bottom: 5px;
+}
+
+.review-author {
+	font-weight: bold;
+	color: white;
+}
+
+.review-date {
+	color: #888;
+	font-size: 14px;
+	color: white;
+}
+
+#reviewSection {
+	text-align: center;
+
+}
+
+#reviewSection h2 {
+	text-align: center;
+	margin-bottom: -140px;
+}
+
+
+#reviewsCarousel .carousel-item::before {
+	content: none;
+}
+
+#reviewsCarousel .carousel-item {
+	background: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+.reviews-section {
+	text-align: center;
+	position: relative;
+	text-align: center;
+	padding: 50px 0;
+	padding-top: 175px;
+	margin-left: -304px;
+	margin-right: -304px;
+}
+
+	.reviews-section h2 {
+		margin-bottom: 30px;
+	}
+
+.background-images {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: -1;
+}
+
+.background-image {
+	width: 50%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.overlay-image {
+	position: absolute;
+
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 700px;
+	height: 100%;
+	max-width: 100%;
+	max-height: 100%;
+	z-index: -1;
+}
+
+.reviews-carousel-container {
+	background-color: #EE642D;
+	position: relative;
+	z-index: 1;
+	max-width: 1000px;
+	height: 100%;
+	margin: 0 auto;
+	padding: 20px;
+	border-radius: 10px;
+}
+
+.review-card {
+
+	border-radius: 5px;
+
+	padding: 20px;
+	margin-bottom: 20px;
+
+
+}
+
+.review-rating {
+	color: #FFD700;
+	margin-bottom: 10px;
+}
+
+	.review-rating .fas {
+		color: #FFD700;
+	}
+
+	.review-rating .far {
+		color: #FFD700;
+	}
+
+.review-text {
+	font-size: 24px;
+	margin-bottom: 10px;
+}
+
+.review-author {
+	font-weight: bold;
+	font-size: 18px;
 }
